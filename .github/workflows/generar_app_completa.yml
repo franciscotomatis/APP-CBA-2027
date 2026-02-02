@@ -70,7 +70,7 @@ jobs:
         if [[ -n $(git status --porcelain) ]]; then
           echo "📤 Subiendo cambios..."
           git add geojson_unificado_actual.geojson index.html
-          git commit -m "🚀 Actualización automática $(date +'%Y-%m-%d %H:%M') - Datos + App"
+          git commit -m "🚀 Actualización automática $(TZ='America/Argentina/Buenos_Aires' date +'%Y-%m-%d %H:%M') - Datos + App""
           git push
           echo "✅ Cambios subidos"
           
