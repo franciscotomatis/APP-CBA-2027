@@ -48,7 +48,7 @@ jobs:
     - name: Generar aplicación HTML
       run: |
         echo "🎨 Generando aplicación web..."
-        python generar_app_html.py geojson_unificado_actual.geojson app_cordoba_actual.html
+        python generar_app_html.py geojson_unificado_actual.geojson index.html
         
         echo "📁 Archivos generados:"
         ls -la *.html
@@ -69,7 +69,7 @@ jobs:
         # Verificar si hay cambios
         if [[ -n $(git status --porcelain) ]]; then
           echo "📤 Subiendo cambios..."
-          git add geojson_unificado_actual.geojson app_cordoba_actual.html
+          git add geojson_unificado_actual.geojson index.html
           git commit -m "🚀 Actualización automática $(date +'%Y-%m-%d %H:%M') - Datos + App"
           git push
           echo "✅ Cambios subidos"
