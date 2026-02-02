@@ -70,7 +70,7 @@ jobs:
         if [[ -n $(git status --porcelain) ]]; then
           echo "📤 Subiendo cambios..."
           git add geojson_unificado_actual.geojson index.html
-          git commit -m "🚀 Actualización automática $(TZ='America/Argentina/Buenos_Aires' date +'%Y-%m-%d %H:%M') - Datos + App""
+          git commit -m "🚀 Actualización automática $(TZ='America/Argentina/Buenos_Aires' date +'%Y-%m-%d %H:%M') - Datos + App"
           git push
           echo "✅ Cambios subidos"
           
@@ -78,8 +78,8 @@ jobs:
           echo ""
           echo "🔗 LINKS DIRECTOS:"
           echo "📊 Datos GeoJSON: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/geojson_unificado_actual.geojson"
-          echo "🌐 App HTML: https://franciscotomatis.github.io/APP-C-rdoba/app_cordoba_actual.html"
-          echo "   (O abre directamente: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/app_cordoba_actual.html)"
+          echo "🌐 App HTML: https://franciscotomatis.github.io/APP-C-rdoba/"
+          echo "   (O abre directamente: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/index.html)"
         else
           echo "ℹ️ No hay cambios para subir"
         fi
