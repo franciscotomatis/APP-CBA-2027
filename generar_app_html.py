@@ -2507,7 +2507,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         <li>Datos actuales: calculados automáticamente del archivo GeoJSON cargado</li>
                         <li>Verde (↑): la zona supera la proyección</li>
                         <li>Rojo (↓): la zona está por debajo de la proyección</li>
-                        <li>Actualizado: {datetime.now().strftime("%d/%m/%Y %H:%M")}</li>
+                        <li>Actualizado: {hora_argentina.strftime("%d/%m/%Y %H:%M")}</li>
                     </ul>
                 </div>
 
