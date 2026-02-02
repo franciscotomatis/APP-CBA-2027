@@ -1,0 +1,133 @@
+name: Actualizar Datos y Generar App Completa
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Cada 6 horas
+  workflow_dispatch:        # Para ejecutar manualmente
+  push:
+    branches: [ main ]
+
+jobs:
+  actualizar_y_generar:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Instalar dependencias COMPLETAS
+      run: |
+        pip install requests beautifulsoup4 pandas geopandas folium owslib shapely -q
+        echo "✅ Dependencias instaladas"
+    
+    - name: Ejecutar descargador de datos
+      env:
+        MULTIRIESGO_USER: ${{ secrets.MULTIRIESGO_USER }}
+        MULTIRIESGO_PASS: ${{ secrets.MULTIRIESGO_PASS }}
+      run: |
+        echo "🚀 Descargando datos de multiriesgo-cba.com..."
+        python descargador_automatico.py
+        echo "✅ Datos descargados"
+        ls -la *.geojson
+    
+    - name: Verificar archivo GeoJSON
+      run: |
+        if [ -f "geojson_unificado_actual.geojson" ]; then
+          echo "✅ GeoJSON encontrado"
+          echo "📏 Tamaño: $(ls -lh geojson_unificado_actual.geojson | awk '{print $5}')"
+          echo "📊 Polígonos aproximados: $(grep -o '"type":"Feature"' geojson_unificado_actual.geojson | wc -l)"
+        else
+          echo "❌ ERROR: No se generó el GeoJSON"
+          exit 1
+        fi
+    
+    - name: Generar aplicación HTML
+      run: |
+        echo "🎨 Generando aplicación web..."
+        python generar_app_html.py geojson_unificado_actual.geojson app_cordoba_actual.html
+        
+        echo "📁 Archivos generados:"
+        ls -la *.html
+        
+        echo "🔍 Vista previa de la app:"
+        echo "----------------------------------------"
+        head -50 app_cordoba_actual.html
+        echo "..."
+        echo "----------------------------------------"
+    
+    - name: Configurar Git
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+    
+    - name: Subir cambios automáticamente
+      run: |
+        # Verificar si hay cambios
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "📤 Subiendo cambios..."
+          git add geojson_unificado_actual.geojson app_cordoba_actual.html
+          git commit -m "🚀 Actualización automática $(date +'%Y-%m-%d %H:%M') - Datos + App"
+          git push
+          echo "✅ Cambios subidos"
+          
+          # Mostrar links útiles
+          echo ""
+          echo "🔗 LINKS DIRECTOS:"
+          echo "📊 Datos GeoJSON: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/geojson_unificado_actual.geojson"
+          echo "🌐 App HTML: https://franciscotomatis.github.io/APP-C-rdoba/app_cordoba_actual.html"
+          echo "   (O abre directamente: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/app_cordoba_actual.html)"
+        else
+          echo "ℹ️ No hay cambios para subir"
+        fi
+    
+    - name: Crear README con instrucciones
+      run: |
+        cat > README_APP.md << 'EOF'
+        # 🌽 APLICACIÓN WEB - PROGRAMA CÓRDOBA 25/26
+        
+        ## 🚀 ACCESO RÁPIDO
+        
+        ### 📊 App actualizada (HTML listo para usar)
+        [👉 ABRIR APLICACIÓN](https://franciscotomatis.github.io/APP-C-rdoba/app_cordoba_actual.html)
+        
+        ### 🔍 Datos actuales (GeoJSON)
+        [📁 DESCARGAR DATOS](https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/geojson_unificado_actual.geojson)
+        
+        ## 🔐 CREDENCIALES DE ACCESO
+        - **Usuario:** `Sancor`
+        - **Contraseña:** `2025Sancor`
+        
+        ## 📋 FUNCIONALIDADES
+        - 🗺️ **Mapa interactivo** con 4 capas base
+        - 🔍 **Buscador de clientes** (lupita azul arriba a la izquierda)
+        - 🌾 **Leyenda de cultivos** (abajo a la derecha)
+        - 📍 **GPS automático** (se activa solo)
+        - 🔐 **Login seguro** con hash SHA-256
+        
+        ## 🔄 ACTUALIZACIÓN AUTOMÁTICA
+        Los datos se actualizan automáticamente cada 6 horas desde:
+        - 🌐 multiriesgo-cba.com
+        - 📅 Última actualización: $(date +'%d/%m/%Y %H:%M')
+        
+        ## 📁 ARCHIVOS EN ESTE REPO
+        - `app_cordoba_actual.html` → Aplicación web lista para usar
+        - `geojson_unificado_actual.geojson` → Datos más recientes
+        - `descargador_automatico.py` → Script de descarga
+        - `generar_app_html.py` → Generador de la app
+        
+        ## 🛠️ USO LOCAL
+        1. Descarga `app_cordoba_actual.html`
+        2. Ábrelo en Chrome/Firefox/Edge
+        3. Ingresa las credenciales
+        4. ¡Listo! La app funciona sin conexión a internet
+        
+        ## 📞 SOPORTE
+        La aplicación se genera automáticamente con GitHub Actions.
+        Si hay problemas, revisa el workflow en `.github/workflows/`
+        EOF
+        
+        echo "✅ README creado"
