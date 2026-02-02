@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 GENERADOR AUTOMÁTICO DE APLICACIÓN HTML IDÉNTICO A COLAB
-Versión para GitHub Actions - Toma geojson automático
-CORREGIDO: Problemas con Jinja2 y llaves {}
+Versión para GitHub Actions - EXACTA A LA VERSIÓN DE COLAB
+Con TODO el JavaScript original preservado
 """
 
 import geopandas as gpd
@@ -78,35 +78,55 @@ def encontrar_campos(gdf):
             campo_causa_stro = campo
             break
 
+    campo_fecha_stro = None
+    # Buscar EXACTAMENTE como en Colab
+    if 'Fecha Stro' in gdf.columns:
+        campo_fecha_stro = 'Fecha Stro'
+    else:
+        for campo in ['FechaStro', 'Fecha_Stro', 'FECHA_STRO', 'FECHA_SINIESTRO', 'FECHA', 'fecha_stro']:
+            if campo in gdf.columns:
+                campo_fecha_stro = campo
+                break
+
+    campo_dano_stro = None
+    for campo in ['DAÑO_ESTIMADO', 'DAÑO', 'DANO_ESTIMADO', 'DANO', 'PERDIDA', 'PERDIDA_ESTIMADA']:
+        if campo in gdf.columns:
+            campo_dano_stro = campo
+            break
+
     return {
         'cultivo': campo_cultivo,
         'hectareas': campo_hectareas,
         'cliente': campo_cliente,
         'zona': campo_zona,
-        'causa_stro': campo_causa_stro
+        'causa_stro': campo_causa_stro,
+        'fecha_stro': campo_fecha_stro,
+        'dano_stro': campo_dano_stro
     }
 
-def agregar_html_seguro(mapa, html_content):
-    """Agrega HTML de forma segura evitando problemas con Jinja2"""
+def agregar_elemento_html_seguro(mapa, html_content):
+    """Agrega HTML de forma segura usando branca.element.Element"""
     try:
         from branca.element import Element
         element = Element(html_content)
         mapa.get_root().html.add_child(element)
+        return True
     except Exception as e:
-        print(f"⚠️  Error agregando HTML: {e}")
-        # Intento alternativo usando folium.Element
+        print(f"⚠️  Error agregando HTML (branca): {e}")
         try:
-            folium_element = folium.Element(html_content)
-            mapa.get_root().html.add_child(folium_element)
-        except:
-            print("❌ No se pudo agregar el HTML")
+            # Intento alternativo
+            mapa.get_root().html.add_child(folium.Element(html_content))
+            return True
+        except Exception as e2:
+            print(f"❌ Error crítico: {e2}")
+            return False
 
 def crear_app_completa(geojson_data, gdf, campos, output_file):
-    """CREA LA APLICACIÓN IDÉNTICA A COLAB - VERSIÓN CORREGIDA"""
+    """CREA LA APLICACIÓN 100% IDÉNTICA A COLAB - VERSIÓN CORREGIDA"""
     
-    print(f"\n🗺️ Creando aplicación web IDÉNTICA A COLAB: {output_file}")
+    print(f"\n🗺️ Creando aplicación web 100% IDÉNTICA A COLAB: {output_file}")
     
-    # Centro del mapa
+    # Centro del mapa (IDÉNTICO)
     if not gdf.empty:
         minx, miny, maxx, maxy = gdf.total_bounds
         bounds = [[miny, minx], [maxy, maxx]]
@@ -124,7 +144,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         zoom_control=True
     )
 
-    # ========== CAPAS BASE (IDÉNTICAS) ==========
+    # ========== CAPAS BASE (100% IDÉNTICAS) ==========
     folium.TileLayer(
         tiles='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
         attr='Google',
@@ -159,7 +179,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         control=True
     ).add_to(m)
 
-    # ========== ESTILOS POR CULTIVO (IDÉNTICOS) ==========
+    # ========== ESTILOS POR CULTIVO (100% IDÉNTICOS) ==========
     def estilo_por_cultivo(feature):
         propiedades = feature['properties']
 
@@ -209,13 +229,13 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             'dashArray': '5, 5'
         }
 
-    # ========== ESTILOS PARA SINIESTROS (IDÉNTICOS) ==========
+    # ========== ESTILOS PARA SINIESTROS (100% IDÉNTICOS) ==========
     def estilo_por_causa_siniestro(feature):
-        """Estilo específico para siniestros"""
+        """Estilo específico para siniestros - IDÉNTICO A COLAB"""
         propiedades = feature['properties']
         causa = propiedades.get(campos['causa_stro'], '').upper() if campos['causa_stro'] else ''
 
-        # Mapeo de colores por causa de siniestro (IDÉNTICO)
+        # Mapeo de colores por causa de siniestro (EXACTO)
         colores_causa = {
             'GRANIZO': ('#00BCD4', '#0097A7'),
             'SEQUÍA': ('#FF5252', '#D50000'),
@@ -254,7 +274,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             'dashArray': '3, 3'
         }
 
-    # ========== CAMPOS PARA POPUP (IDÉNTICOS) ==========
+    # ========== CAMPOS PARA POPUP (100% IDÉNTICOS) ==========
     campos_especificos = [
         'CUIT', 'CLIENTE', 'CAMPO', 'DEPARTAMENTO', 'LOCALIDAD', 'CULTIVO', 'LOTE',
         'CULTIVO_ANTERIOR', 'RENDIMIENTO_ANTERIOR', 'HECTAREAS_DECLARADAS',
@@ -275,7 +295,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     else:
         campos_tooltip = ['excel_fila_num']
 
-    # ========== CAPA PRINCIPAL (IDÉNTICA) ==========
+    # ========== CAPA PRINCIPAL (100% IDÉNTICA) ==========
     geo_layer = folium.GeoJson(
         geojson_data,
         name='Lotes asegurados',
@@ -316,7 +336,337 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
 
     capa_nombre = geo_layer.get_name()
 
-    # ========== CAPA DE SINIESTROS (IDÉNTICA) ==========
+    # ========== CAPA DE FOTOS DESDE GITHUB (100% IDÉNTICA) ==========
+    print("📸 Configurando capa de fotos desde GitHub (VERSIÓN EXACTA COLAB)...")
+    
+    # URL del archivo de fotos en GitHub
+    GITHUB_USER = "franciscotomatis"
+    REPO_NAME = "APP-C-rdoba"
+    FOTOS_JSON_URL = f"https://raw.githubusercontent.com/{GITHUB_USER}/{REPO_NAME}/main/fotos.json"
+
+    print(f"✅ Fotos se cargarán desde: {FOTOS_JSON_URL}")
+
+    # ========== HTML Y JAVASCRIPT DE FOTOS - VERSIÓN EXACTA DE COLAB ==========
+    fotos_html = f'''
+    <div id="contenedorFotosGithub">
+        <!-- Indicador de carga -->
+        <div id="cargandoFotos" style="position: fixed;
+                top: 120px; right: 20px;
+                background: rgba(244, 67, 54, 0.9);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-family: Arial, sans-serif;
+                font-size: 11px;
+                display: none;
+                box-shadow: 0 3px 10px rgba(244, 67, 54, 0.3);
+                border: 1px solid #D32F2F;
+                min-width: 160px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 24px; height: 24px; background: rgba(255, 255, 255, 0.3); 
+                        border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 12px; animation: spin 1s linear infinite;">⏳</span>
+                </div>
+                <div>
+                    <div style="font-weight: bold; font-size: 12px;">Cargando fotos...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    @keyframes spin {{
+        0% {{ transform: rotate(0deg); }}
+        100% {{ transform: rotate(360deg); }}
+    }}
+    </style>
+
+    <script>
+    // Variables globales - TODO IGUAL
+    var capaFotosGithub = null;
+    var fotosCargadas = false;
+    var cargandoFotos = false;
+    var capaVisible = false;
+
+    // Función para crear popup de foto - VERSIÓN EXACTA
+    function crearPopupFotoGithub(feature) {{
+        var props = feature.properties || {{}};
+        var nombre = props.NOMBRE_FOTO || "Foto del perito";
+        var metodo = props.METODO || "Desconocido";
+        var imgBase64 = props.IMAGEN || "";
+        
+        var html = `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; min-width: 300px;">
+            <div style="background: linear-gradient(135deg, #F44336, #D32F2F); 
+                        color: white; padding: 12px; border-radius: 8px 8px 0 0;
+                        text-align: center;">
+                <div style="font-size: 14px; font-weight: bold;">📸 ${{nombre}}</div>
+                <div style="font-size: 10px; opacity: 0.9; margin-top: 3px;">${{metodo}}</div>
+            </div>
+            
+            <div style="padding: 15px; text-align: center; background: #FFF3F2;">
+                <img src="${{imgBase64}}" 
+                    style="max-width: 100%; max-height: 350px; 
+                            border-radius: 6px; border: 2px solid #F44336;
+                            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+                            cursor: pointer;"
+                    onclick="this.style.maxHeight='none'; this.style.cursor='default';"
+                    title="Click para ampliar la foto">
+            </div>
+            
+            <div style="padding: 8px; background: #f9f9f9; border-radius: 0 0 8px 8px;
+                        border-top: 1px solid #eee; font-size: 10px; color: #666;">
+                <div style="text-align: center;">
+                    📍 Foto geolocalizada • 👤 Perito en campo
+                </div>
+                <div style="margin-top: 5px; text-align: center; font-size: 9px;">
+                    Click en la foto para ampliar • Programa Córdoba 25/26
+                </div>
+            </div>
+        </div>
+        `;
+        
+        return L.popup({{
+            maxWidth: 550,
+            minWidth: 320
+        }}).setContent(html);
+    }}
+
+    // Función principal para cargar fotos - EXACTAMENTE IGUAL QUE COLAB
+    async function cargarFotosDesdeGithub() {{
+        if (fotosCargadas || cargandoFotos) return;
+        
+        cargandoFotos = true;
+        var cargandoDiv = document.getElementById("cargandoFotos");
+        if (cargandoDiv) cargandoDiv.style.display = "block";
+        
+        console.log("📸 Cargando fotos desde GitHub...");
+        
+        try {{
+            // 1. Hacer fetch al archivo de fotos
+            const response = await fetch("{FOTOS_JSON_URL}");
+            
+            if (!response.ok) {{
+                throw new Error(`Error HTTP: ${{response.status}}`);
+            }}
+            
+            // 2. Parsear el JSON
+            const fotosData = await response.json();
+            const features = fotosData.features || [];
+            
+            console.log(`✅ ${{features.length}} fotos cargadas`);
+            
+            // 3. Crear capa de fotos - EXACTO
+            capaFotosGithub = L.geoJSON(features, {{
+                pointToLayer: function(feature, latlng) {{
+                    // Crear marcador circular ROJO con borde BLANCO
+                    var marker = L.circleMarker(latlng, {{
+                        radius: 8,
+                        fillColor: "#F44336",      // ROJO
+                        color: "#FFFFFF",          // BLANCO (borde)
+                        weight: 2,                // Grosor del borde
+                        opacity: 1,
+                        fillOpacity: 0.9
+                    }});
+                    
+                    // Forzar que cada marcador esté arriba
+                    marker.options.zIndexOffset = 1000;
+                    return marker;
+                }},
+                
+                onEachFeature: function(feature, layer) {{
+                    // Agregar tooltip simple
+                    var nombre = feature.properties.NOMBRE_FOTO || "Foto";
+                    layer.bindTooltip(`📸 ${{nombre}}`, {{
+                        sticky: true,
+                        direction: 'top',
+                        className: 'foto-tooltip',
+                        opacity: 0.9
+                    }});
+                    
+                    // Agregar popup con imagen
+                    layer.bindPopup(crearPopupFotoGithub(feature));
+                }}
+            }});
+            
+            // 4. Agregar capa al mapa - VERSIÓN EXACTA
+            function agregarCapaAlMapa() {{
+                console.log("🔍 Buscando mapa...");
+                
+                var mapaActual = null;
+                
+                // Buscar window.map primero
+                if (typeof window.map !== "undefined" && window.map !== null) {{
+                    mapaActual = window.map;
+                    console.log("✅ Mapa encontrado: window.map");
+                }}
+                // Buscar cualquier objeto Leaflet
+                else {{
+                    for (var key in window) {{
+                        try {{
+                            var obj = window[key];
+                            if (obj && 
+                                typeof obj.addLayer === "function" && 
+                                typeof obj.fitBounds === "function") {{
+                                mapaActual = obj;
+                                console.log("✅ Mapa encontrado: window." + key);
+                                break;
+                            }}
+                        }} catch(e) {{
+                            // Ignorar errores
+                        }}
+                    }}
+                }}
+                
+                if (mapaActual && typeof mapaActual.addLayer === "function") {{
+                    try {{
+                        mapaActual.addLayer(capaFotosGithub);
+                        console.log("✅ Capa de fotos agregada");
+                        fotosCargadas = true;
+                        capaVisible = true;
+                        
+                        // ========== CLAVE ==========
+                        // Forzar que esté arriba de todo
+                        capaFotosGithub.bringToFront();
+                        // ===========================
+                        
+                        return true;
+                    }} catch (error) {{
+                        console.error("❌ Error:", error);
+                        return false;
+                    }}
+                }} else {{
+                    console.warn("⚠️ Reintentando...");
+                    setTimeout(agregarCapaAlMapa, 500);
+                    return false;
+                }}
+            }}
+
+            // Llamar a la función
+            agregarCapaAlMapa();
+            
+        }} catch (error) {{
+            console.error("❌ Error cargando fotos:", error);
+            
+            // Mostrar error breve
+            var cargandoDiv = document.getElementById("cargandoFotos");
+            if (cargandoDiv) {{
+                cargandoDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 24px; height: 24px; background: rgba(255, 0, 0, 0.2); 
+                            border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 12px; color: #FF0000;">❌</span>
+                    </div>
+                    <div style="font-size: 11px;">Error cargando fotos</div>
+                </div>
+                `;
+            }}
+            
+        }} finally {{
+            cargandoFotos = false;
+            // Ocultar mensaje después de 2 segundos
+            setTimeout(function() {{
+                var cargandoDiv = document.getElementById("cargandoFotos");
+                if (cargandoDiv) cargandoDiv.style.display = "none";
+            }}, 2000);
+        }}
+    }}
+
+    // FUNCIÓN TOGGLE - Con bringToFront cuando se muestran
+    function toggleFotos(mostrar) {{
+        if (!capaFotosGithub) return;
+        
+        capaVisible = mostrar;
+        
+        if (mostrar) {{
+            // Mostrar y traer al frente
+            capaFotosGithub.setStyle({{
+                opacity: 1,
+                fillOpacity: 0.9
+            }});
+            capaFotosGithub.bringToFront(); // <-- EXACTO
+            console.log("✅ Fotos mostradas (ARRIBA)");
+        }} else {{
+            // Ocultar
+            capaFotosGithub.setStyle({{
+                opacity: 0,
+                fillOpacity: 0
+            }});
+            console.log("✅ Fotos ocultadas");
+        }}
+    }}
+
+    // Detección del checkbox - EXACTAMENTE IGUAL
+    function configurarDeteccionFotos() {{
+        function buscarCheckbox() {{
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            
+            for (var i = 0; i < checkboxes.length; i++) {{
+                var checkbox = checkboxes[i];
+                var label = checkbox.parentElement;
+                
+                if (label && label.textContent && label.textContent.includes("📸 Fotos del perito")) {{
+                    console.log("✅ Checkbox de fotos encontrado");
+                    
+                    checkbox.addEventListener("change", function() {{
+                        console.log("🔄 Checkbox cambiado:", this.checked);
+                        
+                        if (this.checked) {{
+                            if (!fotosCargadas) {{
+                                cargarFotosDesdeGithub();
+                            }} else {{
+                                toggleFotos(true);
+                            }}
+                        }} else {{
+                            toggleFotos(false);
+                        }}
+                    }});
+                    
+                    return true;
+                }}
+            }}
+            
+            return false;
+        }}
+        
+        var intentos = 0;
+        function intentarBuscar() {{
+            if (buscarCheckbox()) {{
+                console.log("✅ Sistema de fotos configurado");
+            }} else {{
+                intentos++;
+                if (intentos < 5) {{
+                    setTimeout(intentarBuscar, 1000);
+                }} else {{
+                    console.warn("⚠️ No se encontró el checkbox de fotos");
+                }}
+            }}
+        }}
+        
+        intentarBuscar();
+    }}
+
+    // Inicializar cuando cargue la página
+    document.addEventListener("DOMContentLoaded", configurarDeteccionFotos);
+    
+    // También escuchar si el mapa se carga después
+    if (typeof window.map !== "undefined") {{
+        window.map.whenReady(configurarDeteccionFotos);
+    }}
+    </script>
+    '''
+
+    # Crear capa vacía para fotos (igual que en Colab)
+    fotos_layer = folium.FeatureGroup(name='📸 Fotos del perito', show=True)
+    fotos_layer.add_to(m)
+
+    # Agregar el HTML/JavaScript al mapa
+    agregar_elemento_html_seguro(m, fotos_html)
+
+    print("✅ Sistema de carga de fotos desde GitHub configurado (VERSIÓN EXACTA)")
+
+    # ========== CAPA DE SINIESTROS (100% IDÉNTICA) ==========
     if campos['causa_stro'] and gdf[campos['causa_stro']].notna().any():
         print("✅ Encontrados datos de siniestros")
         
@@ -334,7 +684,23 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
 
             print(f"✅ {len(siniestros_features)} polígonos con siniestros")
 
-            # Crear capa de siniestros SEPARADA
+            # Campos para siniestros (EXACTAMENTE como en Colab)
+            campos_siniestros_popup = [campos['causa_stro']]
+            aliases_siniestros = ['<b>Causa del siniestro</b>']
+            
+            if campos['fecha_stro']:
+                campos_siniestros_popup.append(campos['fecha_stro'])
+                aliases_siniestros.append('<b>Fecha del siniestro</b>')
+                
+            if campos['dano_stro']:
+                campos_siniestros_popup.append(campos['dano_stro'])
+                aliases_siniestros.append('<b>Daño estimado</b>')
+            
+            # Agregar campos generales
+            campos_siniestros_popup.extend(campos_para_popup[:5])
+            aliases_siniestros.extend([f"<b>{col}</b>" for col in campos_para_popup[:5]])
+
+            # Crear capa de siniestros SEPARADA (EXACTO)
             siniestros_layer = folium.GeoJson(
                 siniestros_data,
                 name='⚠️ Siniestros',
@@ -355,9 +721,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                     """
                 ),
                 popup=folium.GeoJsonPopup(
-                    fields=[campos['causa_stro']] + campos_para_popup[:5],
-                    aliases=['<b>Causa del siniestro</b>'] + 
-                            [f"<b>{col}</b>" for col in campos_para_popup[:5]],
+                    fields=campos_siniestros_popup,
+                    aliases=aliases_siniestros,
                     localize=True,
                     labels=True,
                     style="""
@@ -372,14 +737,19 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         border-radius: 5px;
                     """
                 ),
-                show=False
+                show=False  # IMPORTANTE: Ocultar por defecto
             ).add_to(m)
 
-            # Obtener causas únicas para el buscador
+            # Obtener el nombre de la capa de siniestros para JavaScript
+            capa_siniestros_nombre = siniestros_layer.get_name()
+
+            # Obtener causas únicas
             causas_unicas = sorted(gdf[campos['causa_stro']].dropna().unique())
+
+            # ========== BUSCADOR PARA SINIESTROS (100% IDÉNTICO) ==========
+            opciones_causas = "".join(f'<option value="{causa}">{causa}</option>' for causa in causas_unicas)
             
-            # ========== BUSCADOR PARA SINIESTROS (VERSIÓN CORREGIDA) ==========
-            buscador_siniestros_html = '''
+            buscador_siniestros_html = f'''
             <div id="buscadorSiniestros" style="position: fixed;
                     top: 260px; left: 10px;
                     background-color: rgba(244, 67, 54, 0.95);
@@ -392,12 +762,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                     width: 220px;
                     box-shadow: 0 3px 8px rgba(0,0,0,0.15);
                     display: none;">
-            '''
 
-            # Agregar opciones dinámicas usando f-string fuera del JavaScript
-            opciones_html = "".join(f'<option value="{causa}">{causa}</option>' for causa in causas_unicas)
-            
-            buscador_siniestros_html += f'''
                 <!-- CABECERA -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <div style="font-weight: bold; color: white; font-size: 12px; display: flex; align-items: center;">
@@ -416,7 +781,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                                style="width: 100%; padding: 5px; border: 1px solid #ddd;
                                       border-radius: 3px; font-size: 11px;">
                             <option value="">Todas las causas</option>
-                            {opciones_html}
+                            {opciones_causas}
                         </select>
                     </div>
 
@@ -444,6 +809,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             </div>
 
             <script>
+            // Variable para controlar visibilidad del buscador
             var buscadorSiniestrosVisible = false;
 
             function toggleBuscadorSiniestros() {{
@@ -456,6 +822,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 buscadorSiniestrosVisible = !buscadorSiniestrosVisible;
             }}
 
+            // Mostrar buscador cuando se activa la capa de siniestros
             function onCapaSiniestrosChange() {{
                 var checkbox = document.querySelector('input[title="⚠️ Siniestros"]');
                 var buscador = document.getElementById("buscadorSiniestros");
@@ -469,37 +836,38 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 }}
             }}
 
+            // Función para filtrar siniestros
             function filtrarSiniestros() {{
                 var causaSeleccionada = document.getElementById("causaSiniestroSelect").value;
-                var capaSiniestros = window.siniestrosLayer;  // Usamos variable global
+                var capaSiniestros = {capa_siniestros_nombre};
                 var contador = 0;
 
-                if (capaSiniestros) {{
-                    capaSiniestros.eachLayer(function(layer) {{
-                        var causa = layer.feature.properties.{campos['causa_stro']} || '';
+                capaSiniestros.eachLayer(function(layer) {{
+                    var causa = layer.feature.properties.{campos['causa_stro']} || '';
 
-                        if (!causaSeleccionada || causa === causaSeleccionada) {{
-                            layer.setStyle({{
-                                fillOpacity: 0.7,
-                                weight: 3,
-                                opacity: 1
-                            }});
-                            layer.options.interactive = true;
-                            contador++;
-                        }} else {{
-                            layer.setStyle({{
-                                fillOpacity: 0.1,
-                                weight: 1,
-                                opacity: 0.3
-                            }});
-                            layer.options.interactive = false;
-                        }}
-                    }});
+                    if (!causaSeleccionada || causa === causaSeleccionada) {{
+                        // Mostrar este polígono
+                        layer.setStyle({{
+                            fillOpacity: 0.7,
+                            weight: 3,
+                            opacity: 1
+                        }});
+                        layer.options.interactive = true;
+                        contador++;
+                    }} else {{
+                        // Ocultar este polígono
+                        layer.setStyle({{
+                            fillOpacity: 0.1,
+                            weight: 1,
+                            opacity: 0.3
+                        }});
+                        layer.options.interactive = false;
+                    }}
+                }});
 
-                    document.getElementById("estadoSiniestros").innerHTML =
-                        "Mostrando: " + contador + " siniestros" +
-                        (causaSeleccionada ? " (" + causaSeleccionada + ")" : "");
-                }}
+                document.getElementById("estadoSiniestros").innerHTML =
+                    "Mostrando: " + contador + " siniestros" +
+                    (causaSeleccionada ? " (" + causaSeleccionada + ")" : "");
             }}
 
             function mostrarTodosSiniestros() {{
@@ -507,21 +875,23 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 filtrarSiniestros();
             }}
 
+            // Detectar cambios en el checkbox de siniestros
             document.addEventListener("DOMContentLoaded", function() {{
                 setTimeout(function() {{
-                    // Guardar referencia a la capa de siniestros
-                    window.siniestrosLayer = {siniestros_layer.get_name()};
-                    
+                    // Escuchar cambios en el checkbox de siniestros
                     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
                     checkboxes.forEach(function(checkbox) {{
                         if (checkbox.parentElement && checkbox.parentElement.textContent.includes('⚠️ Siniestros')) {{
                             checkbox.addEventListener("change", onCapaSiniestrosChange);
                         }}
                     }});
+
+                    // Inicializar
                     onCapaSiniestrosChange();
                 }}, 1000);
             }});
 
+            // Permitir usar Enter en el select
             document.getElementById("causaSiniestroSelect").addEventListener("keypress", function(e) {{
                 if (e.key === "Enter") {{
                     filtrarSiniestros();
@@ -530,25 +900,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             </script>
             '''
 
-            agregar_html_seguro(m, buscador_siniestros_html)
+            agregar_elemento_html_seguro(m, buscador_siniestros_html)
 
-    # ========== CAPA DE FOTOS DESDE GITHUB (VERSIÓN SIMPLIFICADA) ==========
-    print("📸 Configurando capa de fotos desde GitHub...")
-    
-    # URL del archivo de fotos en GitHub
-    GITHUB_USER = "franciscotomatis"
-    REPO_NAME = "APP-C-rdoba"
-    FOTOS_JSON_URL = f"https://raw.githubusercontent.com/{GITHUB_USER}/{REPO_NAME}/main/fotos.json"
-
-    print(f"✅ Fotos se cargarán desde: {FOTOS_JSON_URL}")
-
-    # Crear capa vacía para fotos
-    fotos_layer = folium.FeatureGroup(name='📸 Fotos del perito', show=True)
-    fotos_layer.add_to(m)
-
-    print("✅ Sistema de carga de fotos desde GitHub configurado")
-
-    # ========== CAPAS WMS (IDÉNTICAS) ==========
+    # ========== CAPAS WMS (100% IDÉNTICAS) ==========
     print("\n" + "="*60)
     print("📡 AGREGANDO CAPAS WMS (IDÉNTICAS A COLAB)")
     print("="*60)
@@ -679,14 +1033,14 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     except Exception as e:
         print(f"⚠️ Error TVDI: {e}")
 
-    # ========== LEYENDAS (SIMPLIFICADAS PARA EVITAR JINJA2) ==========
+    # ========== LEYENDAS WMS (100% IDÉNTICAS) ==========
     
     # URLs de leyendas
     url_leyenda_normal = "https://aplicaciones.gulich.unc.edu.ar/geoserver/ows?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=tvdi_m_2024:tvdi_2025361_modis&style=tvdi61"
     url_leyenda_anomalia = "https://aplicaciones.gulich.unc.edu.ar/geoserver/ows?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=tvdi_anomsindex_m_2024:anomtvdi_2025361_anomindex_modis&style=anomaliasTVDIindex"
     url_leyenda_imerg = "https://geoservicios2.conae.gov.ar/geoserver/PrecipitacionAcumulada/wms?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=MOM_GPMIMERG_PA1D_1&style=estilo_MOM_CMORPH2_PA1D"
     
-    # LEYENDA NORMAL TVDI (SIMPLIFICADA)
+    # LEYENDA NORMAL TVDI
     leyenda_normal_html = f'''
     <div id="leyendaNormal" style="position: fixed;
             bottom: 120px; left: 10px;
@@ -705,7 +1059,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             <div style="font-size: 11px; font-weight: bold; color: #9C27B0;">
                 📊 TVDI
             </div>
-            <button onclick="ocultarLeyenda('normal')"
+            <button onclick="ocultarLeyendaTvdi('normal')"
                     style="background: none; border: none; color: #666;
                            font-size: 16px; cursor: pointer; padding: 0;
                            line-height: 1; width: 20px; height: 20px;
@@ -741,16 +1095,16 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             align-items: center;
             gap: 5px;
             border: 1px solid #7B1FA2;"
-            onclick="mostrarLeyenda('normal')"
-            title="Mostrar leyenda TVDI Normal">
+            onclick="mostrarLeyendaTvdi('normal')"
+            title="Mostrar leyenda TVDI Normal"
+            onmouseover="this.style.backgroundColor='#7B1FA2'; this.style.transform='translateY(-1px)';"
+            onmouseout="this.style.backgroundColor='#9C27B0'; this.style.transform='translateY(0)';">
         <span style="font-size: 12px;">📊</span>
         <span style="color: white;">Leyenda</span>
     </div>
     '''
     
-    agregar_html_seguro(m, leyenda_normal_html)
-    
-    # LEYENDA ANOMALÍA TVDI (SIMPLIFICADA)
+    # LEYENDA ANOMALÍA TVDI
     leyenda_anomalia_html = f'''
     <div id="leyendaAnomalia" style="position: fixed;
             bottom: 120px; left: 10px;
@@ -769,7 +1123,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             <div style="font-size: 11px; font-weight: bold; color: #FF9800;">
                 🟡 Anomalía
             </div>
-            <button onclick="ocultarLeyenda('anomalia')"
+            <button onclick="ocultarLeyendaTvdi('anomalia')"
                     style="background: none; border: none; color: #666;
                            font-size: 16px; cursor: pointer; padding: 0;
                            line-height: 1; width: 20px; height: 20px;
@@ -790,7 +1144,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         </div>
     </div>
 
-    <div id="btnLeyendaAnomalia" style="position: fixed;            bottom: 85px; left: 10px;
+    <div id="btnLeyendaAnomalia" style="position: fixed;
+            bottom: 85px; left: 10px;
             background-color: #FF9800;
             color: white;
             padding: 6px 10px;
@@ -804,16 +1159,16 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             align-items: center;
             gap: 5px;
             border: 1px solid #F57C00;"
-            onclick="mostrarLeyenda('anomalia')"
-            title="Mostrar leyenda TVDI Anomalía">
+            onclick="mostrarLeyendaTvdi('anomalia')"
+            title="Mostrar leyenda TVDI Anomalía"
+            onmouseover="this.style.backgroundColor='#F57C00'; this.style.transform='translateY(-1px)';"
+            onmouseout="this.style.backgroundColor='#FF9800'; this.style.transform='translateY(0)';">
         <span style="font-size: 12px;">🟡</span>
         <span style="color: white;">Leyenda</span>
     </div>
     '''
     
-    agregar_html_seguro(m, leyenda_anomalia_html)
-    
-    # LEYENDA IMERG (SIMPLIFICADA)
+    # LEYENDA IMERG
     leyenda_imerg_html = f'''
     <div id="leyendaImerg" style="position: fixed;
             bottom: 120px; left: 10px;
@@ -832,7 +1187,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             <div style="font-size: 11px; font-weight: bold; color: #1E88E5;">
                 🌧️ Precipitación IMERG
             </div>
-            <button onclick="ocultarLeyenda('imerg')"
+            <button onclick="ocultarLeyendaImerg()"
                     style="background: none; border: none; color: #666;
                            font-size: 16px; cursor: pointer; padding: 0;
                            line-height: 1; width: 20px; height: 20px;
@@ -868,16 +1223,16 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             align-items: center;
             gap: 5px;
             border: 1px solid #0D47A1;"
-            onclick="mostrarLeyenda('imerg')"
-            title="Mostrar leyenda Precipitación IMERG">
+            onclick="mostrarLeyendaImerg()"
+            title="Mostrar leyenda Precipitación IMERG"
+            onmouseover="this.style.backgroundColor='#0D47A1'; this.style.transform='translateY(-1px)';"
+            onmouseout="this.style.backgroundColor='#1E88E5'; this.style.transform='translateY(0)';">
         <span style="font-size: 12px;">🌧️</span>
         <span style="color: white;">Leyenda</span>
     </div>
     '''
     
-    agregar_html_seguro(m, leyenda_imerg_html)
-    
-    # LEYENDA HUMEDAD SUELO (SIMPLIFICADA)
+    # LEYENDA HUMEDAD SUELO
     leyenda_humedad_html = '''
     <div id="leyendaHumedad" style="position: fixed;
             bottom: 120px; left: 10px;
@@ -900,7 +1255,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                     <span>💧</span>
                     <span>Humedad Suelo (%)</span>
                 </div>
-                <button onclick="ocultarLeyenda('humedad')"
+                <button onclick="ocultarLeyendaHumedad()"
                         style="background: none; border: none; color: #795548;
                                font-size: 16px; cursor: pointer; padding: 0;
                                line-height: 1;">×</button>
@@ -988,16 +1343,16 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             align-items: center;
             gap: 5px;
             border: 1px solid #5D4037;"
-            onclick="mostrarLeyenda('humedad')"
-            title="Mostrar leyenda Humedad de Suelo">
+            onclick="mostrarLeyendaHumedad()"
+            title="Mostrar leyenda Humedad de Suelo"
+            onmouseover="this.style.backgroundColor='#5D4037'; this.style.transform='translateY(-1px)';"
+            onmouseout="this.style.backgroundColor='#795548'; this.style.transform='translateY(0)';">
         <span style="font-size: 12px;">💧</span>
         <span style="color: white;">Leyenda</span>
     </div>
     '''
     
-    agregar_html_seguro(m, leyenda_humedad_html)
-    
-    # LEYENDA SINIESTROS (SOLO SI HAY SINIESTROS)
+    # LEYENDA SINIESTROS (solo si hay siniestros)
     if campos['causa_stro'] and gdf[campos['causa_stro']].notna().any():
         leyenda_siniestros_boton = '''
         <div id="btnLeyendaSiniestros" style="position: fixed;
@@ -1015,8 +1370,10 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 align-items: center;
                 gap: 5px;
                 border: 1px solid #D32F2F;"
-                onclick="mostrarLeyenda('siniestros')"
-                title="Mostrar leyenda de Siniestros">
+                onclick="mostrarLeyendaSiniestros()"
+                title="Mostrar leyenda de Siniestros"
+                onmouseover="this.style.backgroundColor='#D32F2F'; this.style.transform='translateY(-1px)';"
+                onmouseout="this.style.backgroundColor='#F44336'; this.style.transform='translateY(0)';">
             <span style="font-size: 12px;">⚠️</span>
             <span style="color: white;">Leyenda</span>
         </div>
@@ -1040,7 +1397,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 <div style="font-size: 11px; font-weight: bold; color: #F44336;">
                     ⚠️ Siniestros
                 </div>
-                <button onclick="ocultarLeyenda('siniestros')"
+                <button onclick="ocultarLeyendaSiniestros()"
                         style="background: none; border: none; color: #666;
                                font-size: 16px; cursor: pointer; padding: 0;
                                line-height: 1; width: 20px; height: 20px;
@@ -1089,66 +1446,124 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 </div>
             </div>
         </div>
+        
+        <script>
+        function mostrarLeyendaSiniestros() {
+            document.getElementById("leyendaSiniestros").style.display = "block";
+            document.getElementById("btnLeyendaSiniestros").style.display = "none";
+        }
+        
+        function ocultarLeyendaSiniestros() {
+            document.getElementById("leyendaSiniestros").style.display = "none";
+            document.getElementById("btnLeyendaSiniestros").style.display = "flex";
+        }
+        
+        function detectarSiniestros() {
+            var checkboxes = document.querySelectorAll("input[type='checkbox']");
+            var siniestrosActivo = false;
+            
+            checkboxes.forEach(function(checkbox) {
+                var label = checkbox.parentElement;
+                if (label && label.textContent) {
+                    if (label.textContent.includes("⚠️ Siniestros")) {
+                        if (checkbox.checked) {
+                            siniestrosActivo = true;
+                        }
+                    }
+                }
+            });
+            
+            if (siniestrosActivo) {
+                document.getElementById("btnLeyendaSiniestros").style.display = "flex";
+            } else {
+                document.getElementById("btnLeyendaSiniestros").style.display = "none";
+                document.getElementById("leyendaSiniestros").style.display = "none";
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                var checkboxes = document.querySelectorAll("input[type='checkbox']");
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener("change", detectarSiniestros);
+                });
+                
+                if (typeof map !== "undefined") {
+                    map.on("overlayadd overlayremove", function(e) {
+                        if (e.name && e.name.includes("⚠️ Siniestros")) {
+                            setTimeout(detectarSiniestros, 100);
+                        }
+                    });
+                }
+                
+                detectarSiniestros();
+            }, 1500);
+        });
+        </script>
         '''
         
-        agregar_html_seguro(m, leyenda_siniestros_boton)
+        agregar_elemento_html_seguro(m, leyenda_siniestros_boton)
 
-    # ========== JAVASCRIPT PARA LEYENDAS (SIMPLIFICADO) ==========
+    # Agregar todas las leyendas
+    agregar_elemento_html_seguro(m, leyenda_normal_html)
+    agregar_elemento_html_seguro(m, leyenda_anomalia_html)
+    agregar_elemento_html_seguro(m, leyenda_imerg_html)
+    agregar_elemento_html_seguro(m, leyenda_humedad_html)
+
+    # ========== JAVASCRIPT PARA LEYENDAS (100% IDÉNTICO) ==========
     js_leyendas_completo = '''
     <script>
-    // FUNCIONES SIMPLIFICADAS PARA LEYENDAS
-    function mostrarLeyenda(tipo) {
-        console.log("Mostrando leyenda:", tipo);
+    // FUNCIONES TVDI
+    function mostrarLeyendaTvdi(tipo) {
+        console.log("Mostrando leyenda TVDI:", tipo);
         ocultarTodasLeyendas();
         
-        switch(tipo) {
-            case 'normal':
-                document.getElementById("leyendaNormal").style.display = "block";
-                document.getElementById("btnLeyendaNormal").style.display = "none";
-                break;
-            case 'anomalia':
-                document.getElementById("leyendaAnomalia").style.display = "block";
-                document.getElementById("btnLeyendaAnomalia").style.display = "none";
-                break;
-            case 'imerg':
-                document.getElementById("leyendaImerg").style.display = "block";
-                document.getElementById("btnLeyendaImerg").style.display = "none";
-                break;
-            case 'humedad':
-                document.getElementById("leyendaHumedad").style.display = "block";
-                document.getElementById("btnLeyendaHumedad").style.display = "none";
-                break;
-            case 'siniestros':
-                document.getElementById("leyendaSiniestros").style.display = "block";
-                document.getElementById("btnLeyendaSiniestros").style.display = "none";
-                break;
+        if (tipo === 'normal') {
+            document.getElementById("leyendaNormal").style.display = "block";
+            document.getElementById("btnLeyendaNormal").style.display = "none";
+        } else if (tipo === 'anomalia') {
+            document.getElementById("leyendaAnomalia").style.display = "block";
+            document.getElementById("btnLeyendaAnomalia").style.display = "none";
         }
     }
     
-    function ocultarLeyenda(tipo) {
-        console.log("Ocultando leyenda:", tipo);
-        switch(tipo) {
-            case 'normal':
-                document.getElementById("leyendaNormal").style.display = "none";
-                document.getElementById("btnLeyendaNormal").style.display = "flex";
-                break;
-            case 'anomalia':
-                document.getElementById("leyendaAnomalia").style.display = "none";
-                document.getElementById("btnLeyendaAnomalia").style.display = "flex";
-                break;
-            case 'imerg':
-                document.getElementById("leyendaImerg").style.display = "none";
-                document.getElementById("btnLeyendaImerg").style.display = "flex";
-                break;
-            case 'humedad':
-                document.getElementById("leyendaHumedad").style.display = "none";
-                document.getElementById("btnLeyendaHumedad").style.display = "flex";
-                break;
-            case 'siniestros':
-                document.getElementById("leyendaSiniestros").style.display = "none";
-                document.getElementById("btnLeyendaSiniestros").style.display = "flex";
-                break;
+    function ocultarLeyendaTvdi(tipo) {
+        console.log("Ocultando leyenda TVDI:", tipo);
+        if (tipo === 'normal') {
+            document.getElementById("leyendaNormal").style.display = "none";
+            document.getElementById("btnLeyendaNormal").style.display = "flex";
+        } else if (tipo === 'anomalia') {
+            document.getElementById("leyendaAnomalia").style.display = "none";
+            document.getElementById("btnLeyendaAnomalia").style.display = "flex";
         }
+    }
+    
+    // FUNCIONES IMERG
+    function mostrarLeyendaImerg() {
+        console.log("Mostrando leyenda IMERG");
+        ocultarTodasLeyendas();
+        document.getElementById("leyendaImerg").style.display = "block";
+        document.getElementById("btnLeyendaImerg").style.display = "none";
+    }
+    
+    function ocultarLeyendaImerg() {
+        console.log("Ocultando leyenda IMERG");
+        document.getElementById("leyendaImerg").style.display = "none";
+        document.getElementById("btnLeyendaImerg").style.display = "flex";
+    }
+    
+    // FUNCIONES HUMEDAD
+    function mostrarLeyendaHumedad() {
+        console.log("Mostrando leyenda Humedad");
+        ocultarTodasLeyendas();
+        document.getElementById("leyendaHumedad").style.display = "block";
+        document.getElementById("btnLeyendaHumedad").style.display = "none";
+    }
+    
+    function ocultarLeyendaHumedad() {
+        console.log("Ocultando leyenda Humedad");
+        document.getElementById("leyendaHumedad").style.display = "none";
+        document.getElementById("btnLeyendaHumedad").style.display = "flex";
     }
     
     // FUNCIÓN PARA OCULTAR TODAS
@@ -1275,9 +1690,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     </script>
     '''
     
-    agregar_html_seguro(m, js_leyendas_completo)
+    agregar_elemento_html_seguro(m, js_leyendas_completo)
 
-    # ========== CONTROLES (IDÉNTICOS) ==========
+    # ========== CONTROLES (100% IDÉNTICOS) ==========
     folium.LayerControl(position='topright', collapsed=True).add_to(m)
     Fullscreen(
         position='topright',
@@ -1286,7 +1701,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     ).add_to(m)
     MeasureControl(position='topright').add_to(m)
 
-    # ========== GPS AUTO-ACTIVADO (SIMPLIFICADO) ==========
+    # ========== GPS AUTO-ACTIVADO (100% IDÉNTICO) ==========
     try:
         locate = LocateControl(
             position='topright',
@@ -1328,15 +1743,42 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 setTimeout(arguments.callee, 1000);
             }
         }, 3000);
+        
+        function seguirUbicacionSiempre() {
+            if (navigator.geolocation) {
+                var options = {
+                    enableHighAccuracy: true,
+                    maximumAge: 10000,
+                    timeout: 5000
+                };
+                
+                navigator.geolocation.watchPosition(
+                    function(position) {
+                        console.log("📍 Ubicación actualizada");
+                    },
+                    function(error) {
+                        console.log("⚠️ Error GPS:", error.message);
+                    },
+                    options
+                );
+            }
+        }
+        
+        if (typeof map !== 'undefined') {
+            map.on('locationfound', function(e) {
+                console.log("📍 GPS activado con éxito");
+                seguirUbicacionSiempre();
+            });
+        }
         </script>
         '''
         
-        agregar_html_seguro(m, gps_auto_html)
+        agregar_elemento_html_seguro(m, gps_auto_html)
         
     except Exception as e:
         print(f"⚠️  Error GPS: {e}")
 
-    # ========== TÍTULO PRINCIPAL ==========
+    # ========== TÍTULO PRINCIPAL (100% IDÉNTICO) ==========
     fecha_actual = datetime.now().strftime("%d/%m/%Y")
     titulo_html = f'''
     <div style="position: fixed;
@@ -1359,9 +1801,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         </div>
     </div>
     '''
-    agregar_html_seguro(m, titulo_html)
+    agregar_elemento_html_seguro(m, titulo_html)
 
-    # ========== LEYENDA DE CULTIVOS ==========
+    # ========== LEYENDA DE CULTIVOS (100% IDÉNTICA) ==========
     if campos['cultivo'] and campos['hectareas']:
         gdf[campos['hectareas']] = pd.to_numeric(gdf[campos['hectareas']], errors='coerce').fillna(0)
         
@@ -1439,9 +1881,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         </div>
         '''
 
-        agregar_html_seguro(m, leyenda_html)
+        agregar_elemento_html_seguro(m, leyenda_html)
 
-    # ========== BUSCADOR DE CLIENTES (SIMPLIFICADO) ==========
+    # ========== BUSCADOR DE CLIENTES (100% IDÉNTICO) ==========
     if campos['cliente']:
         clientes = sorted(gdf[campos['cliente']].dropna().astype(str).unique())
         
@@ -1450,7 +1892,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         buscador_html = f'''
         <div id="lupitaBuscador" style="position: fixed;
                 top: 80px; left: 8px;
-                background: linear-gradient(135deg, rgba(250, 249, 246, 0.95), rgba(245, 245, 240, 0.95));
+                background: linear-gradient(135deg, rgba(250, 249, 246, 0.95) 0%, rgba(245, 245, 240, 0.95) 100%);
                 padding: 10px 12px;
                 border-radius: 12px;
                 border: 1px solid rgba(212, 212, 212, 0.8);
@@ -1458,7 +1900,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 font-size: 11px;
                 width: 220px;
-                box-shadow: 0 5px 20px rgba(44, 85, 48, 0.12);">
+                box-shadow: 0 5px 20px rgba(44, 85, 48, 0.12);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);">
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <div style="display: flex; align-items: center; gap: 6px;">
@@ -1470,6 +1914,19 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         Buscar cliente
                     </div>
                 </div>
+                <button id="toggleBuscador"
+                        style="background: rgba(44, 85, 48, 0.1); 
+                               border: none; 
+                               cursor: pointer; 
+                               font-size: 14px; 
+                               color: #2C5530;
+                               width: 24px;
+                               height: 24px;
+                               border-radius: 6px;
+                               display: flex;
+                               align-items: center;
+                               justify-content: center;"
+                        onclick="toggleBuscador()">↻</button>
             </div>
 
             <div id="contenidoBuscador">
@@ -1481,7 +1938,10 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                                   padding: 8px 10px;
                                   border: 2px solid rgba(212, 212, 212, 0.8);
                                   border-radius: 8px;
-                                  font-size: 11px;">
+                                  font-size: 11px;
+                                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                                  background: white;
+                                  color: #2C2C2C;">
                     <datalist id="clientesList">
                         {opciones_clientes}
                     </datalist>
@@ -1498,7 +1958,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                                    cursor: pointer;
                                    font-size: 10px;
                                    font-weight: 600;">
-                        Filtrar
+                        <span>✓</span>
+                        <span>Filtrar</span>
                     </button>
     
                     <button onclick="resetearFiltro()"
@@ -1511,7 +1972,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                                    cursor: pointer;
                                    font-size: 10px;
                                    font-weight: 600;">
-                        Resetear
+                        <span>↺</span>
+                        <span>Resetear</span>
                     </button>
                 </div>
 
@@ -1521,71 +1983,227 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                             margin-top: 10px;
                             padding: 8px;
                             background: rgba(44, 85, 48, 0.05);
-                            border-radius: 6px;">
-                    Mostrando {len(gdf)} polígonos
+                            border-radius: 6px;
+                            border-left: 4px solid #8A9A5B;
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;">
+                    <div style="width: 6px; height: 6px; background: #2C5530; border-radius: 50%;"></div>
+                    <div>Mostrando <span style="font-weight: 700; color: #2C5530;">{len(gdf)}</span> polígonos</div>
                 </div>
             </div>
         </div>
 
         <script>
+        // Variables globales - EXACTO A COLAB
+        var boundsGeneral = {capa_nombre}.getBounds();
+        var contenidoVisible = true;
+        var mapaPoligonos = new Map();
+
+        // Función para mostrar/ocultar contenido - CON BOTÓN ↻/▼
+        function toggleBuscador() {{
+            var contenido = document.getElementById("contenidoBuscador");
+            var toggleBtn = document.getElementById("toggleBuscador");
+            var lupita = document.getElementById("lupitaBuscador");
+
+            if (contenidoVisible) {{
+                contenido.style.display = "none";
+                toggleBtn.innerHTML = "▼";
+                lupita.style.width = "140px";
+                lupita.style.padding = "6px 8px";
+            }} else {{
+                contenido.style.display = "block";
+                toggleBtn.innerHTML = "↻";
+                lupita.style.width = "220px";
+                lupita.style.padding = "10px 12px";
+            }}
+            contenidoVisible = !contenidoVisible;
+        }}
+
+        // Almacenar referencia a cada polígono al inicio
+        function inicializarPoligonos() {{
+            {capa_nombre}.eachLayer(function(layer) {{
+                var id = layer._leaflet_id;
+                mapaPoligonos.set(id, layer);
+
+                // Guardar estilo original
+                layer._estiloOriginal = {{
+                    fillColor: layer.options.fillColor,
+                    color: layer.options.color,
+                    weight: layer.options.weight,
+                    fillOpacity: layer.options.fillOpacity,
+                    opacity: layer.options.opacity,
+                    interactive: layer.options.interactive
+                }};
+            }});
+        }}
+
+        // Función para filtrar - ¡SOLUCIÓN DEFINITIVA!
         function filtrarCliente() {{
             var valor = document.getElementById("clienteInput").value.toLowerCase();
-            if (!valor) return;
-            
+            if (!valor) {{
+                alert("Por favor, escribe o selecciona un cliente");
+                return;
+            }}
+
+            var boundsFiltrados = null;
             var contador = 0;
-            var layers = window.geoLayer.getLayers();
-            
-            layers.forEach(function(layer) {{
+
+            {capa_nombre}.eachLayer(function(layer) {{
                 var propiedades = layer.feature.properties;
                 var clienteEnPoligono = propiedades["{campos['cliente']}"];
-                
+
+                // Verificar si coincide (búsqueda parcial)
                 if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {{
+                    // MOSTRAR este polígono completamente
                     layer.setStyle({{
                         fillOpacity: 0.6,
                         weight: 2,
                         opacity: 1
                     }});
+
+                    // Hacerlo interactivo
+                    layer.options.interactive = true;
+
+                    // Restaurar tooltip y popup
+                    if (layer._tooltip) {{
+                        layer._tooltip.options.interactive = true;
+                    }}
+
+                    // Agregar a bounds para zoom
+                    var layerBounds = layer.getBounds();
+                    if (layerBounds) {{
+                        if (!boundsFiltrados) {{
+                            boundsFiltrados = layerBounds;
+                        }} else {{
+                            boundsFiltrados = boundsFiltrados.extend(layerBounds);
+                        }}
+                    }}
                     contador++;
                 }} else {{
+                    // OCULTAR este polígono COMPLETAMENTE
                     layer.setStyle({{
-                        fillOpacity: 0,
-                        weight: 0,
-                        opacity: 0
+                        fillOpacity: 0,       // Sin relleno
+                        weight: 0,           // Sin borde
+                        opacity: 0           // Totalmente transparente
                     }});
+
+                    // DESHABILITAR completamente la interactividad
+                    layer.options.interactive = false;
+
+                    // Deshabilitar tooltip
+                    if (layer._tooltip) {{
+                        layer._tooltip.options.interactive = false;
+                        layer.unbindTooltip();
+                    }}
+
+                    // Deshabilitar popup
+                    if (layer._popup) {{
+                        layer.unbindPopup();
+                    }}
+
+                    // Remover event listeners de mouse
+                    layer.off('mouseover');
+                    layer.off('mouseout');
+                    layer.off('click');
                 }}
             }});
-            
-            document.getElementById("estadoFiltro").innerHTML = 
-                "Mostrando " + contador + " polígonos";
+
+            // Actualizar estado
+            var estadoDiv = document.getElementById("estadoFiltro");
+            if (contador > 0) {{
+                estadoDiv.innerHTML = "Mostrando " + contador + " polígonos";
+                estadoDiv.style.color = "#4CAF50";
+
+                // Zoom a los polígonos filtrados
+                if (boundsFiltrados) {{
+                    map.fitBounds(boundsFiltrados, {{padding: [50, 50]}});
+                }}
+            }} else {{
+                estadoDiv.innerHTML = "❌ No se encontraron";
+                estadoDiv.style.color = "#f44336";
+            }}
         }}
-        
+
+        // Función para resetear - RESTAURA TODO COMPLETAMENTE
         function resetearFiltro() {{
+            // Limpiar input
             document.getElementById("clienteInput").value = "";
-            var layers = window.geoLayer.getLayers();
-            
-            layers.forEach(function(layer) {{
-                var propiedades = layer.feature.properties;
-                layer.setStyle({{
-                    fillColor: propiedades._color_fill || '#9C27B0',
-                    color: propiedades._color_border || '#7B1FA2',
-                    weight: 2,
-                    fillOpacity: 0.6,
-                    opacity: 1
+
+            // Mostrar TODOS los polígonos nuevamente y restaurar TODO
+            {capa_nombre}.eachLayer(function(layer) {{
+                // Restaurar estilo original
+                if (layer._estiloOriginal) {{
+                    layer.setStyle(layer._estiloOriginal);
+                }} else {{
+                    // Si no hay estilo guardado, restaurar valores por defecto
+                    var propiedades = layer.feature.properties;
+                    layer.setStyle({{
+                        fillColor: propiedades._color_fill || '#9C27B0',
+                        color: propiedades._color_border || '#7B1FA2',
+                        weight: 2,
+                        fillOpacity: 0.6,
+                        opacity: 1
+                    }});
+                }}
+
+                // RESTAURAR INTERACTIVIDAD COMPLETA
+                layer.options.interactive = true;
+
+                // Restaurar tooltip si existía
+                if (!layer._tooltip && layer.feature.properties["{campos['cliente']}"]) {{
+                    layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {{
+                        sticky: true,
+                        className: 'leaflet-tooltip-custom'
+                    }});
+                }}
+
+                // Restaurar event listeners
+                layer.on('mouseover', function(e) {{
+                    e.target.setStyle({{
+                        fillOpacity: 0.8,
+                        weight: 3
+                    }});
+                }});
+
+                layer.on('mouseout', function(e) {{
+                    {capa_nombre}.resetStyle(e.target);
                 }});
             }});
-            
-            document.getElementById("estadoFiltro").innerHTML = 
-                "Mostrando {len(gdf)} polígonos";
+
+            // Forzar redibujado
+            {capa_nombre}.redraw();
+
+            // Restaurar zoom original
+            if (boundsGeneral && boundsGeneral.isValid()) {{
+                map.fitBounds(boundsGeneral);
+            }}
+
+            // Actualizar estado
+            var estadoDiv = document.getElementById("estadoFiltro");
+            estadoDiv.innerHTML = "Mostrando todos ({len(gdf)})";
+            estadoDiv.style.color = "#666";
         }}
-        
-        // Guardar referencia a la capa
-        window.geoLayer = {capa_nombre};
+
+        // Permitir usar Enter para filtrar
+        document.getElementById("clienteInput").addEventListener("keypress", function(e) {{
+            if (e.key === "Enter") {{
+                filtrarCliente();
+            }}
+        }});
+
+        // Inicializar cuando se carga la página
+        document.addEventListener("DOMContentLoaded", function() {{
+            setTimeout(function() {{
+                inicializarPoligonos();
+            }}, 1000);
+        }});
         </script>
         '''
         
-        agregar_html_seguro(m, buscador_html)
+        agregar_elemento_html_seguro(m, buscador_html)
 
-    # ========== PANEL DE COMPARACIÓN POR ZONA (SIMPLIFICADO) ==========
+    # ========== PANEL DE COMPARACIÓN POR ZONA (100% IDÉNTICO) ==========
     if campos['zona'] and campos['hectareas']:
         gdf[campos['zona']] = gdf[campos['zona']].astype(str).str.strip()
         hectareas_por_zona = {}
@@ -1595,19 +2213,36 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             hectareas = gdf.loc[mascara, campos['hectareas']].sum()
             hectareas_por_zona[zona_str] = hectareas
         
+        # Hectáreas proyectadas por zona (EXACTAMENTE COMO EN COLAB)
         hectareas_proyectadas = {
-            "1": 84940,
-            "2": 155256,
-            "3": 158675,
-            "4": 134574
+            "1": 128998,
+            "2": 65245,
+            "3": 187636,
+            "4": 151566
         }
         
-        total_proyectado = sum(hectareas_proyectadas.values())
-        total_actual = sum(hectareas_por_zona.values())
-        diferencia_total = total_actual - total_proyectado
-        porcentaje_total = (total_actual / total_proyectado * 100) if total_proyectado > 0 else 0
+        zonas_ordenadas = ["1", "2", "3", "4"]
+        datos_proyectados = []
+        datos_reales = []
+        diferencias = []
+        porcentajes_dif = []
         
-        panel_html = f'''
+        for zona in zonas_ordenadas:
+            proyectado = hectareas_proyectadas.get(zona, 0)
+            real = hectareas_por_zona.get(zona, 0) if zona in hectareas_por_zona else 0
+            diferencia = real - proyectado
+            porcentaje = (diferencia / proyectado * 100) if proyectado > 0 else 0
+            
+            datos_proyectados.append(proyectado)
+            datos_reales.append(real)
+            diferencias.append(diferencia)
+            porcentajes_dif.append(porcentaje)
+        
+        max_valor = max(max(datos_proyectados), max(datos_reales)) if datos_proyectados and datos_reales else 100000
+        
+        panel_graficos_html = f'''
+
+        <!-- BOTÓN FLOTANTE MÁS PEQUEÑO - EXACTO A COLAB -->
         <div id="btnGraficos" style="position: fixed;
                 bottom: 25px; left: 25px;
                 background: linear-gradient(135deg, #2C5530, #8A9A5B);
@@ -1617,136 +2252,376 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 z-index: 9997;
                 cursor: pointer;
                 box-shadow: 0 5px 15px rgba(44, 85, 48, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 font-size: 20px;
                 width: 50px;
                 height: 50px;
-                display: flex;
-                align-items: center;
-                justify-content: center;"
-                onclick="togglePanel()">
-            📈
+                transition: all 0.3s;"
+                onclick="togglePanelGraficos()"
+                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(44, 85, 48, 0.4)';"
+                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 15px rgba(44, 85, 48, 0.3)';">
+            <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                📈
+            </div>
         </div>
 
+        <!-- PANEL DESPLEGABLE DE GRÁFICOS - MÁS PEQUEÑO - EXACTO -->
         <div id="panelGraficos" style="position: fixed;
-                bottom: -300px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 90%;
-                max-width: 600px;
-                height: 300px;
-                background: white;
+                bottom: -80%;
+                left: 0;
+                width: 100%;
+                height: 80%;
+                background-color: white;
                 z-index: 10001;
-                box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
-                border-radius: 15px 15px 0 0;
-                transition: bottom 0.3s;
-                padding: 20px;
-                overflow-y: auto;">
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="margin: 0; color: #2C5530;">Comparación por Zona</h3>
-                <button onclick="togglePanel()" style="background: none; border: none; font-size: 20px; cursor: pointer;">×</button>
+                box-shadow: 0 -3px 15px rgba(0,0,0,0.3);
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                transition: bottom 0.4s ease;
+                overflow-y: auto;
+                font-family: Arial, sans-serif;">
+
+            <!-- CABECERA DEL PANEL - EXACTA -->
+            <div style="position: sticky; top: 0; background: linear-gradient(135deg, #2C5530, #8A9A5B); color: white;
+                    padding: 15px 20px; border-top-left-radius: 12px; border-top-right-radius: 12px;
+                    display: flex; justify-content: space-between; align-items: center; z-index: 1;
+                    box-shadow: 0 3px 15px rgba(44, 85, 48, 0.3);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 36px; height: 36px; background: rgba(255, 255, 255, 0.2); 
+                            border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 18px;">📊</span>
+                    </div>
+                    <div>
+                        <div style="font-size: 16px; font-weight: 700; color: white;">
+                            COMPARACIÓN POR ZONA
+                        </div>
+                        <div style="font-size: 11px; color: rgba(255, 255, 255, 0.9); margin-top: 2px;">
+                            Proyectado vs Actual - Campaña 25/26
+                        </div>
+                    </div>
+                </div>
+                <button onclick="togglePanelGraficos()"
+                        style="background: rgba(255, 255, 255, 0.2); 
+                               border: none; 
+                               color: white; 
+                               font-size: 22px;
+                               cursor: pointer; 
+                               padding: 0; 
+                               width: 32px; 
+                               height: 32px;
+                               border-radius: 8px;
+                               display: flex;
+                               align-items: center;
+                               justify-content: center;">
+                    ×
+                </button>
             </div>
             
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
-                <div style="background: #f0f9ff; padding: 10px; border-radius: 8px; border-left: 4px solid #2E7D32;">
-                    <div style="font-size: 12px; color: #666;">Proyectado</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #2E7D32;">{total_proyectado:,.0f} ha</div>
+            <!-- CONTENIDO DEL PANEL - EXACTO -->
+            <div style="padding: 15px; max-width: 900px; margin: 0 auto;">
+
+                <!-- RESUMEN - EXACTO -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                            gap: 12px; margin-bottom: 20px;">
+                    <div style="background-color: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 4px solid #2E7D32;">
+                        <div style="font-size: 11px; color: #666; margin-bottom: 5px;">TOTAL PROYECTADO</div>
+                        <div style="font-size: 20px; font-weight: bold; color: #2E7D32;">
+                            {sum(hectareas_proyectadas.values()):,.0f} ha
+                        </div>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 4px solid #2196F3;">
+                        <div style="font-size: 11px; color: #666; margin-bottom: 5px;">TOTAL ACTUAL</div>
+                        <div style="font-size: 20px; font-weight: bold; color: #2196F3;">
+                            {sum(hectareas_por_zona.values()):,.0f} ha
+                        </div>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 4px solid #FF9800;">
+                        <div style="font-size: 11px; color: #666; margin-bottom: 5px;">DIFERENCIA TOTAL</div>
+                        <div style="font-size: 20px; font-weight: bold; color: {'red' if (sum(hectareas_por_zona.values()) - sum(hectareas_proyectadas.values())) < 0 else '#4CAF50'};">
+                            {sum(hectareas_por_zona.values()) - sum(hectareas_proyectadas.values()):+,.0f} ha
+                        </div>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 4px solid #9C27B0;">
+                        <div style="font-size: 11px; color: #666; margin-bottom: 5px;">% DE CUMPLIMIENTO</div>
+                        <div style="font-size: 20px; font-weight: bold; color: {'red' if ((sum(hectareas_por_zona.values()) / sum(hectareas_proyectadas.values()) * 100) if sum(hectareas_proyectadas.values()) > 0 else 0) < 100 else '#4CAF50'};">
+                            {(sum(hectareas_por_zona.values()) / sum(hectareas_proyectadas.values()) * 100) if sum(hectareas_proyectadas.values()) > 0 else 0:.1f}%
+                        </div>
+                    </div>
                 </div>
-                <div style="background: #fff0f0; padding: 10px; border-radius: 8px; border-left: 4px solid #2196F3;">
-                    <div style="font-size: 12px; color: #666;">Actual</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #2196F3;">{total_actual:,.0f} ha</div>
-                </div>
-            </div>
-            
-            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                    <thead>
-                        <tr style="background: #2C5530; color: white;">
-                            <th style="padding: 8px; text-align: left;">Zona</th>
-                            <th style="padding: 8px; text-align: right;">Proyectado</th>
-                            <th style="padding: 8px; text-align: right;">Actual</th>
-                            <th style="padding: 8px; text-align: right;">Diferencia</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+
+                <!-- GRÁFICO DE BARRAS AGRUPADAS - EXACTO -->
+                <div style="background-color: white; border: 1px solid #e0e0e0; border-radius: 8px;
+                            padding: 15px; margin-bottom: 20px;">
+                    <h3 style="margin-top: 0; margin-bottom: 15px; color: #333; font-size: 15px;
+                              border-bottom: 2px solid #2E7D32; padding-bottom: 6px;">
+                        HECTÁREAS POR ZONA - COMPARACIÓN
+                    </h3>
+
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
         '''
         
-        for zona in ["1", "2", "3", "4"]:
-            proyectado = hectareas_proyectadas.get(zona, 0)
-            real = hectareas_por_zona.get(zona, 0) if zona in hectareas_por_zona else 0
-            diferencia = real - proyectado
+        for i, zona in enumerate(zonas_ordenadas):
+            proyectado = datos_proyectados[i]
+            real = datos_reales[i]
+            diferencia = diferencias[i]
+            porcentaje = porcentajes_dif[i]
             
-            panel_html += f'''
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 8px;">Zona {zona}</td>
-                            <td style="padding: 8px; text-align: right;">{proyectado:,.0f}</td>
-                            <td style="padding: 8px; text-align: right;">{real:,.0f}</td>
-                            <td style="padding: 8px; text-align: right; color: {'#4CAF50' if diferencia >= 0 else '#f44336'};">
-                                {diferencia:+,.0f}
-                            </td>
-                        </tr>
+            ancho_proyectado = min(95, (proyectado / max_valor * 95))
+            ancho_real = min(95, (real / max_valor * 95))
+            
+            color_proyectado = "#2E7D32"
+            color_real = "#2196F3" if diferencia >= 0 else "#f44336"
+            color_diferencia = "#4CAF50" if diferencia >= 0 else "#f44336"
+            icono_diferencia = "↗️" if diferencia >= 0 else "↘️"
+            
+            panel_graficos_html += f'''
+                        <!-- ZONA {zona} - EXACTO -->
+                        <div style="margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                <div style="font-weight: bold; color: #333; font-size: 13px;">
+                                    ZONA {zona}
+                                </div>
+                                <div style="font-size: 12px; color: #666;">
+                                    Diferencia: <span style="font-weight: bold; color: {color_diferencia}">
+                                        {diferencia:+,.0f} ha ({porcentaje:+.1f}%) {icono_diferencia}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 8px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 11px; color: #666;">Proyectado</span>
+                                    <span style="font-size: 11px; font-weight: bold; color: {color_proyectado}">
+                                        {proyectado:,.0f} ha
+                                    </span>
+                                </div>
+                                <div style="width: 100%; background-color: #f0f0f0; border-radius: 4px; height: 20px; overflow: hidden;">
+                                    <div style="width: {ancho_proyectado}%; height: 100%; background-color: {color_proyectado};
+                                            border-radius: 4px; display: flex; align-items: center; padding-left: 8px;">
+                                        <span style="color: white; font-size: 10px; font-weight: bold;">
+                                            PROYECTADO
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 11px; color: #666;">Actual</span>
+                                    <span style="font-size: 11px; font-weight: bold; color: {color_real}">
+                                        {real:,.0f} ha
+                                    </span>
+                                </div>
+                                <div style="width: 100%; background-color: #f0f0f0; border-radius: 4px; height: 20px; overflow: hidden;">
+                                    <div style="width: {ancho_real}%; height: 100%; background-color: {color_real};
+                                            border-radius: 4px; display: flex; align-items: center; padding-left: 8px;">
+                                        <span style="color: white; font-size: 10px; font-weight: bold;">
+                                            ACTUAL
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
             '''
         
-        panel_html += f'''
-                        <tr style="background: #e8f5e8; font-weight: bold;">
-                            <td style="padding: 8px;">TOTAL</td>
-                            <td style="padding: 8px; text-align: right;">{total_proyectado:,.0f}</td>
-                            <td style="padding: 8px; text-align: right;">{total_actual:,.0f}</td>
-                            <td style="padding: 8px; text-align: right; color: {'#4CAF50' if diferencia_total >= 0 else '#f44336'};">
-                                {diferencia_total:+,.0f} ({porcentaje_total:.1f}%)
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        panel_graficos_html += '''
+                    </div>
+                </div>
+                
+                <!-- TABLA RESUMEN - EXACTA -->
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background-color: #f5f5f5;">
+                                <th style="padding: 8px; text-align: left; border-bottom: 2px solid #2E7D32;">ZONA</th>
+                                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #2E7D32;">PROYECTADO (ha)</th>
+                                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #2E7D32;">ACTUAL (ha)</th>
+                                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #2E7D32;">DIFERENCIA (ha)</th>
+                                <th style="padding: 8px; text-align: right; border-bottom: 2px solid #2E7D32;">DIFERENCIA (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        '''
+        
+        for i, zona in enumerate(zonas_ordenadas):
+            proyectado = datos_proyectados[i]
+            real = datos_reales[i]
+            diferencia = diferencias[i]
+            porcentaje = porcentajes_dif[i]
+            
+            color_diferencia = "#4CAF50" if diferencia >= 0 else "#f44336"
+            
+            panel_graficos_html += f'''
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px; font-weight: bold;">Zona {zona}</td>
+                                <td style="padding: 8px; text-align: right;">{proyectado:,.0f}</td>
+                                <td style="padding: 8px; text-align: right; font-weight: bold;">{real:,.0f}</td>
+                                <td style="padding: 8px; text-align: right; color: {color_diferencia}; font-weight: bold;">
+                                    {diferencia:+,.0f}
+                                </td>
+                                <td style="padding: 8px; text-align: right; color: {color_diferencia};">
+                                    {porcentaje:+.1f}%
+                                </td>
+                            </tr>
+            '''
+        
+        panel_graficos_html += f'''
+                        </tbody>
+                        <tfoot style="background-color: #f9f9f9; font-weight: bold;">
+                            <tr>
+                                <td style="padding: 8px; border-top: 2px solid #2E7D32;">TOTAL</td>
+                                <td style="padding: 8px; text-align: right; border-top: 2px solid #2E7D32;">
+                                    {sum(datos_proyectados):,.0f}
+                                </td>
+                                <td style="padding: 8px; text-align: right; border-top: 2px solid #2E7D32;">
+                                    {sum(datos_reales):,.0f}
+                                </td>
+                                <td style="padding: 8px; text-align: right; border-top: 2px solid #2E7D32;
+                                    color: {'#4CAF50' if (sum(datos_reales) - sum(datos_proyectados)) >= 0 else '#f44336'};">
+                                    {sum(datos_reales) - sum(datos_proyectados):+,.0f}
+                                </td>
+                                <td style="padding: 8px; text-align: right; border-top: 2px solid #2E7D32;
+                                    color: {'#4CAF50' if ((sum(datos_reales) / sum(datos_proyectados) * 100) - 100 if sum(datos_proyectados) > 0 else 0) >= 0 else '#f44336'};">
+                                    {((sum(datos_reales) / sum(datos_proyectados) * 100) - 100) if sum(datos_proyectados) > 0 else 0:+.1f}%
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- INFORMACIÓN ADICIONAL - EXACTA -->
+                <div style="font-size: 11px; color: #666; padding: 12px; background-color: #f8f9fa;
+                            border-radius: 6px; border-left: 4px solid #FF9800;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                        <span>💡</span>
+                        <strong>Información para el análisis:</strong>
+                    </div>
+                    <ul style="margin: 0; padding-left: 18px;">
+                        <li>Datos proyectados: valores estimados para la campaña 25/26</li>
+                        <li>Datos actuales: calculados automáticamente del archivo GeoJSON cargado</li>
+                        <li>Verde (↑): la zona supera la proyección</li>
+                        <li>Rojo (↓): la zona está por debajo de la proyección</li>
+                        <li>Actualizado: {datetime.now().strftime("%d/%m/%Y %H:%M")}</li>
+                    </ul>
+                </div>
+
             </div>
         </div>
 
         <script>
-        function togglePanel() {{
-            var panel = document.getElementById("panelGraficos");
-            if (panel.style.bottom === "0px") {{
-                panel.style.bottom = "-300px";
+        let panelAbierto = false;
+
+        function togglePanelGraficos() {{
+            const panel = document.getElementById("panelGraficos");
+            const btn = document.getElementById("btnGraficos");
+
+            if (panelAbierto) {{
+                // Cerrar panel
+                panel.style.bottom = "-80%";
+                panel.style.zIndex = "9998";
+                btn.innerHTML = "📈";
+
             }} else {{
-                panel.style.bottom = "0px";
+                // Abrir panel
+                panel.style.zIndex = "10001";
+                panel.style.bottom = "0";
+                btn.innerHTML = "📊";
             }}
+
+            panelAbierto = !panelAbierto;
         }}
+
+        // Cerrar panel al hacer clic fuera
+        document.addEventListener('click', function(event) {{
+            const panel = document.getElementById("panelGraficos");
+            const btn = document.getElementById("btnGraficos");
+
+            if (panelAbierto && !panel.contains(event.target) && !btn.contains(event.target)) {{
+                togglePanelGraficos();
+            }}
+        }});
+
+        // Ocultar botón hasta después del login
+        document.addEventListener('DOMContentLoaded', function() {{
+            document.getElementById("btnGraficos").style.display = "none";
+        }});
         </script>
         '''
         
-        agregar_html_seguro(m, panel_html)
+        agregar_elemento_html_seguro(m, panel_graficos_html)
 
-    # ========== ESTILOS GLOBALES ==========
+    # ========== ESTILOS GLOBALES (100% IDÉNTICOS) ==========
     estilos_globales = '''
     <style>
-        .leaflet-tooltip {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-family: Arial, sans-serif;
-            font-size: 11px;
+        :root {
+            --color-fondo: #FAF9F6;
+            --color-primario: #2C5530;
+            --color-secundario: #8A9A5B;
+            --color-accento: #B8860B;
+            --color-texto: #2C2C2C;
+            --color-borde: rgba(212, 212, 212, 0.8);
+            --color-sombra: rgba(44, 85, 48, 0.1);
         }
-        
-        .leaflet-popup-content-wrapper {
-            border-radius: 10px;
-            background: white;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        
+    
         ::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #2C5530;
+    
+        ::-webkit-scrollbar-track {
+            background: rgba(250, 249, 246, 0.8);
             border-radius: 8px;
+        }
+    
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #2C5530, #8A9A5B);
+            border-radius: 8px;
+        }
+    
+        .leaflet-tooltip {
+            background: linear-gradient(135deg, rgba(250, 249, 246, 0.95), rgba(245, 245, 240, 0.95));
+            border: 1px solid rgba(212, 212, 212, 0.8);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 10px;
+            color: #2C2C2C;
+            box-shadow: 0 3px 10px rgba(44, 85, 48, 0.1);
+        }
+    
+        .leaflet-popup-content-wrapper {
+            background: linear-gradient(135deg, rgba(250, 249, 246, 0.98), rgba(245, 245, 240, 0.98));
+            border-radius: 10px;
+            border: 1px solid rgba(212, 212, 212, 0.8);
+            box-shadow: 0 6px 20px rgba(44, 85, 48, 0.15);
+        }
+    
+        .leaflet-popup-content {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 11px;
+            color: #2C2C2C;
+        }
+    
+        .leaflet-control-zoom a {
+            background: linear-gradient(135deg, rgba(250, 249, 246, 0.95), rgba(245, 245, 240, 0.95));
+            border: 1px solid rgba(212, 212, 212, 0.8) !important;
+            color: #2C5530 !important;
+            border-radius: 6px !important;
+        }
+    
+        .leaflet-control-layers {
+            background: linear-gradient(135deg, rgba(250, 249, 246, 0.95), rgba(245, 245, 240, 0.95)) !important;
+            border: 1px solid rgba(212, 212, 212, 0.8) !important;
+            border-radius: 10px !important;
         }
     </style>
     '''
     
-    agregar_html_seguro(m, estilos_globales)
+    agregar_elemento_html_seguro(m, estilos_globales)
 
-    # ========== PANTALLA DE LOGIN (SIMPLIFICADA) ==========
+    # ========== PANTALLA DE LOGIN (100% IDÉNTICA) ==========
     login_html = f'''
     <div id="loginScreen" style="position: fixed;
             top: 0; left: 0;
@@ -1756,84 +2631,202 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;">
-            
-        <div style="background: white;
-                    padding: 30px;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: opacity 0.5s ease;">
+
+        <div style="background: rgba(255, 255, 255, 0.95);
+                    padding: 30px 25px;
                     border-radius: 15px;
                     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
                     text-align: center;
-                    width: 300px;">
-            
+                    max-width: 320px;
+                    width: 90%;
+                    backdrop-filter: blur(15px);
+                    -webkit-backdrop-filter: blur(15px);">
+
+            <!-- LOGO -->
             <div style="margin-bottom: 20px;">
-                <div style="width: 60px; height: 60px; background: #2C5530;
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2C5530, #8A9A5B);
                         border-radius: 15px; display: flex; align-items: center; justify-content: center;
-                        margin: 0 auto 12px;">
+                        margin: 0 auto 12px; box-shadow: 0 4px 15px rgba(44, 85, 48, 0.3);">
                     <span style="color: white; font-size: 28px;">🔐</span>
                 </div>
-                <h2 style="color: #2C5530; margin-bottom: 5px;">PROGRAMA CÓRDOBA 25/26</h2>
+                <h2 style="color: #2C5530; margin-bottom: 5px; font-weight: 800; font-size: 18px;">
+                    PROGRAMA CÓRDOBA 25/26
+                </h2>
             </div>
-            
-            <div style="margin-bottom: 15px;">
-                <input type="text" id="loginUsuario" placeholder="Usuario"
-                       style="width: 100%; padding: 12px; margin-bottom: 10px;
-                              border: 2px solid #ddd; border-radius: 8px;">
-                <input type="password" id="loginContrasena" placeholder="Contraseña"
-                       style="width: 100%; padding: 12px; margin-bottom: 15px;
-                              border: 2px solid #ddd; border-radius: 8px;">
+
+            <!-- FORMULARIO -->
+            <div style="margin-bottom: 20px; text-align: left;">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2C5530; font-size: 12px;">
+                        👤 Usuario
+                    </label>
+                    <input type="text" id="loginUsuario"
+                           placeholder="Ingrese su usuario"
+                           style="width: 100%; padding: 12px 14px;
+                                  border: 2px solid rgba(212, 212, 212, 0.8);
+                                  border-radius: 10px;
+                                  font-size: 14px;
+                                  background: white;
+                                  color: #2C2C2C;
+                                  box-sizing: border-box;"
+                           onfocus="this.style.borderColor='#8A9A5B'; this.style.boxShadow='0 0 0 3px rgba(138, 154, 91, 0.2)';"
+                           onblur="this.style.borderColor='rgba(212, 212, 212, 0.8)'; this.style.boxShadow='none';">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2C5530; font-size: 12px;">
+                        🔒 Contraseña
+                    </label>
+                    <input type="password" id="loginContrasena"
+                           placeholder="Ingrese su contraseña"
+                           style="width: 100%; padding: 12px 14px;
+                                  border: 2px solid rgba(212, 212, 212, 0.8);
+                                  border-radius: 10px;
+                                  font-size: 14px;
+                                  background: white;
+                                  color: #2C2C2C;
+                                  box-sizing: border-box;"
+                           onfocus="this.style.borderColor='#8A9A5B'; this.style.boxShadow='0 0 0 3px rgba(138, 154, 91, 0.2)';"
+                           onblur="this.style.borderColor='rgba(212, 212, 212, 0.8)'; this.style.boxShadow='none';">
+                </div>
+
                 <button onclick="verificarAcceso()"
-                        style="width: 100%; background: #2C5530; color: white;
-                               border: none; padding: 14px; border-radius: 8px;
-                               font-size: 16px; cursor: pointer;">
-                    INGRESAR
+                        style="width: 100%;
+                               background: linear-gradient(135deg, #2C5530, #8A9A5B);
+                               color: white;
+                               border: none;
+                               padding: 14px;
+                               border-radius: 10px;
+                               font-size: 15px;
+                               font-weight: 700;
+                               cursor: pointer;
+                               transition: all 0.3s;
+                               display: flex;
+                               align-items: center;
+                               justify-content: center;
+                               gap: 8px;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(44, 85, 48, 0.4)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    <span>🔓</span>
+                    <span>INGRESAR</span>
                 </button>
             </div>
-            
-            <div id="loginError" style="color: #f44336; display: none;">
-                ❌ Credenciales incorrectas
+
+            <!-- MENSAJE DE ERROR -->
+            <div id="loginError"
+                 style="margin-top: 15px;
+                        color: #f44336;
+                        font-size: 12px;
+                        font-weight: 600;
+                        display: none;
+                        padding: 10px;
+                        background: rgba(244, 67, 54, 0.1);
+                        border-radius: 6px;
+                        border-left: 4px solid #f44336;">
+                ❌ Usuario o contraseña incorrectos
             </div>
         </div>
     </div>
 
     <script>
-    const HASH_USUARIO = "{HASH_USUARIO}";
-    const HASH_CONTRASENA = "{HASH_CONTRASENA}";
-    
+    // HASHES SEGUROS DE LAS CREDENCIALES - EXACTO A COLAB
+    const HASH_USUARIO_VALIDO = "{HASH_USUARIO}";
+    const HASH_CONTRASENA_VALIDA = "{HASH_CONTRASENA}";
+
+    // Función para calcular hash - EXACTO
     async function calcularHash(texto) {{
         const salt = "ProgramaCordoba25/26-SancorSeguro";
         const encoder = new TextEncoder();
         const data = encoder.encode(texto + salt);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex.substring(0, 16);
     }}
-    
+
+    // Función principal de verificación - EXACTO
     async function verificarAcceso() {{
-        const usuario = document.getElementById("loginUsuario").value;
-        const contrasena = document.getElementById("loginContrasena").value;
-        
+        const usuario = document.getElementById("loginUsuario").value.trim();
+        const contrasena = document.getElementById("loginContrasena").value.trim();
+        const errorDiv = document.getElementById("loginError");
+
+        if (!usuario || !contrasena) {{
+            errorDiv.innerHTML = "❌ Por favor, complete ambos campos";
+            errorDiv.style.display = "block";
+            return;
+        }}
+
         try {{
-            const hashUsuario = await calcularHash(usuario);
-            const hashContrasena = await calcularHash(contrasena);
-            
-            if (hashUsuario === HASH_USUARIO && hashContrasena === HASH_CONTRASENA) {{
-                document.getElementById("loginScreen").style.display = "none";
+            const hashUsuarioIngresado = await calcularHash(usuario);
+            const hashContrasenaIngresada = await calcularHash(contrasena);
+
+            if (hashUsuarioIngresado === HASH_USUARIO_VALIDO &&
+                hashContrasenaIngresada === HASH_CONTRASENA_VALIDA) {{
+
+                document.getElementById("loginScreen").style.opacity = "0";
+                setTimeout(function() {{
+                    document.getElementById("loginScreen").style.display = "none";
+                }}, 500);
+
+                if (document.getElementById("lupitaBuscador")) {{
+                    document.getElementById("lupitaBuscador").style.display = "block";
+                }}
+
+                if (document.getElementById("btnGraficos")) {{
+                    document.getElementById("btnGraficos").style.display = "flex";
+                }}
+
+                map.getContainer().style.pointerEvents = "auto";
+
             }} else {{
-                document.getElementById("loginError").style.display = "block";
+                errorDiv.innerHTML = "❌ Usuario o contraseña incorrectos";
+                errorDiv.style.display = "block";
+                document.getElementById("loginContrasena").value = "";
+                document.getElementById("loginContrasena").focus();
             }}
         }} catch (error) {{
-            console.error("Error:", error);
+            errorDiv.innerHTML = "❌ Error al verificar credenciales";
+            errorDiv.style.display = "block";
         }}
     }}
-    
-    // Enter para enviar
+
+    // Permitir Enter para login - EXACTO
+    document.getElementById("loginUsuario").addEventListener("keypress", function(e) {{
+        if (e.key === "Enter") {{
+            document.getElementById("loginContrasena").focus();
+        }}
+    }});
+
     document.getElementById("loginContrasena").addEventListener("keypress", function(e) {{
-        if (e.key === "Enter") verificarAcceso();
+        if (e.key === "Enter") {{
+            verificarAcceso();
+        }}
+    }});
+
+    // Al cargar la página - EXACTO
+    document.addEventListener("DOMContentLoaded", function() {{
+        map.getContainer().style.pointerEvents = "none";
+
+        if (document.getElementById("lupitaBuscador")) {{
+            document.getElementById("lupitaBuscador").style.display = "none";
+        }}
+
+        if (document.getElementById("btnGraficos")) {{
+            document.getElementById("btnGraficos").style.display = "none";
+        }}
+
+        setTimeout(() => {{
+            document.getElementById("loginUsuario").focus();
+        }}, 500);
     }});
     </script>
     '''
     
-    agregar_html_seguro(m, login_html)
+    agregar_elemento_html_seguro(m, login_html)
 
     # ========== AJUSTAR VISTA ==========
     if not gdf.empty:
@@ -1841,22 +2834,22 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
 
     # ========== GUARDAR ARCHIVO ==========
     m.save(output_file)
-    print(f"✅ Aplicación CORREGIDA guardada como: {output_file}")
+    print(f"✅ Aplicación 100% IDÉNTICA A COLAB guardada como: {output_file}")
     
     return output_file
 
 def main():
     """Función principal"""
     if len(sys.argv) < 2:
-        print("❌ Uso: python generar_app_html.py <ruta_al_geojson> [nombre_salida]")
-        print("   Ejemplo: python generar_app_html.py geojson_unificado_actual.geojson app_cordoba_completa.html")
+        print("❌ Uso: python generar_app_html_identico.py <ruta_al_geojson> [nombre_salida]")
+        print("   Ejemplo: python generar_app_html_identico.py geojson_unificado_actual.geojson app_cordoba_identica.html")
         sys.exit(1)
     
     ruta_geojson = sys.argv[1]
     if len(sys.argv) > 2:
         output_file = sys.argv[2]
     else:
-        output_file = "app_cordoba_actual.html"
+        output_file = "app_cordoba_identica_colab.html"
     
     if not os.path.exists(ruta_geojson):
         print(f"❌ El archivo {ruta_geojson} no existe")
@@ -1873,16 +2866,25 @@ def main():
             if campo:
                 print(f"   • {nombre}: '{campo}'")
         
-        # 3. Crear aplicación COMPLETA
+        # 3. Crear aplicación 100% IDÉNTICA
         crear_app_completa(geojson_data, gdf, campos, output_file)
         
         print(f"\n{'='*80}")
-        print("🎉 APLICACIÓN CORREGIDA GENERADA EXITOSAMENTE")
+        print("🎉 APLICACIÓN 100% IDÉNTICA A COLAB GENERADA EXITOSAMENTE")
         print(f"{'='*80}")
         print(f"📁 Archivo: {output_file}")
         print(f"📊 Polígonos: {len(gdf)}")
-        print(f"🔐 Usuario: {USUARIO_CORRECTO}")
-        print(f"🔐 Contraseña: {CONTRASENA_CORRECTA}")
+        print(f"🔐 Credenciales: {USUARIO_CORRECTO} / {CONTRASENA_CORRECTA}")
+        print(f"\n🌐 Para usar: Abre {output_file} en cualquier navegador")
+        print(f"📋 Funcionalidades IDÉNTICAS:")
+        print(f"   ✅ Login seguro EXACTO")
+        print(f"   ✅ Capa de fotos desde GitHub (200+ líneas JavaScript)")
+        print(f"   ✅ Capa de siniestros con fecha y daño")
+        print(f"   ✅ Buscador de clientes con botón plegable")
+        print(f"   ✅ Dashboard de gráficos idéntico")
+        print(f"   ✅ Sistema de leyendas WMS inteligente")
+        print(f"   ✅ GPS auto-activado")
+        print(f"   ✅ Título, leyenda de cultivos, estilos EXACTOS")
         print(f"{'='*80}")
         
     except Exception as e:
@@ -1893,4 +2895,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-           
