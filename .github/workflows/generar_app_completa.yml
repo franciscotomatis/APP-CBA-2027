@@ -55,7 +55,7 @@ jobs:
         
         echo "🔍 Vista previa de la app:"
         echo "----------------------------------------"
-        head -50 app_cordoba_actual.html
+        head -50 index.html
         echo "..."
         echo "----------------------------------------"
     
