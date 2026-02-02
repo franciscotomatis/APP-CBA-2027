@@ -1779,7 +1779,11 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         print(f"⚠️  Error GPS: {e}")
 
     # ========== TÍTULO PRINCIPAL (100% IDÉNTICO) ==========
-    fecha_actual = datetime.now().strftime("%d/%m/%Y")
+    # Obtener hora Argentina (UTC-3)
+    from datetime import datetime, timezone, timedelta
+    hora_argentina = datetime.now(timezone(timedelta(hours=-3)))
+    fecha_hora_argentina = hora_argentina.strftime("%d/%m/%Y • %H:%M")
+    
     titulo_html = f'''
     <div style="position: fixed;
             top: 8px; left: 8px;
@@ -1797,7 +1801,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             PROGRAMA CÓRDOBA 25/26
         </div>
         <div style="font-size: 9px; color: rgba(255, 255, 255, 0.9); margin-top: 1px;">
-            Actualizado: {fecha_actual} • {len(gdf)} polígonos
+            Actualizado: {fecha_hora_argentina}
         </div>
     </div>
     '''
