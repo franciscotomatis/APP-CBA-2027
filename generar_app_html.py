@@ -2175,6 +2175,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         // Variables globales
         var capaOriginal = null;
         var capaFiltrada = null;
+        var popupOriginal = null; // Guardar referencia al popup original
 
         function filtrarCliente() {{
             console.log("🔍 Iniciando búsqueda avanzada...");
@@ -2196,6 +2197,10 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             // Guardar referencia a la capa original (solo primera vez)
             if (!capaOriginal) {{
                 capaOriginal = capa;
+                // Guardar el popup original si existe
+                if (capaOriginal._popup) {{
+                    popupOriginal = capaOriginal._popup;
+                }}
             }}
 
             // Limpiar filtro anterior
@@ -2222,9 +2227,16 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 // DESHABILITAR INTERACTIVIDAD
                 layer.options.interactive = false;
                 
-                // Remover tooltip
+                // Remover tooltip temporalmente
                 if (layer._tooltip) {{
+                    layer._savedTooltip = layer._tooltip; // Guardar referencia
                     layer.unbindTooltip();
+                }}
+                
+                // Remover popup temporalmente
+                if (layer._popup) {{
+                    layer._savedPopup = layer._popup; // Guardar referencia
+                    layer.unbindPopup();
                 }}
                 
                 // Remover eventos de mouse
@@ -2272,13 +2284,35 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         // ACTIVAR interactividad SOLO para filtrados
                         layer.options.interactive = true;
                         
-                        // Restaurar tooltip
+                        // Restaurar tooltip si había
                         if (feature.properties["{campos['cliente']}"]) {{
                             layer.bindTooltip(feature.properties["{campos['cliente']}"], {{
                                 sticky: true,
                                 className: 'leaflet-tooltip-custom'
                             }});
                         }}
+                        
+                        // Restaurar popup con los campos originales
+                        // Primero buscamos el polígono original para copiar su popup
+                        capaOriginal.eachLayer(function(originalLayer) {{
+                            if (originalLayer.feature === feature) {{
+                                if (originalLayer._savedPopup) {{
+                                    // Copiar el popup original
+                                    layer.bindPopup(originalLayer._savedPopup._content, {{
+                                        maxWidth: originalLayer._savedPopup.options.maxWidth,
+                                        minWidth: originalLayer._savedPopup.options.minWidth,
+                                        className: originalLayer._savedPopup.options.className
+                                    }});
+                                }} else if (originalLayer._popup) {{
+                                    // Usar el popup actual si no hay guardado
+                                    layer.bindPopup(originalLayer._popup._content, {{
+                                        maxWidth: originalLayer._popup.options.maxWidth,
+                                        minWidth: originalLayer._popup.options.minWidth,
+                                        className: originalLayer._popup.options.className
+                                    }});
+                                }}
+                            }}
+                        }});
                         
                         // Agregar eventos de hover
                         layer.on('mouseover', function(e) {{
@@ -2293,6 +2327,12 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                                 fillOpacity: 0.6,
                                 weight: 2
                             }});
+                        }});
+                        
+                        // Evento click para abrir popup
+                        layer.on('click', function(e) {{
+                            // Leaflet maneja automáticamente el popup si está bindeado
+                            console.log("📍 Click en polígono filtrado");
                         }});
                     }}
                 }}).addTo(mapa);
@@ -2352,12 +2392,22 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 // RESTAURAR interactividad
                 layer.options.interactive = true;
                 
-                // Restaurar tooltip
-                if (layer.feature.properties["{campos['cliente']}"]) {{
+                // Restaurar tooltip si tenía guardado
+                if (layer._savedTooltip) {{
+                    layer.bindTooltip(layer._savedTooltip._content, layer._savedTooltip.options);
+                    delete layer._savedTooltip;
+                }} else if (layer.feature.properties["{campos['cliente']}"]) {{
+                    // Crear nuevo tooltip
                     layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {{
                         sticky: true,
                         className: 'leaflet-tooltip-custom'
                     }});
+                }}
+                
+                // Restaurar popup si tenía guardado
+                if (layer._savedPopup) {{
+                    layer.bindPopup(layer._savedPopup._content, layer._savedPopup.options);
+                    delete layer._savedPopup;
                 }}
                 
                 // Restaurar eventos de hover
