@@ -22,8 +22,15 @@ print("🔐🌽🌱 GENERADOR DE APLICACIÓN WEB COMPLETA - PROGRAMA CÓRDOBA 25
 print("=" * 80)
 
 # 🔐 CREDENCIALES DE ACCESO (MISMO QUE EN COLAB)
-USUARIO_CORRECTO = "Sancor"
-CONTRASENA_CORRECTA = "2025Sancor"
+USUARIO_CORRECTO = os.environ.get("MULTIRIESGO_USER")
+CONTRASENA_CORRECTA = os.environ.get("MULTIRIESGO_PASS")
+
+# Verificar que se cargaron las credenciales
+if not USUARIO_CORRECTO or not CONTRASENA_CORRECTA:
+    print("⚠️  ADVERTENCIA: No se encontraron credenciales en variables de entorno")
+    print("   Usando valores por defecto (solo para desarrollo)")
+    USUARIO_CORRECTO = USUARIO_CORRECTO or "UsuarioDemo"
+    CONTRASENA_CORRECTA = CONTRASENA_CORRECTA or "PassDemo"
 
 def generar_hash_seguro(texto):
     """Genera hash SHA-256 con salt para mayor seguridad"""
