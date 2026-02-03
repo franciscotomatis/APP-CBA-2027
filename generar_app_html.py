@@ -1976,11 +1976,32 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 
                 // FUNCIÓN PARA ENCONTRAR CAPA DE POLÍGONOS
                 function obtenerCapaPoligonosSegura() {{
+                    // Primero, buscar por nombre específico (si ya sabemos cómo se llama)
                     if (window._miCapaPoligonos && window._miCapaPoligonos.eachLayer) {{
                         return window._miCapaPoligonos;
                     }}
                     
-                    // Buscar capa con ~5700 polígonos
+                    // Buscar en el mapa directamente (si ya tenemos el mapa)
+                    var mapa = obtenerMapaSeguro();
+                    if (mapa) {{
+                        // Buscar entre todas las capas del mapa
+                        for (var key in mapa._layers) {{
+                            var layer = mapa._layers[key];
+                            if (layer && typeof layer.eachLayer === 'function') {{
+                                var contador = 0;
+                                try {{
+                                    layer.eachLayer(function() {{ contador++; }});
+                                    if (contador > 1000) {{  // Si tiene más de 1000 polígonos
+                                        console.log("✅ Capa principal encontrada en mapa:", contador, "polígonos");
+                                        window._miCapaPoligonos = layer;
+                                        return layer;
+                                    }}
+                                }} catch(e) {{}}
+                            }}
+                        }}
+                    }}
+                    
+                    // Si no encontramos, buscar en ventana global como antes
                     for (var key in window) {{
                         try {{
                             var obj = window[key];
@@ -1988,8 +2009,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                                 var contador = 0;
                                 obj.eachLayer(function() {{ contador++; }});
                                 
-                                if (contador > 5000 && contador < 6000) {{
-                                    console.log("✅ Capa principal detectada:", key, "(" + contador + " polígonos)");
+                                if (contador > 5000) {{  // Tu capa tiene ~5700
+                                    console.log("✅ Capa principal detectada en window:", key, "(" + contador + " polígonos)");
                                     window._miCapaPoligonos = obj;
                                     return obj;
                                 }}
@@ -1997,13 +2018,15 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         }} catch(e) {{}}
                     }}
                     
-                    console.warn("⚠️ Usando fallback: primera capa geo_json_");
+                    // Fallback: buscar geo_json_
                     for (var key in window) {{
                         if (key.startsWith('geo_json_')) {{
+                            console.log("⚠️ Usando fallback:", key);
                             return window[key];
                         }}
                     }}
                     
+                    console.error("❌ No se pudo encontrar ninguna capa de polígonos");
                     return null;
                 }}
                 
@@ -2149,7 +2172,11 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             var boundsFiltrados = null;
             var contador = 0;
 
-            console.log("📊 Buscando en", capa.getLayers().length, "polígonos...");
+            console.log("📊 Buscando en capa:", capa);
+            // Contar polígonos de otra forma
+            var contadorInicial = 0;
+            capa.eachLayer(function() { contadorInicial++; });
+            console.log("📊 Polígonos totales:", contadorInicial);
 
             capa.eachLayer(function(layer) {{
                 var propiedades = layer.feature.properties;
