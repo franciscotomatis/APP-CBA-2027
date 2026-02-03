@@ -2175,7 +2175,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         // Variables globales
         var capaOriginal = null;
         var capaFiltrada = null;
-        var poligonosFiltrados = [];
 
         function filtrarCliente() {{
             console.log("🔍 Iniciando búsqueda avanzada...");
@@ -2204,22 +2203,43 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 mapa.removeLayer(capaFiltrada);
                 capaFiltrada = null;
             }}
-            poligonosFiltrados = [];
 
             var boundsFiltrados = null;
             var featuresFiltrados = [];
+            var contadorFiltrados = 0;
 
             console.log("🔍 Buscando coincidencias...");
 
-            // 1. RECOLECTAR features que coinciden
+            // 1. DESHABILITAR TODOS los polígonos primero
             capaOriginal.eachLayer(function(layer) {{
+                // OCULTAR COMPLETAMENTE
+                layer.setStyle({{
+                    fillOpacity: 0,
+                    weight: 0,
+                    opacity: 0
+                }});
+                
+                // DESHABILITAR INTERACTIVIDAD
+                layer.options.interactive = false;
+                
+                // Remover tooltip
+                if (layer._tooltip) {{
+                    layer.unbindTooltip();
+                }}
+                
+                // Remover eventos de mouse
+                layer.off('mouseover');
+                layer.off('mouseout');
+                layer.off('click');
+                
+                // Verificar si coincide con la búsqueda
                 var propiedades = layer.feature.properties;
                 var clienteEnPoligono = propiedades["{campos['cliente']}"];
 
                 if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {{
-                    // Agregar a la lista
+                    // Agregar a la lista de filtrados
                     featuresFiltrados.push(layer.feature);
-                    poligonosFiltrados.push(layer);
+                    contadorFiltrados++;
 
                     // Para zoom
                     var layerBounds = layer.getBounds();
@@ -2229,17 +2249,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 }}
             }});
 
-            console.log("✅ Encontrados:", featuresFiltrados.length, "polígonos");
+            console.log("✅ Encontrados:", contadorFiltrados, "polígonos");
 
-            // 2. OCULTAR capa original completamente
-            capaOriginal.setStyle({{
-                fillOpacity: 0,
-                weight: 0,
-                opacity: 0
-            }});
-            capaOriginal.options.interactive = false;
-
-            // 3. CREAR nueva capa SOLO con los filtrados
+            // 2. CREAR nueva capa SOLO con los filtrados
             if (featuresFiltrados.length > 0) {{
                 var geoJsonFiltrado = {{
                     type: "FeatureCollection",
@@ -2257,20 +2269,35 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         }};
                     }},
                     onEachFeature: function(feature, layer) {{
-                        // Restaurar interactividad
+                        // ACTIVAR interactividad SOLO para filtrados
                         layer.options.interactive = true;
                         
-                        // Restaurar tooltip si existía
+                        // Restaurar tooltip
                         if (feature.properties["{campos['cliente']}"]) {{
                             layer.bindTooltip(feature.properties["{campos['cliente']}"], {{
                                 sticky: true,
                                 className: 'leaflet-tooltip-custom'
                             }});
                         }}
+                        
+                        // Agregar eventos de hover
+                        layer.on('mouseover', function(e) {{
+                            e.target.setStyle({{
+                                fillOpacity: 0.8,
+                                weight: 3
+                            }});
+                        }});
+                        
+                        layer.on('mouseout', function(e) {{
+                            e.target.setStyle({{
+                                fillOpacity: 0.6,
+                                weight: 2
+                            }});
+                        }});
                     }}
                 }}).addTo(mapa);
 
-                // 4. ZOOM a los filtrados
+                // 3. ZOOM a los filtrados
                 if (boundsFiltrados && boundsFiltrados.isValid()) {{
                     console.log("🎯 Haciendo zoom a bounds filtrados");
                     mapa.fitBounds(boundsFiltrados, {{
@@ -2281,10 +2308,10 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 }}
             }}
 
-            // 5. ACTUALIZAR ESTADO
+            // 4. ACTUALIZAR ESTADO
             var estadoDiv = document.getElementById("estadoFiltro");
-            if (featuresFiltrados.length > 0) {{
-                estadoDiv.innerHTML = "Mostrando " + featuresFiltrados.length + " polígonos";
+            if (contadorFiltrados > 0) {{
+                estadoDiv.innerHTML = "Mostrando " + contadorFiltrados + " polígonos";
                 estadoDiv.style.color = "#4CAF50";
             }} else {{
                 estadoDiv.innerHTML = "❌ No se encontraron resultados";
@@ -2311,24 +2338,41 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 capaFiltrada = null;
             }}
 
-            // 3. RESTAURAR capa original completamente
-            capaOriginal.setStyle({{
-                fillColor: '#9C27B0',
-                color: '#7B1FA2',
-                weight: 2,
-                fillOpacity: 0.6,
-                opacity: 1
-            }});
-            
-            // Restaurar interactividad de TODOS los polígonos
+            // 3. RESTAURAR TODOS los polígonos individualmente
             capaOriginal.eachLayer(function(layer) {{
-                layer.options.interactive = true;
+                // Restaurar estilo
                 layer.setStyle({{
                     fillColor: layer.feature.properties._color_fill || '#9C27B0',
                     color: layer.feature.properties._color_border || '#7B1FA2',
                     weight: 2,
                     fillOpacity: 0.6,
                     opacity: 1
+                }});
+                
+                // RESTAURAR interactividad
+                layer.options.interactive = true;
+                
+                // Restaurar tooltip
+                if (layer.feature.properties["{campos['cliente']}"]) {{
+                    layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {{
+                        sticky: true,
+                        className: 'leaflet-tooltip-custom'
+                    }});
+                }}
+                
+                // Restaurar eventos de hover
+                layer.on('mouseover', function(e) {{
+                    e.target.setStyle({{
+                        fillOpacity: 0.8,
+                        weight: 3
+                    }});
+                }});
+                
+                layer.on('mouseout', function(e) {{
+                    e.target.setStyle({{
+                        fillOpacity: 0.6,
+                        weight: 2
+                    }});
                 }});
             }});
 
@@ -2348,7 +2392,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             
             console.log("✅ Filtro restablecido completamente");
         }}
-
         // Permitir usar Enter para filtrar
         document.getElementById("clienteInput").addEventListener("keypress", function(e) {{
             if (e.key === "Enter") {{
