@@ -862,13 +862,33 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         layer.options.interactive = true;
                         contador++;
                     }} else {{
-                        // Ocultar este polígono
+                        // OCULTAR COMPLETAMENTE este polígono
                         layer.setStyle({{
-                            fillOpacity: 0.1,
-                            weight: 1,
-                            opacity: 0.3
+                            fillOpacity: 0,
+                            weight: 0,
+                            opacity: 0
                         }});
+                        
+                        // DESHABILITAR INTERACTIVIDAD TOTALMENTE
                         layer.options.interactive = false;
+                        
+                        // Remover tooltip si existe
+                        if (layer._tooltip) {{
+                            layer.unbindTooltip();
+                        }}
+                        
+                        // Remover popup si existe  
+                        if (layer._popup) {{
+                            layer.unbindPopup();
+                        }}
+                        
+                        // Remover eventos de mouse
+                        layer.off('mouseover');
+                        layer.off('mouseout');
+                        layer.off('click');
+                        
+                        // Hacer que el layer no responda a ningún evento
+                        layer.options.bubblingMouseEvents = false;
                     }}
                 }});
 
@@ -2268,6 +2288,15 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
 
                 // Restaurar interactividad
                 layer.options.interactive = true;
+                layer.options.bubblingMouseEvents = true;
+                
+                // Restaurar tooltip si había
+                if (!layer._tooltip && layer.feature.properties["{campos['cliente']}"]) {{
+                    layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {{
+                        sticky: true,
+                        className: 'leaflet-tooltip-custom'
+                    }});
+                }}
             }});
 
             // Restaurar zoom original
