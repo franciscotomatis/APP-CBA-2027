@@ -2175,7 +2175,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         // Variables globales
         var capaOriginal = null;
         var capaFiltrada = null;
-        var popupOriginal = null; // Guardar referencia al popup original
 
         function filtrarCliente() {{
             console.log("🔍 Iniciando búsqueda avanzada...");
@@ -2197,10 +2196,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             // Guardar referencia a la capa original (solo primera vez)
             if (!capaOriginal) {{
                 capaOriginal = capa;
-                // Guardar el popup original si existe
-                if (capaOriginal._popup) {{
-                    popupOriginal = capaOriginal._popup;
-                }}
             }}
 
             // Limpiar filtro anterior
@@ -2229,13 +2224,12 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 
                 // Remover tooltip temporalmente
                 if (layer._tooltip) {{
-                    layer._savedTooltip = layer._tooltip; // Guardar referencia
                     layer.unbindTooltip();
                 }}
                 
-                // Remover popup temporalmente
+                // Remover popup temporalmente (pero guardar que tenía popup)
                 if (layer._popup) {{
-                    layer._savedPopup = layer._popup; // Guardar referencia
+                    layer._teniaPopup = true;
                     layer.unbindPopup();
                 }}
                 
@@ -2284,7 +2278,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                         // ACTIVAR interactividad SOLO para filtrados
                         layer.options.interactive = true;
                         
-                        // Restaurar tooltip si había
+                        // Restaurar tooltip
                         if (feature.properties["{campos['cliente']}"]) {{
                             layer.bindTooltip(feature.properties["{campos['cliente']}"], {{
                                 sticky: true,
@@ -2292,27 +2286,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                             }});
                         }}
                         
-                        // Restaurar popup con los campos originales
-                        // Primero buscamos el polígono original para copiar su popup
-                        capaOriginal.eachLayer(function(originalLayer) {{
-                            if (originalLayer.feature === feature) {{
-                                if (originalLayer._savedPopup) {{
-                                    // Copiar el popup original
-                                    layer.bindPopup(originalLayer._savedPopup._content, {{
-                                        maxWidth: originalLayer._savedPopup.options.maxWidth,
-                                        minWidth: originalLayer._savedPopup.options.minWidth,
-                                        className: originalLayer._savedPopup.options.className
-                                    }});
-                                }} else if (originalLayer._popup) {{
-                                    // Usar el popup actual si no hay guardado
-                                    layer.bindPopup(originalLayer._popup._content, {{
-                                        maxWidth: originalLayer._popup.options.maxWidth,
-                                        minWidth: originalLayer._popup.options.minWidth,
-                                        className: originalLayer._popup.options.className
-                                    }});
-                                }}
-                            }}
-                        }});
+                        // CREAR POPUP NUEVO con los datos del polígono
+                        crearPopupParaPoligono(layer, feature);
                         
                         // Agregar eventos de hover
                         layer.on('mouseover', function(e) {{
@@ -2327,12 +2302,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                                 fillOpacity: 0.6,
                                 weight: 2
                             }});
-                        }});
-                        
-                        // Evento click para abrir popup
-                        layer.on('click', function(e) {{
-                            // Leaflet maneja automáticamente el popup si está bindeado
-                            console.log("📍 Click en polígono filtrado");
                         }});
                     }}
                 }}).addTo(mapa);
@@ -2357,6 +2326,49 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 estadoDiv.innerHTML = "❌ No se encontraron resultados";
                 estadoDiv.style.color = "#f44336";
             }}
+        }}
+
+        // FUNCIÓN PARA CREAR POPUP IDÉNTICO AL ORIGINAL
+        function crearPopupParaPoligono(layer, feature) {{
+            var props = feature.properties;
+            
+            // Crear HTML del popup (igual que en tu aplicación original)
+            var popupContent = '<div style="font-family: Arial, sans-serif; font-size: 11px; max-width: 350px; max-height: 400px; overflow-y: auto; padding: 10px;">';
+            
+            // Agregar campos importantes
+            var camposParaPopup = [
+                'CUIT', 'CLIENTE', 'CAMPO', 'DEPARTAMENTO', 'LOCALIDAD', 
+                'CULTIVO', 'LOTE', 'HECTAREAS_DECLARADAS', 'HECTAREAS_ASEGURADAS',
+                'ZONA_CZ4', 'RENDIMIENTO_ASEGURADO', 'SUMA_ASEGURADA', 'FECHA_SIEMBRA'
+            ];
+            
+            for (var i = 0; i < camposParaPopup.length; i++) {{
+                var campo = camposParaPopup[i];
+                if (props[campo] !== undefined && props[campo] !== null && props[campo] !== '') {{
+                    popupContent += '<div style="margin-bottom: 8px;">';
+                    popupContent += '<strong style="color: #2C5530;">' + campo + ':</strong> ';
+                    popupContent += '<span style="color: #333;">' + props[campo] + '</span>';
+                    popupContent += '</div>';
+                }}
+            }}
+            
+            // Agregar campo del cliente (si existe y no está ya)
+            var campoCliente = "{campos['cliente']}";
+            if (campoCliente && props[campoCliente] && !camposParaPopup.includes(campoCliente)) {{
+                popupContent += '<div style="margin-bottom: 8px;">';
+                popupContent += '<strong style="color: #2C5530;">CLIENTE:</strong> ';
+                popupContent += '<span style="color: #333;">' + props[campoCliente] + '</span>';
+                popupContent += '</div>';
+            }}
+            
+            popupContent += '</div>';
+            
+            // Bindear el popup
+            layer.bindPopup(popupContent, {{
+                maxWidth: 350,
+                minWidth: 250,
+                className: 'leaflet-popup-custom'
+            }});
         }}
 
         function resetearFiltro() {{
@@ -2392,22 +2404,18 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 // RESTAURAR interactividad
                 layer.options.interactive = true;
                 
-                // Restaurar tooltip si tenía guardado
-                if (layer._savedTooltip) {{
-                    layer.bindTooltip(layer._savedTooltip._content, layer._savedTooltip.options);
-                    delete layer._savedTooltip;
-                }} else if (layer.feature.properties["{campos['cliente']}"]) {{
-                    // Crear nuevo tooltip
+                // Restaurar tooltip
+                if (layer.feature.properties["{campos['cliente']}"]) {{
                     layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {{
                         sticky: true,
                         className: 'leaflet-tooltip-custom'
                     }});
                 }}
                 
-                // Restaurar popup si tenía guardado
-                if (layer._savedPopup) {{
-                    layer.bindPopup(layer._savedPopup._content, layer._savedPopup.options);
-                    delete layer._savedPopup;
+                // Restaurar popup (si tenía originalmente)
+                if (layer._teniaPopup) {{
+                    crearPopupParaPoligono(layer, layer.feature);
+                    delete layer._teniaPopup;
                 }}
                 
                 // Restaurar eventos de hover
