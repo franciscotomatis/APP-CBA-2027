@@ -1336,7 +1336,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     </div>
     
     <div id="btnLeyendaHumedad" style="position: fixed;
-            bottom: 85px; left: 180px;
+            bottom: 85px; left: 10px;
             background-color: #795548;
             color: white;
             padding: 6px 10px;
@@ -1363,7 +1363,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     if campos['causa_stro'] and gdf[campos['causa_stro']].notna().any():
         leyenda_siniestros_boton = '''
         <div id="btnLeyendaSiniestros" style="position: fixed;
-                bottom: 85px; left: 180px;
+                bottom: 85px; left: 10px;
                 background-color: #F44336;
                 color: white;
                 padding: 6px 10px;
