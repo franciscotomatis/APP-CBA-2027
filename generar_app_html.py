@@ -1895,386 +1895,387 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         agregar_elemento_html_seguro(m, leyenda_html)
 
 # ========== BUSCADOR DE CLIENTES (100% IDÉNTICO) ==========
-    if campos['cliente']:
-        clientes = sorted(gdf[campos['cliente']].dropna().astriz().unique())
-        
-        opciones_clientes = "".join(f'<option value="{cliente}">' for cliente in clientes)
-        
-        buscador_html = f'''
-        <div id="lupitaBuscador" style="position: fixed;
-                top: 80px; left: 8px;
-                background: linear-gradient(135deg, rgba(250, 249, 246, 0.95) 0%, rgba(245, 245, 240, 0.95) 100%);
-                padding: 10px 12px;
-                border-radius: 12px;
-                border: 1px solid rgba(212, 212, 212, 0.8);
-                z-index: 9998;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                font-size: 11px;
-                width: 220px;
-                box-shadow: 0 5px 20px rgba(44, 85, 48, 0.12);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);">
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <div style="width: 28px; height: 28px; background: linear-gradient(135deg, #2C5530, #8A9A5B);
-                            border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: white; font-size: 12px;">🔍</span>
-                    </div>
-                    <div style="font-weight: 700; color: #2C5530; font-size: 12px;">
-                        Buscar cliente
-                    </div>
-                </div>
-                <button id="toggleBuscador"
-                        style="background: rgba(44, 85, 48, 0.1); 
-                               border: none; 
-                               cursor: pointer; 
-                               font-size: 14px; 
-                               color: #2C5530;
-                               width: 24px;
-                               height: 24px;
-                               border-radius: 6px;
-                               display: flex;
-                               align-items: center;
-                               justify-content: center;"
-                        onclick="toggleBuscador()">↻</button>
-            </div>
-
-            <div id="contenidoBuscador">
-            
-                <!-- ========== SISTEMA DE DETECCIÓN AUTOMÁTICA ========== -->
-                <script>
-                // FUNCIÓN PARA ENCONTRAR EL MAPA (aunque cambie el nombre)
-                function obtenerMapaSeguro() {{
-                    // Si ya lo encontramos, reusar
-                    if (window._miMapa && window._miMapa.fitBounds) {{
-                        return window._miMapa;
-                    }}
-                    
-                    // Buscar en ventana global
-                    for (var key in window) {{
-                        try {{
-                            var obj = window[key];
-                            // Características únicas de mapa Leaflet
-                            if (obj && 
-                                typeof obj.fitBounds === 'function' &&
-                                typeof obj.setView === 'function' && 
-                                typeof obj.getBounds === 'function' &&
-                                obj._container && obj._container.tagName === 'DIV') {{
-                                
-                                console.log("🗺️ Mapa detectado automáticamente:", key);
-                                window._miMapa = obj;  // Guardar para siempre
-                                window.map = obj;      // Compatibilidad
-                                return obj;
-                            }}
-                        }} catch(e) {{}}
-                    }}
-                    
-                    console.error("❌ No se pudo encontrar el mapa");
-                    return null;
-                }}
-                
-                // FUNCIÓN PARA ENCONTRAR CAPA DE POLÍGONOS
-                function obtenerCapaPoligonosSegura() {{
-                    if (window._miCapaPoligonos && window._miCapaPoligonos.eachLayer) {{
-                        return window._miCapaPoligonos;
-                    }}
-                    
-                    // Buscar capa con ~5700 polígonos
-                    for (var key in window) {{
-                        try {{
-                            var obj = window[key];
-                            if (obj && typeof obj.eachLayer === 'function') {{
-                                var contador = 0;
-                                obj.eachLayer(function() {{ contador++; }});
-                                
-                                if (contador > 5000 && contador < 6000) {{
-                                    console.log("✅ Capa principal detectada:", key, "(" + contador + " polígonos)");
-                                    window._miCapaPoligonos = obj;
-                                    return obj;
-                                }}
-                            }}
-                        }} catch(e) {{}}
-                    }}
-                    
-                    console.warn("⚠️ Usando fallback: primera capa geo_json_");
-                    for (var key in window) {{
-                        if (key.startsWith('geo_json_')) {{
-                            return window[key];
-                        }}
-                    }}
-                    
-                    return null;
-                }}
-                
-                // INICIALIZAR AL CARGAR
-                setTimeout(function() {{
-                    obtenerMapaSeguro();
-                    obtenerCapaPoligonosSegura();
-                    console.log("✅ Sistema de detección listo");
-                }}, 500);
-                </script>
-                <!-- ========== FIN DETECCIÓN ========== -->
-                
-                <div style="margin-bottom: 10px;">
-                    <input list="clientesList"
-                           id="clienteInput"
-                           placeholder="🔍 Escribe o selecciona cliente..."
-                           style="width: 100%; 
-                                  padding: 8px 10px;
-                                  border: 2px solid rgba(212, 212, 212, 0.8);
-                                  border-radius: 8px;
-                                  font-size: 11px;
-                                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                                  background: white;
-                                  color: #2C2C2C;">
-                    <datalist id="clientesList">
-                        {opciones_clientes}
-                    </datalist>
-                </div>
-
-                <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-                    <button onclick="filtrarCliente()"
-                            style="flex: 1; 
-                                   background: linear-gradient(135deg, #2C5530, #8A9A5B);
-                                   color: white;
-                                   border: none;
-                                   padding: 8px;
-                                   border-radius: 8px;
-                                   cursor: pointer;
-                                   font-size: 10px;
-                                   font-weight: 600;">
-                        <span>✓</span>
-                        <span>Filtrar</span>
-                    </button>
+if campos['cliente']:
+    # SOLO ESTA LÍNEA, NO LAS DOS:
+    clientes = sorted(gdf[campos['cliente']].dropna().astype(str).unique())
     
-                    <button onclick="resetearFiltro()"
-                            style="flex: 1; 
-                                   background: linear-gradient(135deg, #FAF9F6, #F5F5F0);
-                                   color: #666;
-                                   border: 2px solid rgba(212, 212, 212, 0.8);
-                                   padding: 8px;
-                                   border-radius: 8px;
-                                   cursor: pointer;
-                                   font-size: 10px;
-                                   font-weight: 600;">
-                        <span>↺</span>
-                        <span>Resetear</span>
-                    </button>
-                </div>
+    opciones_clientes = "".join(f'<option value="{cliente}">' for cliente in clientes)
+    
+    buscador_html = f'''
+    <div id="lupitaBuscador" style="position: fixed;
+            top: 80px; left: 8px;
+            background: linear-gradient(135deg, rgba(250, 249, 246, 0.95) 0%, rgba(245, 245, 240, 0.95) 100%);
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 212, 212, 0.8);
+            z-index: 9998;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 11px;
+            width: 220px;
+            box-shadow: 0 5px 20px rgba(44, 85, 48, 0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);">
 
-                <div id="estadoFiltro"
-                     style="font-size: 9px; 
-                            color: #666; 
-                            margin-top: 10px;
-                            padding: 8px;
-                            background: rgba(44, 85, 48, 0.05);
-                            border-radius: 6px;
-                            border-left: 4px solid #8A9A5B;
-                            display: flex;
-                            align-items: center;
-                            gap: 6px;">
-                    <div style="width: 6px; height: 6px; background: #2C5530; border-radius: 50%;"></div>
-                    <div>Mostrando <span style="font-weight: 700; color: #2C5530;">{len(gdf)}</span> polígonos</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 28px; height: 28px; background: linear-gradient(135deg, #2C5530, #8A9A5B);
+                        border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-size: 12px;">🔍</span>
+                </div>
+                <div style="font-weight: 700; color: #2C5530; font-size: 12px;">
+                    Buscar cliente
                 </div>
             </div>
+            <button id="toggleBuscador"
+                    style="background: rgba(44, 85, 48, 0.1); 
+                           border: none; 
+                           cursor: pointer; 
+                           font-size: 14px; 
+                           color: #2C5530;
+                           width: 24px;
+                           height: 24px;
+                           border-radius: 6px;
+                           display: flex;
+                           align-items: center;
+                           justify-content: center;"
+                    onclick="toggleBuscador()">↻</button>
         </div>
 
-        <script>
-        // Variables globales - EXACTO A COLAB
-        var boundsGeneral = null;
-        var contenidoVisible = true;
-        var mapaPoligonos = new Map();
-
-        // Función para mostrar/ocultar contenido - CON BOTÓN ↻/▼
-        function toggleBuscador() {{
-            var contenido = document.getElementById("contenidoBuscador");
-            var toggleBtn = document.getElementById("toggleBuscador");
-            var lupita = document.getElementById("lupitaBuscador");
-
-            if (contenidoVisible) {{
-                contenido.style.display = "none";
-                toggleBtn.innerHTML = "▼";
-                lupita.style.width = "140px";
-                lupita.style.padding = "6px 8px";
-            }} else {{
-                contenido.style.display = "block";
-                toggleBtn.innerHTML = "↻";
-                lupita.style.width = "220px";
-                lupita.style.padding = "10px 12px";
-            }}
-            contenidoVisible = !contenidoVisible;
-        }}
-
-        // Almacenar referencia a cada polígono al inicio
-        function inicializarPoligonos() {{
-            var capa = obtenerCapaPoligonosSegura();
-            if (capa) {{
-                capa.eachLayer(function(layer) {{
-                    var id = layer._leaflet_id;
-                    mapaPoligonos.set(id, layer);
-
-                    // Guardar estilo original
-                    layer._estiloOriginal = {{
-                        fillColor: layer.options.fillColor,
-                        color: layer.options.color,
-                        weight: layer.options.weight,
-                        fillOpacity: layer.options.fillOpacity,
-                        opacity: layer.options.opacity,
-                        interactive: layer.options.interactive
-                    }};
-                }});
-            }}
-        }}
-
-        // Función para filtrar - ¡SOLUCIÓN DEFINITIVA!
-        function filtrarCliente() {{
-            console.log("🔍 Iniciando búsqueda...");
-            
-            // OBTENER MAPA Y CAPA
-            var mapa = obtenerMapaSeguro();
-            var capa = obtenerCapaPoligonosSegura();
-            
-            if (!mapa || !capa) {{
-                alert("❌ Error: No se pudo inicializar el sistema. Recarga la página.");
-                return;
-            }}
-            
-            var valor = document.getElementById("clienteInput").value.toLowerCase();
-            if (!valor) {{
-                alert("Por favor, escribe o selecciona un cliente");
-                return;
-            }}
-
-            var boundsFiltrados = null;
-            var contador = 0;
-
-            console.log("📊 Buscando en", capa.getLayers().length, "polígonos...");
-
-            capa.eachLayer(function(layer) {{
-                var propiedades = layer.feature.properties;
-                var clienteEnPoligono = propiedades["{campos['cliente']}"];
-
-                if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {{
-                    // MOSTRAR este polígono
-                    layer.setStyle({{
-                        fillOpacity: 0.6,
-                        weight: 2,
-                        opacity: 1
-                    }});
-                    layer.options.interactive = true;
-                    contador++;
-
-                    // AGREGAR A BOUNDS PARA ZOOM
-                    var layerBounds = layer.getBounds();
-                    if (layerBounds && layerBounds.isValid()) {{
-                        if (!boundsFiltrados) {{
-                            boundsFiltrados = layerBounds;
-                        }} else {{
-                            boundsFiltrados = boundsFiltrados.extend(layerBounds);
+        <div id="contenidoBuscador">
+        
+            <!-- ========== SISTEMA DE DETECCIÓN AUTOMÁTICA ========== -->
+            <script>
+            // FUNCIÓN PARA ENCONTRAR EL MAPA (aunque cambie el nombre)
+            function obtenerMapaSeguro() {{
+                // Si ya lo encontramos, reusar
+                if (window._miMapa && window._miMapa.fitBounds) {{
+                    return window._miMapa;
+                }}
+                
+                // Buscar en ventana global
+                for (var key in window) {{
+                    try {{
+                        var obj = window[key];
+                        // Características únicas de mapa Leaflet
+                        if (obj && 
+                            typeof obj.fitBounds === 'function' &&
+                            typeof obj.setView === 'function' && 
+                            typeof obj.getBounds === 'function' &&
+                            obj._container && obj._container.tagName === 'DIV') {{
+                            
+                            console.log("🗺️ Mapa detectado automáticamente:", key);
+                            window._miMapa = obj;  // Guardar para siempre
+                            window.map = obj;      // Compatibilidad
+                            return obj;
                         }}
-                    }}
-                }} else {{
-                    // OCULTAR este polígono
-                    layer.setStyle({{
-                        fillOpacity: 0,
-                        weight: 0,
-                        opacity: 0
-                    }});
-                    layer.options.interactive = false;
+                    }} catch(e) {{}}
                 }}
-            }});
-
-            // ACTUALIZAR ESTADO
-            var estadoDiv = document.getElementById("estadoFiltro");
-            if (contador > 0) {{
-                estadoDiv.innerHTML = "Mostrando " + contador + " polígonos";
-                estadoDiv.style.color = "#4CAF50";
-
-                // HACER ZOOM
-                if (boundsFiltrados && boundsFiltrados.isValid()) {{
-                    console.log("🎯 Haciendo zoom a bounds:", boundsFiltrados);
-                    
-                    mapa.fitBounds(boundsFiltrados, {{
-                        padding: [80, 80],
-                        duration: 1,
-                        maxZoom: 15
-                    }});
-                    
-                    console.log("✅ Zoom ejecutado");
-                }} else {{
-                    console.warn("⚠️ No hay bounds válidos para zoom");
-                }}
-            }} else {{
-                estadoDiv.innerHTML = "❌ No se encontraron resultados";
-                estadoDiv.style.color = "#f44336";
+                
+                console.error("❌ No se pudo encontrar el mapa");
+                return null;
             }}
+            
+            // FUNCIÓN PARA ENCONTRAR CAPA DE POLÍGONOS
+            function obtenerCapaPoligonosSegura() {{
+                if (window._miCapaPoligonos && window._miCapaPoligonos.eachLayer) {{
+                    return window._miCapaPoligonos;
+                }}
+                
+                // Buscar capa con ~5700 polígonos
+                for (var key in window) {{
+                    try {{
+                        var obj = window[key];
+                        if (obj && typeof obj.eachLayer === 'function') {{
+                            var contador = 0;
+                            obj.eachLayer(function() {{ contador++; }});
+                            
+                            if (contador > 5000 && contador < 6000) {{
+                                console.log("✅ Capa principal detectada:", key, "(" + contador + " polígonos)");
+                                window._miCapaPoligonos = obj;
+                                return obj;
+                            }}
+                        }}
+                    }} catch(e) {{}}
+                }}
+                
+                console.warn("⚠️ Usando fallback: primera capa geo_json_");
+                for (var key in window) {{
+                    if (key.startsWith('geo_json_')) {{
+                        return window[key];
+                    }}
+                }}
+                
+                return null;
+            }}
+            
+            // INICIALIZAR AL CARGAR
+            setTimeout(function() {{
+                obtenerMapaSeguro();
+                obtenerCapaPoligonosSegura();
+                console.log("✅ Sistema de detección listo");
+            }}, 500);
+            </script>
+            <!-- ========== FIN DETECCIÓN ========== -->
+            
+            <div style="margin-bottom: 10px;">
+                <input list="clientesList"
+                       id="clienteInput"
+                       placeholder="🔍 Escribe o selecciona cliente..."
+                       style="width: 100%; 
+                              padding: 8px 10px;
+                              border: 2px solid rgba(212, 212, 212, 0.8);
+                              border-radius: 8px;
+                              font-size: 11px;
+                              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                              background: white;
+                              color: #2C2C2C;">
+                <datalist id="clientesList">
+                    {opciones_clientes}
+                </datalist>
+            </div>
+
+            <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+                <button onclick="filtrarCliente()"
+                        style="flex: 1; 
+                               background: linear-gradient(135deg, #2C5530, #8A9A5B);
+                               color: white;
+                               border: none;
+                               padding: 8px;
+                               border-radius: 8px;
+                               cursor: pointer;
+                               font-size: 10px;
+                               font-weight: 600;">
+                    <span>✓</span>
+                    <span>Filtrar</span>
+                </button>
+
+                <button onclick="resetearFiltro()"
+                        style="flex: 1; 
+                               background: linear-gradient(135deg, #FAF9F6, #F5F5F0);
+                               color: #666;
+                               border: 2px solid rgba(212, 212, 212, 0.8);
+                               padding: 8px;
+                               border-radius: 8px;
+                               cursor: pointer;
+                               font-size: 10px;
+                               font-weight: 600;">
+                    <span>↺</span>
+                    <span>Resetear</span>
+                </button>
+            </div>
+
+            <div id="estadoFiltro"
+                 style="font-size: 9px; 
+                        color: #666; 
+                        margin-top: 10px;
+                        padding: 8px;
+                        background: rgba(44, 85, 48, 0.05);
+                        border-radius: 6px;
+                        border-left: 4px solid #8A9A5B;
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;">
+                <div style="width: 6px; height: 6px; background: #2C5530; border-radius: 50%;"></div>
+                <div>Mostrando <span style="font-weight: 700; color: #2C5530;">{len(gdf)}</span> polígonos</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Variables globales - EXACTO A COLAB
+    var boundsGeneral = null;
+    var contenidoVisible = true;
+    var mapaPoligonos = new Map();
+
+    // Función para mostrar/ocultar contenido - CON BOTÓN ↻/▼
+    function toggleBuscador() {{
+        var contenido = document.getElementById("contenidoBuscador");
+        var toggleBtn = document.getElementById("toggleBuscador");
+        var lupita = document.getElementById("lupitaBuscador");
+
+        if (contenidoVisible) {{
+            contenido.style.display = "none";
+            toggleBtn.innerHTML = "▼";
+            lupita.style.width = "140px";
+            lupita.style.padding = "6px 8px";
+        }} else {{
+            contenido.style.display = "block";
+            toggleBtn.innerHTML = "↻";
+            lupita.style.width = "220px";
+            lupita.style.padding = "10px 12px";
+        }}
+        contenidoVisible = !contenidoVisible;
+    }}
+
+    // Almacenar referencia a cada polígono al inicio
+    function inicializarPoligonos() {{
+        var capa = obtenerCapaPoligonosSegura();
+        if (capa) {{
+            capa.eachLayer(function(layer) {{
+                var id = layer._leaflet_id;
+                mapaPoligonos.set(id, layer);
+
+                // Guardar estilo original
+                layer._estiloOriginal = {{
+                    fillColor: layer.options.fillColor,
+                    color: layer.options.color,
+                    weight: layer.options.weight,
+                    fillOpacity: layer.options.fillOpacity,
+                    opacity: layer.options.opacity,
+                    interactive: layer.options.interactive
+                }};
+            }});
+        }}
+    }}
+
+    // Función para filtrar - ¡SOLUCIÓN DEFINITIVA!
+    function filtrarCliente() {{
+        console.log("🔍 Iniciando búsqueda...");
+        
+        // OBTENER MAPA Y CAPA
+        var mapa = obtenerMapaSeguro();
+        var capa = obtenerCapaPoligonosSegura();
+        
+        if (!mapa || !capa) {{
+            alert("❌ Error: No se pudo inicializar el sistema. Recarga la página.");
+            return;
+        }}
+        
+        var valor = document.getElementById("clienteInput").value.toLowerCase();
+        if (!valor) {{
+            alert("Por favor, escribe o selecciona un cliente");
+            return;
         }}
 
-        // Función para resetear - RESTAURA TODO COMPLETAMENTE
-        function resetearFiltro() {{
-            console.log("🔄 Restableciendo filtros...");
-            
-            // OBTENER MAPA Y CAPA
-            var mapa = obtenerMapaSeguro();
-            var capa = obtenerCapaPoligonosSegura();
-            
-            if (!mapa || !capa) {{
-                console.error("❌ No se pudo obtener mapa/capa");
-                return;
-            }}
+        var boundsFiltrados = null;
+        var contador = 0;
 
-            // Limpiar input
-            document.getElementById("clienteInput").value = "";
+        console.log("📊 Buscando en", capa.getLayers().length, "polígonos...");
 
-            // Restaurar TODOS los polígonos
-            capa.eachLayer(function(layer) {{
-                // Restaurar estilo original
-                var propiedades = layer.feature.properties;
+        capa.eachLayer(function(layer) {{
+            var propiedades = layer.feature.properties;
+            var clienteEnPoligono = propiedades["{campos['cliente']}"];
+
+            if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {{
+                // MOSTRAR este polígono
                 layer.setStyle({{
-                    fillColor: propiedades._color_fill || '#9C27B0',
-                    color: propiedades._color_border || '#7B1FA2',
-                    weight: 2,
                     fillOpacity: 0.6,
+                    weight: 2,
                     opacity: 1
                 }});
-
-                // Restaurar interactividad
                 layer.options.interactive = true;
-            }});
+                contador++;
 
-            // Restaurar zoom original
-            var boundsGeneral = capa.getBounds();
-            if (boundsGeneral && boundsGeneral.isValid()) {{
-                console.log("📍 Restaurando zoom original...");
-                mapa.fitBounds(boundsGeneral, {{padding: [50, 50]}});
+                // AGREGAR A BOUNDS PARA ZOOM
+                var layerBounds = layer.getBounds();
+                if (layerBounds && layerBounds.isValid()) {{
+                    if (!boundsFiltrados) {{
+                        boundsFiltrados = layerBounds;
+                    }} else {{
+                        boundsFiltrados = boundsFiltrados.extend(layerBounds);
+                    }}
+                }}
+            }} else {{
+                // OCULTAR este polígono
+                layer.setStyle({{
+                    fillOpacity: 0,
+                    weight: 0,
+                    opacity: 0
+                }});
+                layer.options.interactive = false;
             }}
+        }});
 
-            // Actualizar estado
-            var estadoDiv = document.getElementById("estadoFiltro");
-            estadoDiv.innerHTML = "Mostrando todos (" + capa.getLayers().length + ")";
-            estadoDiv.style.color = "#666";
-            
-            console.log("✅ Filtros restablecidos");
+        // ACTUALIZAR ESTADO
+        var estadoDiv = document.getElementById("estadoFiltro");
+        if (contador > 0) {{
+            estadoDiv.innerHTML = "Mostrando " + contador + " polígonos";
+            estadoDiv.style.color = "#4CAF50";
+
+            // HACER ZOOM
+            if (boundsFiltrados && boundsFiltrados.isValid()) {{
+                console.log("🎯 Haciendo zoom a bounds:", boundsFiltrados);
+                
+                mapa.fitBounds(boundsFiltrados, {{
+                    padding: [80, 80],
+                    duration: 1,
+                    maxZoom: 15
+                }});
+                
+                console.log("✅ Zoom ejecutado");
+            }} else {{
+                console.warn("⚠️ No hay bounds válidos para zoom");
+            }}
+        }} else {{
+            estadoDiv.innerHTML = "❌ No se encontraron resultados";
+            estadoDiv.style.color = "#f44336";
+        }}
+    }}
+
+    // Función para resetear - RESTAURA TODO COMPLETAMENTE
+    function resetearFiltro() {{
+        console.log("🔄 Restableciendo filtros...");
+        
+        // OBTENER MAPA Y CAPA
+        var mapa = obtenerMapaSeguro();
+        var capa = obtenerCapaPoligonosSegura();
+        
+        if (!mapa || !capa) {{
+            console.error("❌ No se pudo obtener mapa/capa");
+            return;
         }}
 
-        // Permitir usar Enter para filtrar
-        document.getElementById("clienteInput").addEventListener("keypress", function(e) {{
-            if (e.key === "Enter") {{
-                filtrarCliente();
-            }}
+        // Limpiar input
+        document.getElementById("clienteInput").value = "";
+
+        // Restaurar TODOS los polígonos
+        capa.eachLayer(function(layer) {{
+            // Restaurar estilo original
+            var propiedades = layer.feature.properties;
+            layer.setStyle({{
+                fillColor: propiedades._color_fill || '#9C27B0',
+                color: propiedades._color_border || '#7B1FA2',
+                weight: 2,
+                fillOpacity: 0.6,
+                opacity: 1
+            }});
+
+            // Restaurar interactividad
+            layer.options.interactive = true;
         }});
 
-        // Inicializar cuando se carga la página
-        document.addEventListener("DOMContentLoaded", function() {{
-            setTimeout(function() {{
-                inicializarPoligonos();
-            }}, 1000);
-        }});
-        </script>
-        '''
+        // Restaurar zoom original
+        var boundsGeneral = capa.getBounds();
+        if (boundsGeneral && boundsGeneral.isValid()) {{
+            console.log("📍 Restaurando zoom original...");
+            mapa.fitBounds(boundsGeneral, {{padding: [50, 50]}});
+        }}
+
+        // Actualizar estado
+        var estadoDiv = document.getElementById("estadoFiltro");
+        estadoDiv.innerHTML = "Mostrando todos (" + capa.getLayers().length + ")";
+        estadoDiv.style.color = "#666";
         
-        agregar_elemento_html_seguro(m, buscador_html)
+        console.log("✅ Filtros restablecidos");
+    }}
+
+    // Permitir usar Enter para filtrar
+    document.getElementById("clienteInput").addEventListener("keypress", function(e) {{
+        if (e.key === "Enter") {{
+            filtrarCliente();
+        }}
+    }});
+
+    // Inicializar cuando se carga la página
+    document.addEventListener("DOMContentLoaded", function() {{
+        setTimeout(function() {{
+            inicializarPoligonos();
+        }}, 1000);
+    }});
+    </script>
+    '''
+    
+    agregar_elemento_html_seguro(m, buscador_html)
 
     # ========== PANEL DE COMPARACIÓN POR ZONA (100% IDÉNTICO) ==========
     if campos['zona'] and campos['hectareas']:
