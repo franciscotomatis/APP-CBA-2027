@@ -2176,7 +2176,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             // Contar polígonos de otra forma
             var contadorInicial = 0;
             capa.eachLayer(function() {{ contadorInicial++; }});
-            console.log("📊 Polígonos totales:", contadorInicial);
+            console.log("📊 Polígonos totales: " + contadorInicial);
 
             capa.eachLayer(function(layer) {{
                 var propiedades = layer.feature.properties;
