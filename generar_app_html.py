@@ -1896,7 +1896,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
 
 # ========== BUSCADOR DE CLIENTES (100% IDÉNTICO) ==========
     if campos['cliente']:
-        clientes = sorted(gdf[campos['cliente']].dropna().astype(str).unique())
+        clientes = sorted(gdf[campos['cliente']].dropna().astriz().unique())
         
         opciones_clientes = "".join(f'<option value="{cliente}">' for cliente in clientes)
         
@@ -1945,74 +1945,74 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 <!-- ========== SISTEMA DE DETECCIÓN AUTOMÁTICA ========== -->
                 <script>
                 // FUNCIÓN PARA ENCONTRAR EL MAPA (aunque cambie el nombre)
-                function obtenerMapaSeguro() {
+                function obtenerMapaSeguro() {{
                     // Si ya lo encontramos, reusar
-                    if (window._miMapa && window._miMapa.fitBounds) {
+                    if (window._miMapa && window._miMapa.fitBounds) {{
                         return window._miMapa;
-                    }
+                    }}
                     
                     // Buscar en ventana global
-                    for (var key in window) {
-                        try {
+                    for (var key in window) {{
+                        try {{
                             var obj = window[key];
                             // Características únicas de mapa Leaflet
                             if (obj && 
                                 typeof obj.fitBounds === 'function' &&
                                 typeof obj.setView === 'function' && 
                                 typeof obj.getBounds === 'function' &&
-                                obj._container && obj._container.tagName === 'DIV') {
+                                obj._container && obj._container.tagName === 'DIV') {{
                                 
                                 console.log("🗺️ Mapa detectado automáticamente:", key);
                                 window._miMapa = obj;  // Guardar para siempre
                                 window.map = obj;      // Compatibilidad
                                 return obj;
-                            }
-                        } catch(e) {}
-                    }
+                            }}
+                        }} catch(e) {{}}
+                    }}
                     
                     console.error("❌ No se pudo encontrar el mapa");
                     return null;
-                }
+                }}
                 
                 // FUNCIÓN PARA ENCONTRAR CAPA DE POLÍGONOS
-                function obtenerCapaPoligonosSegura() {
-                    if (window._miCapaPoligonos && window._miCapaPoligonos.eachLayer) {
+                function obtenerCapaPoligonosSegura() {{
+                    if (window._miCapaPoligonos && window._miCapaPoligonos.eachLayer) {{
                         return window._miCapaPoligonos;
-                    }
+                    }}
                     
                     // Buscar capa con ~5700 polígonos
-                    for (var key in window) {
-                        try {
+                    for (var key in window) {{
+                        try {{
                             var obj = window[key];
-                            if (obj && typeof obj.eachLayer === 'function') {
+                            if (obj && typeof obj.eachLayer === 'function') {{
                                 var contador = 0;
-                                obj.eachLayer(function() { contador++; });
+                                obj.eachLayer(function() {{ contador++; }});
                                 
-                                if (contador > 5000 && contador < 6000) {
+                                if (contador > 5000 && contador < 6000) {{
                                     console.log("✅ Capa principal detectada:", key, "(" + contador + " polígonos)");
                                     window._miCapaPoligonos = obj;
                                     return obj;
-                                }
-                            }
-                        } catch(e) {}
-                    }
+                                }}
+                            }}
+                        }} catch(e) {{}}
+                    }}
                     
                     console.warn("⚠️ Usando fallback: primera capa geo_json_");
-                    for (var key in window) {
-                        if (key.startsWith('geo_json_')) {
+                    for (var key in window) {{
+                        if (key.startsWith('geo_json_')) {{
                             return window[key];
-                        }
-                    }
+                        }}
+                    }}
                     
                     return null;
-                }
+                }}
                 
                 // INICIALIZAR AL CARGAR
-                setTimeout(function() {
+                setTimeout(function() {{
                     obtenerMapaSeguro();
                     obtenerCapaPoligonosSegura();
                     console.log("✅ Sistema de detección listo");
-                }, 500);
+                }}, 500);
                 </script>
                 <!-- ========== FIN DETECCIÓN ========== -->
                 
@@ -2128,127 +2128,127 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         }}
 
         // Función para filtrar - ¡SOLUCIÓN DEFINITIVA!
-        function filtrarCliente() {
+        function filtrarCliente() {{
             console.log("🔍 Iniciando búsqueda...");
             
             // OBTENER MAPA Y CAPA
             var mapa = obtenerMapaSeguro();
             var capa = obtenerCapaPoligonosSegura();
             
-            if (!mapa || !capa) {
+            if (!mapa || !capa) {{
                 alert("❌ Error: No se pudo inicializar el sistema. Recarga la página.");
                 return;
-            }
+            }}
             
             var valor = document.getElementById("clienteInput").value.toLowerCase();
-            if (!valor) {
+            if (!valor) {{
                 alert("Por favor, escribe o selecciona un cliente");
                 return;
-            }
+            }}
 
             var boundsFiltrados = null;
             var contador = 0;
 
             console.log("📊 Buscando en", capa.getLayers().length, "polígonos...");
 
-            capa.eachLayer(function(layer) {
+            capa.eachLayer(function(layer) {{
                 var propiedades = layer.feature.properties;
                 var clienteEnPoligono = propiedades["{campos['cliente']}"];
 
-                if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {
+                if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {{
                     // MOSTRAR este polígono
-                    layer.setStyle({
+                    layer.setStyle({{
                         fillOpacity: 0.6,
                         weight: 2,
                         opacity: 1
-                    });
+                    }});
                     layer.options.interactive = true;
                     contador++;
 
                     // AGREGAR A BOUNDS PARA ZOOM
                     var layerBounds = layer.getBounds();
-                    if (layerBounds && layerBounds.isValid()) {
-                        if (!boundsFiltrados) {
+                    if (layerBounds && layerBounds.isValid()) {{
+                        if (!boundsFiltrados) {{
                             boundsFiltrados = layerBounds;
-                        } else {
+                        }} else {{
                             boundsFiltrados = boundsFiltrados.extend(layerBounds);
-                        }
-                    }
-                } else {
+                        }}
+                    }}
+                }} else {{
                     // OCULTAR este polígono
-                    layer.setStyle({
+                    layer.setStyle({{
                         fillOpacity: 0,
                         weight: 0,
                         opacity: 0
-                    });
+                    }});
                     layer.options.interactive = false;
-                }
-            });
+                }}
+            }});
 
             // ACTUALIZAR ESTADO
             var estadoDiv = document.getElementById("estadoFiltro");
-            if (contador > 0) {
+            if (contador > 0) {{
                 estadoDiv.innerHTML = "Mostrando " + contador + " polígonos";
                 estadoDiv.style.color = "#4CAF50";
 
                 // HACER ZOOM
-                if (boundsFiltrados && boundsFiltrados.isValid()) {
+                if (boundsFiltrados && boundsFiltrados.isValid()) {{
                     console.log("🎯 Haciendo zoom a bounds:", boundsFiltrados);
                     
-                    mapa.fitBounds(boundsFiltrados, {
+                    mapa.fitBounds(boundsFiltrados, {{
                         padding: [80, 80],
                         duration: 1,
                         maxZoom: 15
-                    });
+                    }});
                     
                     console.log("✅ Zoom ejecutado");
-                } else {
+                }} else {{
                     console.warn("⚠️ No hay bounds válidos para zoom");
-                }
-            } else {
+                }}
+            }} else {{
                 estadoDiv.innerHTML = "❌ No se encontraron resultados";
                 estadoDiv.style.color = "#f44336";
-            }
-        }
+            }}
+        }}
 
         // Función para resetear - RESTAURA TODO COMPLETAMENTE
-        function resetearFiltro() {
+        function resetearFiltro() {{
             console.log("🔄 Restableciendo filtros...");
             
             // OBTENER MAPA Y CAPA
             var mapa = obtenerMapaSeguro();
             var capa = obtenerCapaPoligonosSegura();
             
-            if (!mapa || !capa) {
+            if (!mapa || !capa) {{
                 console.error("❌ No se pudo obtener mapa/capa");
                 return;
-            }
+            }}
 
             // Limpiar input
             document.getElementById("clienteInput").value = "";
 
             // Restaurar TODOS los polígonos
-            capa.eachLayer(function(layer) {
+            capa.eachLayer(function(layer) {{
                 // Restaurar estilo original
                 var propiedades = layer.feature.properties;
-                layer.setStyle({
+                layer.setStyle({{
                     fillColor: propiedades._color_fill || '#9C27B0',
                     color: propiedades._color_border || '#7B1FA2',
                     weight: 2,
                     fillOpacity: 0.6,
                     opacity: 1
-                });
+                }});
 
                 // Restaurar interactividad
                 layer.options.interactive = true;
-            });
+            }});
 
             // Restaurar zoom original
             var boundsGeneral = capa.getBounds();
-            if (boundsGeneral && boundsGeneral.isValid()) {
+            if (boundsGeneral && boundsGeneral.isValid()) {{
                 console.log("📍 Restaurando zoom original...");
                 mapa.fitBounds(boundsGeneral, {{padding: [50, 50]}});
-            }
+            }}
 
             // Actualizar estado
             var estadoDiv = document.getElementById("estadoFiltro");
@@ -2256,7 +2256,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             estadoDiv.style.color = "#666";
             
             console.log("✅ Filtros restablecidos");
-        }
+        }}
 
         // Permitir usar Enter para filtrar
         document.getElementById("clienteInput").addEventListener("keypress", function(e) {{
