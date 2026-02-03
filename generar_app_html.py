@@ -2170,16 +2170,21 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             }}
         }}
 
-        // Función para filtrar - ¡SOLUCIÓN DEFINITIVA!
+        // ========== SISTEMA DE FILTRADO AVANZADO ==========
+
+        // Variables globales
+        var capaOriginal = null;
+        var capaFiltrada = null;
+        var poligonosFiltrados = [];
+
         function filtrarCliente() {{
-            console.log("🔍 Iniciando búsqueda...");
+            console.log("🔍 Iniciando búsqueda avanzada...");
             
-            // OBTENER MAPA Y CAPA
             var mapa = obtenerMapaSeguro();
             var capa = obtenerCapaPoligonosSegura();
             
             if (!mapa || !capa) {{
-                alert("❌ Error: No se pudo inicializar el sistema. Recarga la página.");
+                alert("❌ Error: No se pudo inicializar el sistema.");
                 return;
             }}
             
@@ -2189,132 +2194,159 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 return;
             }}
 
+            // Guardar referencia a la capa original (solo primera vez)
+            if (!capaOriginal) {{
+                capaOriginal = capa;
+            }}
+
+            // Limpiar filtro anterior
+            if (capaFiltrada) {{
+                mapa.removeLayer(capaFiltrada);
+                capaFiltrada = null;
+            }}
+            poligonosFiltrados = [];
+
             var boundsFiltrados = null;
-            var contador = 0;
+            var featuresFiltrados = [];
 
-            console.log("📊 Buscando en capa:", capa);
-            // Contar polígonos de otra forma
-            var contadorInicial = 0;
-            capa.eachLayer(function() {{ contadorInicial++; }});
-            console.log("📊 Polígonos totales: " + contadorInicial);
+            console.log("🔍 Buscando coincidencias...");
 
-            capa.eachLayer(function(layer) {{
+            // 1. RECOLECTAR features que coinciden
+            capaOriginal.eachLayer(function(layer) {{
                 var propiedades = layer.feature.properties;
                 var clienteEnPoligono = propiedades["{campos['cliente']}"];
 
                 if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {{
-                    // MOSTRAR este polígono
-                    layer.setStyle({{
-                        fillOpacity: 0.6,
-                        weight: 2,
-                        opacity: 1
-                    }});
-                    layer.options.interactive = true;
-                    contador++;
+                    // Agregar a la lista
+                    featuresFiltrados.push(layer.feature);
+                    poligonosFiltrados.push(layer);
 
-                    // AGREGAR A BOUNDS PARA ZOOM
+                    // Para zoom
                     var layerBounds = layer.getBounds();
                     if (layerBounds && layerBounds.isValid()) {{
-                        if (!boundsFiltrados) {{
-                            boundsFiltrados = layerBounds;
-                        }} else {{
-                            boundsFiltrados = boundsFiltrados.extend(layerBounds);
-                        }}
+                        boundsFiltrados = boundsFiltrados ? boundsFiltrados.extend(layerBounds) : layerBounds;
                     }}
-                }} else {{
-                    // OCULTAR este polígono
-                    layer.setStyle({{
-                        fillOpacity: 0,
-                        weight: 0,
-                        opacity: 0
-                    }});
-                    layer.options.interactive = false;
                 }}
             }});
 
-            // ACTUALIZAR ESTADO
-            var estadoDiv = document.getElementById("estadoFiltro");
-            if (contador > 0) {{
-                estadoDiv.innerHTML = "Mostrando " + contador + " polígonos";
-                estadoDiv.style.color = "#4CAF50";
+            console.log("✅ Encontrados:", featuresFiltrados.length, "polígonos");
 
-                // HACER ZOOM
+            // 2. OCULTAR capa original completamente
+            capaOriginal.setStyle({{
+                fillOpacity: 0,
+                weight: 0,
+                opacity: 0
+            }});
+            capaOriginal.options.interactive = false;
+
+            // 3. CREAR nueva capa SOLO con los filtrados
+            if (featuresFiltrados.length > 0) {{
+                var geoJsonFiltrado = {{
+                    type: "FeatureCollection",
+                    features: featuresFiltrados
+                }};
+
+                capaFiltrada = L.geoJSON(geoJsonFiltrado, {{
+                    style: function(feature) {{
+                        return {{
+                            fillColor: feature.properties._color_fill || '#9C27B0',
+                            color: feature.properties._color_border || '#7B1FA2',
+                            weight: 2,
+                            fillOpacity: 0.6,
+                            opacity: 1
+                        }};
+                    }},
+                    onEachFeature: function(feature, layer) {{
+                        // Restaurar interactividad
+                        layer.options.interactive = true;
+                        
+                        // Restaurar tooltip si existía
+                        if (feature.properties["{campos['cliente']}"]) {{
+                            layer.bindTooltip(feature.properties["{campos['cliente']}"], {{
+                                sticky: true,
+                                className: 'leaflet-tooltip-custom'
+                            }});
+                        }}
+                    }}
+                }}).addTo(mapa);
+
+                // 4. ZOOM a los filtrados
                 if (boundsFiltrados && boundsFiltrados.isValid()) {{
-                    console.log("🎯 Haciendo zoom a bounds:", boundsFiltrados);
-                    
+                    console.log("🎯 Haciendo zoom a bounds filtrados");
                     mapa.fitBounds(boundsFiltrados, {{
                         padding: [80, 80],
                         duration: 1,
                         maxZoom: 15
                     }});
-                    
-                    console.log("✅ Zoom ejecutado");
-                }} else {{
-                    console.warn("⚠️ No hay bounds válidos para zoom");
                 }}
+            }}
+
+            // 5. ACTUALIZAR ESTADO
+            var estadoDiv = document.getElementById("estadoFiltro");
+            if (featuresFiltrados.length > 0) {{
+                estadoDiv.innerHTML = "Mostrando " + featuresFiltrados.length + " polígonos";
+                estadoDiv.style.color = "#4CAF50";
             }} else {{
                 estadoDiv.innerHTML = "❌ No se encontraron resultados";
                 estadoDiv.style.color = "#f44336";
             }}
         }}
 
-        // Función para resetear - RESTAURA TODO COMPLETAMENTE
         function resetearFiltro() {{
-            console.log("🔄 Restableciendo filtros...");
+            console.log("🔄 Restableciendo filtro avanzado...");
             
-            // OBTENER MAPA Y CAPA
             var mapa = obtenerMapaSeguro();
-            var capa = obtenerCapaPoligonosSegura();
             
-            if (!mapa || !capa) {{
-                console.error("❌ No se pudo obtener mapa/capa");
+            if (!mapa || !capaOriginal) {{
+                console.error("❌ No se pudo restablecer");
                 return;
             }}
 
-            // Limpiar input
+            // 1. Limpiar input
             document.getElementById("clienteInput").value = "";
 
-            // Restaurar TODOS los polígonos
-            capa.eachLayer(function(layer) {{
-                // Restaurar estilo original
-                var propiedades = layer.feature.properties;
+            // 2. ELIMINAR capa filtrada si existe
+            if (capaFiltrada) {{
+                mapa.removeLayer(capaFiltrada);
+                capaFiltrada = null;
+            }}
+
+            // 3. RESTAURAR capa original completamente
+            capaOriginal.setStyle({{
+                fillColor: '#9C27B0',
+                color: '#7B1FA2',
+                weight: 2,
+                fillOpacity: 0.6,
+                opacity: 1
+            }});
+            
+            // Restaurar interactividad de TODOS los polígonos
+            capaOriginal.eachLayer(function(layer) {{
+                layer.options.interactive = true;
                 layer.setStyle({{
-                    fillColor: propiedades._color_fill || '#9C27B0',
-                    color: propiedades._color_border || '#7B1FA2',
+                    fillColor: layer.feature.properties._color_fill || '#9C27B0',
+                    color: layer.feature.properties._color_border || '#7B1FA2',
                     weight: 2,
                     fillOpacity: 0.6,
                     opacity: 1
                 }});
-
-                // Restaurar interactividad
-                layer.options.interactive = true;
-                layer.options.bubblingMouseEvents = true;
-                
-                // Restaurar tooltip si había
-                if (!layer._tooltip && layer.feature.properties["{campos['cliente']}"]) {{
-                    layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {{
-                        sticky: true,
-                        className: 'leaflet-tooltip-custom'
-                    }});
-                }}
             }});
 
-            // Restaurar zoom original
-            var boundsGeneral = capa.getBounds();
+            // 4. RESTAURAR ZOOM original
+            var boundsGeneral = capaOriginal.getBounds();
             if (boundsGeneral && boundsGeneral.isValid()) {{
                 console.log("📍 Restaurando zoom original...");
                 mapa.fitBounds(boundsGeneral, {{padding: [50, 50]}});
             }}
 
-            // Actualizar estado
+            // 5. ACTUALIZAR ESTADO
             var estadoDiv = document.getElementById("estadoFiltro");
-            // Contar polígonos para mostrar en el estado
             var contadorTotal = 0;
-            capa.eachLayer(function() {{ contadorTotal++; }});
+            capaOriginal.eachLayer(function() {{ contadorTotal++; }});
             estadoDiv.innerHTML = "Mostrando todos (" + contadorTotal + ")";
             estadoDiv.style.color = "#666";
             
-            console.log("✅ Filtros restablecidos");
+            console.log("✅ Filtro restablecido completamente");
         }}
 
         // Permitir usar Enter para filtrar
