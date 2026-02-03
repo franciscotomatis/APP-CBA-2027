@@ -2175,7 +2175,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             console.log("📊 Buscando en capa:", capa);
             // Contar polígonos de otra forma
             var contadorInicial = 0;
-            capa.eachLayer(function() { contadorInicial++; });
+            capa.eachLayer(function() {{ contadorInicial++; }});
             console.log("📊 Polígonos totales:", contadorInicial);
 
             capa.eachLayer(function(layer) {{
@@ -2279,7 +2279,10 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
 
             // Actualizar estado
             var estadoDiv = document.getElementById("estadoFiltro");
-            estadoDiv.innerHTML = "Mostrando todos (" + capa.getLayers().length + ")";
+            // Contar polígonos para mostrar en el estado
+            var contadorTotal = 0;
+            capa.eachLayer(function() {{ contadorTotal++; }});
+            estadoDiv.innerHTML = "Mostrando todos (" + contadorTotal + ")";
             estadoDiv.style.color = "#666";
             
             console.log("✅ Filtros restablecidos");
