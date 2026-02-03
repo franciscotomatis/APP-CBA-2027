@@ -986,13 +986,13 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         
         config_capas = [
             {
-                "nombre": "tvdi_m_2024:tvdi_2025361_modis",
+                "nombre": "tvdi_m_2024:tvdi_2026009_modis",
                 "simbolo": "📊",
                 "nombre_display": "TVDI",
                 "opacidad": 0.75
             },
             {
-                "nombre": "tvdi_anomsindex_m_2024:anomtvdi_2025361_anomindex_modis",
+                "nombre": "tvdi_anomsindex_m_2024:anomtvdi_2026009_anomindex_modis",
                 "simbolo": "🟡", 
                 "nombre_display": "Anomalía TVDI",
                 "opacidad": 0.75
