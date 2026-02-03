@@ -2171,67 +2171,67 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         }}
 
         // ========== SISTEMA DE FILTRADO AVANZADO CORREGIDO ==========
-        
+
         // Variables globales
         var capaOriginal = null;
         var capaFiltrada = null;
-        
-        function filtrarCliente() {
+
+        function filtrarCliente() {{
             console.log("🔍 Iniciando búsqueda avanzada...");
-            
+
             var mapa = obtenerMapaSeguro();
             var capa = obtenerCapaPoligonosSegura();
-            
-            if (!mapa || !capa) {
+
+            if (!mapa || !capa) {{
                 alert("❌ Error: No se pudo inicializar el sistema.");
                 return;
-            }
-            
+            }}
+
             var valor = document.getElementById("clienteInput").value.toLowerCase();
-            if (!valor) {
+            if (!valor) {{
                 alert("Por favor, escribe o selecciona un cliente");
                 return;
-            }
+            }}
         
             // Guardar referencia a la capa original (solo primera vez)
-            if (!capaOriginal) {
+            if (!capaOriginal) {{
                 capaOriginal = capa;
-            }
+            }}
         
             // Limpiar filtro anterior
-            if (capaFiltrada) {
+            if (capaFiltrada) {{
                 mapa.removeLayer(capaFiltrada);
                 capaFiltrada = null;
-            }
+            }}
         
             var boundsFiltrados = null;
             var featuresFiltrados = [];
             var contadorFiltrados = 0;
-        
+
             console.log("🔍 Buscando coincidencias...");
-        
+
             // 1. DESHABILITAR TODOS los polígonos primero
-            capaOriginal.eachLayer(function(layer) {
+            capaOriginal.eachLayer(function(layer) {{
                 // OCULTAR COMPLETAMENTE
-                layer.setStyle({
+                layer.setStyle({{
                     fillOpacity: 0,
                     weight: 0,
                     opacity: 0
-                });
+                }});
                 
                 // DESHABILITAR INTERACTIVIDAD
                 layer.options.interactive = false;
                 
                 // Remover tooltip temporalmente
-                if (layer._tooltip) {
+                if (layer._tooltip) {{
                     layer.unbindTooltip();
-                }
+                }}
                 
                 // Remover popup temporalmente (pero guardar que tenía popup)
-                if (layer._popup) {
+                if (layer._popup) {{
                     layer._teniaPopup = true;
                     layer.unbindPopup();
-                }
+                }}
                 
                 // Remover eventos de mouse
                 layer.off('mouseover');
@@ -2241,109 +2241,109 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 // Verificar si coincide con la búsqueda
                 var propiedades = layer.feature.properties;
                 var clienteEnPoligono = propiedades["{campos['cliente']}"];
-        
-                if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {
+
+                if (clienteEnPoligono && clienteEnPoligono.toString().toLowerCase().includes(valor)) {{
                     // Agregar a la lista de filtrados
                     featuresFiltrados.push(layer.feature);
                     contadorFiltrados++;
-        
+
                     // Para zoom
                     var layerBounds = layer.getBounds();
-                    if (layerBounds && layerBounds.isValid()) {
+                    if (layerBounds && layerBounds.isValid()) {{
                         boundsFiltrados = boundsFiltrados ? boundsFiltrados.extend(layerBounds) : layerBounds;
-                    }
-                }
-            });
+                    }}
+                }}
+            }});
         
             console.log("✅ Encontrados:", contadorFiltrados, "polígonos");
-        
+
             // 2. CREAR nueva capa SOLO con los filtrados - CORREGIDO
-            if (featuresFiltrados.length > 0) {
-                var geoJsonFiltrado = {
+            if (featuresFiltrados.length > 0) {{
+                var geoJsonFiltrado = {{
                     type: "FeatureCollection",
                     features: featuresFiltrados
-                };
-        
-                capaFiltrada = L.geoJSON(geoJsonFiltrado, {
-                    style: function(feature) {
-                        return {
+                }};
+
+                capaFiltrada = L.geoJSON(geoJsonFiltrado, {{
+                    style: function(feature) {{
+                        return {{
                             fillColor: feature.properties._color_fill || '#9C27B0',
                             color: feature.properties._color_border || '#7B1FA2',
                             weight: 2,
                             fillOpacity: 0.6,
                             opacity: 1
-                        };
-                    },
-                    onEachFeature: function(feature, layer) {
+                        }};
+                    }},
+                    onEachFeature: function(feature, layer) {{
                         // ACTIVAR interactividad SOLO para filtrados
                         layer.options.interactive = true;
                         layer.options.bubblingMouseEvents = true; // IMPORTANTE: Permitir eventos
                         
                         // Restaurar tooltip
-                        if (feature.properties["{campos['cliente']}"]) {
-                            layer.bindTooltip(feature.properties["{campos['cliente']}"], {
+                        if (feature.properties["{campos['cliente']}"]) {{
+                            layer.bindTooltip(feature.properties["{campos['cliente']}"], {{
                                 sticky: true,
                                 className: 'leaflet-tooltip-custom'
-                            });
-                        }
+                            }});
+                        }}
                         
                         // CREAR POPUP NUEVO - FIX CRÍTICO: Usar el popup EXACTO que debería tener
                         var popupContent = crearContenidoPopup(feature.properties);
                         
-                        layer.bindPopup(popupContent, {
+                        layer.bindPopup(popupContent, {{
                             maxWidth: 350,
                             minWidth: 250,
                             className: 'leaflet-popup-custom'
-                        });
+                        }});
                         
                         // Agregar eventos de hover
-                        layer.on('mouseover', function(e) {
-                            e.target.setStyle({
+                        layer.on('mouseover', function(e) {{
+                            e.target.setStyle({{
                                 fillOpacity: 0.8,
                                 weight: 3
-                            });
-                        });
+                            }});
+                        }});
                         
-                        layer.on('mouseout', function(e) {
-                            e.target.setStyle({
+                        layer.on('mouseout', function(e) {{
+                            e.target.setStyle({{
                                 fillOpacity: 0.6,
                                 weight: 2
-                            });
-                        });
+                            }});
+                        }});
                         
                         // Evento click para abrir popup
-                        layer.on('click', function(e) {
+                        layer.on('click', function(e) {{
                             // Esto es CRÍTICO: Abrir el popup programáticamente si no se abre solo
                             layer.openPopup();
-                        });
-                    }
-                }).addTo(mapa);
+                        }});
+                    }}
+                }}).addTo(mapa);
         
                 // 3. ZOOM a los filtrados
-                if (boundsFiltrados && boundsFiltrados.isValid()) {
+                if (boundsFiltrados && boundsFiltrados.isValid()) {{
                     console.log("🎯 Haciendo zoom a bounds filtrados");
-                    mapa.fitBounds(boundsFiltrados, {
+                    mapa.fitBounds(boundsFiltrados, {{
                         padding: [80, 80],
                         duration: 1,
                         maxZoom: 15
-                    });
-                }
-            }
+                    }});
+                }}
+            }}
         
             // 4. ACTUALIZAR ESTADO
             var estadoDiv = document.getElementById("estadoFiltro");
-            if (contadorFiltrados > 0) {
+            if (contadorFiltrados > 0) {{
                 estadoDiv.innerHTML = "Mostrando " + contadorFiltrados + " polígonos";
                 estadoDiv.style.color = "#4CAF50";
-            } else {
+            }} else {{
                 estadoDiv.innerHTML = "❌ No se encontraron resultados";
                 estadoDiv.style.color = "#f44336";
-            }
-        }
-        
+            }}
+        }}
+
         // FUNCIÓN PARA CREAR CONTENIDO DEL POPUP (idéntico al original)
-        function crearContenidoPopup(propiedades) {
-            var props = propiedades || {};
+        function crearContenidoPopup(propiedades) {{
+            var props = propiedades || {{}};
             
             // Crear HTML del popup (igual que en tu aplicación original)
             var popupContent = '<div style="font-family: Arial, sans-serif; font-size: 11px; max-width: 350px; max-height: 400px; overflow-y: auto; padding: 10px;">';
@@ -2355,112 +2355,112 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 'ZONA_CZ4', 'RENDIMIENTO_ASEGURADO', 'SUMA_ASEGURADA', 'FECHA_SIEMBRA'
             ];
             
-            for (var i = 0; i < camposParaPopup.length; i++) {
+            for (var i = 0; i < camposParaPopup.length; i++) {{
                 var campo = camposParaPopup[i];
-                if (props[campo] !== undefined && props[campo] !== null && props[campo] !== '') {
+                if (props[campo] !== undefined && props[campo] !== null && props[campo] !== '') {{
                     popupContent += '<div style="margin-bottom: 8px;">';
                     popupContent += '<strong style="color: #2C5530;">' + campo + ':</strong> ';
                     popupContent += '<span style="color: #333;">' + props[campo] + '</span>';
                     popupContent += '</div>';
-                }
-            }
+                }}
+            }}
             
             // Agregar campo del cliente (si existe y no está ya)
             var campoCliente = "{campos['cliente']}";
-            if (campoCliente && props[campoCliente] && !camposParaPopup.includes(campoCliente)) {
+            if (campoCliente && props[campoCliente] && !camposParaPopup.includes(campoCliente)) {{
                 popupContent += '<div style="margin-bottom: 8px;">';
                 popupContent += '<strong style="color: #2C5530;">CLIENTE:</strong> ';
                 popupContent += '<span style="color: #333;">' + props[campoCliente] + '</span>';
                 popupContent += '</div>';
-            }
+            }}
             
             popupContent += '</div>';
             
             return popupContent;
-        }
-        
-        function resetearFiltro() {
+        }}
+
+        function resetearFiltro() {{
             console.log("🔄 Restableciendo filtro avanzado...");
             
             var mapa = obtenerMapaSeguro();
             
-            if (!mapa || !capaOriginal) {
+            if (!mapa || !capaOriginal) {{
                 console.error("❌ No se pudo restablecer");
                 return;
-            }
+            }}
         
             // 1. Limpiar input
             document.getElementById("clienteInput").value = "";
-        
+
             // 2. ELIMINAR capa filtrada si existe
-            if (capaFiltrada) {
+            if (capaFiltrada) {{
                 mapa.removeLayer(capaFiltrada);
                 capaFiltrada = null;
-            }
+            }}
         
             // 3. RESTAURAR TODOS los polígonos individualmente
-            capaOriginal.eachLayer(function(layer) {
+            capaOriginal.eachLayer(function(layer) {{
                 // Restaurar estilo
-                layer.setStyle({
+                layer.setStyle({{
                     fillColor: layer.feature.properties._color_fill || '#9C27B0',
                     color: layer.feature.properties._color_border || '#7B1FA2',
                     weight: 2,
                     fillOpacity: 0.6,
                     opacity: 1
-                });
+                }});
                 
                 // RESTAURAR interactividad COMPLETA
                 layer.options.interactive = true;
                 layer.options.bubblingMouseEvents = true;
                 
                 // Restaurar tooltip
-                if (layer.feature.properties["{campos['cliente']}"]) {
-                    layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {
+                if (layer.feature.properties["{campos['cliente']}"]) {{
+                    layer.bindTooltip(layer.feature.properties["{campos['cliente']}"], {{
                         sticky: true,
                         className: 'leaflet-tooltip-custom'
-                    });
-                }
+                    }});
+                }}
                 
                 // Restaurar popup usando la misma función
                 var popupContent = crearContenidoPopup(layer.feature.properties);
-                layer.bindPopup(popupContent, {
+                layer.bindPopup(popupContent, {{
                     maxWidth: 350,
                     minWidth: 250,
                     className: 'leaflet-popup-custom'
-                });
+                }});
                 
                 // Restaurar eventos de hover
-                layer.on('mouseover', function(e) {
-                    e.target.setStyle({
+                layer.on('mouseover', function(e) {{
+                    e.target.setStyle({{
                         fillOpacity: 0.8,
                         weight: 3
-                    });
-                });
+                    }});
+                }});
                 
-                layer.on('mouseout', function(e) {
-                    e.target.setStyle({
+                layer.on('mouseout', function(e) {{
+                    e.target.setStyle({{
                         fillOpacity: 0.6,
                         weight: 2
-                    });
-                });
-            });
-        
+                    }});
+                }});
+            }});
+
             // 4. RESTAURAR ZOOM original
             var boundsGeneral = capaOriginal.getBounds();
-            if (boundsGeneral && boundsGeneral.isValid()) {
+            if (boundsGeneral && boundsGeneral.isValid()) {{
                 console.log("📍 Restaurando zoom original...");
-                mapa.fitBounds(boundsGeneral, {padding: [50, 50]});
-            }
+                mapa.fitBounds(boundsGeneral, {{padding: [50, 50]}});
+            }}
         
             // 5. ACTUALIZAR ESTADO
             var estadoDiv = document.getElementById("estadoFiltro");
             var contadorTotal = 0;
-            capaOriginal.eachLayer(function() { contadorTotal++; });
+            capaOriginal.eachLayer(function() {{ contadorTotal++; }});
             estadoDiv.innerHTML = "Mostrando todos (" + contadorTotal + ")";
             estadoDiv.style.color = "#666";
             
             console.log("✅ Filtro restablecido completamente");
-        }
+        }}
         // Permitir usar Enter para filtrar
         document.getElementById("clienteInput").addEventListener("keypress", function(e) {{
             if (e.key === "Enter") {{
