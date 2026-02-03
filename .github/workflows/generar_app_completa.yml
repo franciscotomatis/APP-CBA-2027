@@ -46,6 +46,9 @@ jobs:
         fi
     
     - name: Generar aplicación HTML
+      env:  # ← ¡AGREGAR ESTO!
+        MULTIRIESGO_USER: ${{ secrets.MULTIRIESGO_USER }}
+        MULTIRIESGO_PASS: ${{ secrets.MULTIRIESGO_PASS }}
       run: |
         echo "🎨 Generando aplicación web..."
         python generar_app_html.py geojson_unificado_actual.geojson index.html
