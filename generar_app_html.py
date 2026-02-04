@@ -349,7 +349,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     # URL del archivo de fotos en GitHub
     GITHUB_USER = "franciscotomatis"
     REPO_NAME = "APP-C-rdoba"
-    FOTOS_JSON_URL = f"https://raw.githubusercontent.com/{GITHUB_USER}/{REPO_NAME}/main/fotos.json"
+    FOTOS_JSON_URL = "https://drive.google.com/uc?export=download&id=1S5I0UIXqLJ2hxKQsv4mOY1KY1FzZcpzH"
 
     print(f"✅ Fotos se cargarán desde: {FOTOS_JSON_URL}")
 
