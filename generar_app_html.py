@@ -1733,7 +1733,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     <!-- BOTÓN EN EL PANEL DE CONTROLES -->
     <div id="controlSubirFotos" style="
         position: absolute;
-        top: 110px;  /* Debajo del botón de Medir */
+        top: 230px;  /* Debajo del botón de Medir */
         right: 10px;
         z-index: 1000;
     ">
