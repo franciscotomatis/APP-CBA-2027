@@ -2052,7 +2052,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             return;
         }
         
-        // MODO ONLINE: Subir a GitHub
+        // MODO ONLINE: Subir a GitHub usando el workflow
         mensajeProgreso.innerHTML = '🌐 Subiendo a GitHub...';
         
         try {
@@ -2065,8 +2065,50 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 timestamp: new Date().toISOString()
             };
             
-            // Usar GitHub API para subir directamente a fotos_subidas/
-            const subidaExitosa = await subirAGitHubAPI(fotoData);
+            // ========== NUEVA FUNCIÓN PARA USAR EL WORKFLOW ==========
+            async function subirFotoConWorkflow(fotoData) {
+                console.log('🔄 Enviando foto a GitHub Actions...');
+                
+                const nombreArchivo = `foto_${Math.abs(fotoData.lat).toFixed(6)}_${Math.abs(fotoData.lon).toFixed(6)}_${Date.now()}.jpg`;
+                
+                try {
+                    // Usar GitHub API para trigger workflow
+                    const response = await fetch(
+                        'https://api.github.com/repos/franciscotomatis/APP-C-rdoba/actions/workflows/recibir-foto.yml/dispatches',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/vnd.github.v3+json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                ref: 'main',
+                                inputs: {
+                                    foto_base64: fotoData.datos,
+                                    nombre_archivo: nombreArchivo,
+                                    latitud: fotoData.lat.toString(),
+                                    longitud: fotoData.lon.toString()
+                                }
+                            })
+                        }
+                    );
+                    
+                    if (response.ok) {
+                        console.log('✅ Workflow ejecutado correctamente');
+                        return { success: true };
+                    } else {
+                        console.error('❌ Error ejecutando workflow');
+                        return { success: false };
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error de red:', error);
+                    return { success: false };
+                }
+            }
+            
+            // Usar la nueva función
+            const subidaExitosa = await subirFotoConWorkflow(fotoData);
             
             if (subidaExitosa) {
                 mensajeProgreso.innerHTML = '✅ Foto subida exitosamente';
