@@ -1,0 +1,115 @@
+name: Procesar Fotos Nuevas Automático
+
+on:
+  # Se activa cuando se suben fotos a la carpeta fotos_subidas
+  push:
+    paths:
+      - 'fotos_subidas/**'
+      - '!fotos_subidas/procesadas/**'
+      - '!fotos_subidas/README.md'
+  
+  # Se ejecuta automáticamente cada 5 minutos (por si hay fotos pendientes)
+  schedule:
+    - cron: '*/5 * * * *'
+  
+  # Permite ejecución manual desde la interfaz de GitHub
+  workflow_dispatch:
+    inputs:
+      motivo:
+        description: 'Motivo de la ejecución manual'
+        required: false
+        default: 'Ejecución manual'
+
+jobs:
+  procesar-fotos:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🛎️ Checkout del repositorio
+      uses: actions/checkout@v3
+      with:
+        # Token con permisos para hacer push
+        token: ${{ secrets.GITHUB_TOKEN }}
+        # Bajar todo el historial (necesario para git push)
+        fetch-depth: 0
+    
+    - name: 🐍 Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: 📦 Instalar dependencias
+      run: |
+        pip install pillow
+        echo "✅ Dependencias instaladas"
+    
+    - name: 🔍 Verificar si hay fotos nuevas
+      id: check-fotos
+      run: |
+        echo "Buscando fotos nuevas en /fotos_subidas/..."
+        fotos=$(find fotos_subidas -maxdepth 1 -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.heic" \) 2>/dev/null | wc -l)
+        echo "Fotos encontradas: $fotos"
+        if [ $fotos -gt 0 ]; then
+          echo "hay_fotos=true" >> $GITHUB_OUTPUT
+        else
+          echo "hay_fotos=false" >> $GITHUB_OUTPUT
+        fi
+        echo "::notice title=Estado::Fotos encontradas: $fotos"
+    
+    - name: 🖼️ Procesar fotos nuevas
+      if: steps.check-fotos.outputs.hay_fotos == 'true'
+      run: |
+        echo "🔄 Iniciando procesamiento de fotos..."
+        python scripts/procesar_fotos_nuevas.py
+    
+    - name: 💾 Subir cambios al repositorio
+      if: steps.check-fotos.outputs.hay_fotos == 'true'
+      run: |
+        echo "📤 Subiendo cambios a GitHub..."
+        
+        # Configurar git
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        
+        # Verificar qué archivos cambiaron
+        echo "📝 Archivos modificados:"
+        git status
+        
+        # Agregar todos los cambios
+        git add fotos_imagenes/ fotos_metadata/ fotos_subidas/
+        
+        # Verificar si hay cambios reales
+        if git diff --staged --quiet; then
+          echo "📭 No hay cambios para commit"
+        else
+          # Crear commit
+          git commit -m "📸 Fotos nuevas procesadas automáticamente [skip ci]"
+          
+          # Hacer push
+          git push
+          echo "✅ Cambios subidos exitosamente"
+        fi
+    
+    - name: 📊 Reporte de ejecución
+      run: |
+        echo "========================================"
+        echo "📋 REPORTE DE EJECUCIÓN"
+        echo "========================================"
+        echo "🕐 Hora: $(date)"
+        echo "🎯 Trigger: ${{ github.event_name }}"
+        echo "📁 Fotos procesadas: ${{ steps.check-fotos.outputs.hay_fotos == 'true' && 'Sí' || 'No' }}"
+        
+        # Contar fotos totales
+        if [ -f "fotos_metadata/fotos_procesadas.json" ]; then
+          total_fotos=$(python -c "import json; data=json.load(open('fotos_metadata/fotos_procesadas.json')); print(len(data.get('features', [])))")
+          echo "📊 Total fotos en sistema: $total_fotos"
+        fi
+        
+        echo "✅ Workflow completado"
+        echo "========================================"
+    
+    - name: 🏁 Workflow completado (sin fotos)
+      if: steps.check-fotos.outputs.hay_fotos == 'false'
+      run: |
+        echo "📭 No se encontraron fotos nuevas para procesar"
+        echo "✅ Workflow completado sin cambios"
