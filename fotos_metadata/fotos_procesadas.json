@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "total_fotos": 1,
+    "fecha": "2026-02-05T11:19:58.169724"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.07854166666667,
+          -34.110866666666666
+        ]
+      },
+      "properties": {
+        "id": "foto_b2ea8c81",
+        "NOMBRE_FOTO": "IMG_7687",
+        "METODO": "Perito",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_b2ea8c81.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_b2ea8c81.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7687.HEIC"
+      }
+    }
+  ]
+}
