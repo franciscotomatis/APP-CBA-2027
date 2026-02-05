@@ -30,7 +30,15 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     
+    - name: 🔐 Configurar autenticación GitHub
+      env:
+        WORKFLOW_TOKEN: ${{ secrets.TOKEN_FOTOS }}
+      run: |
+        echo "✅ Token configurado (longitud: ${#WORKFLOW_TOKEN})"
+    
     - name: 📷 Guardar foto recibida
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_FOTOS }}
       run: |
         echo "📸 Recibiendo foto: ${{ github.event.inputs.nombre_archivo }}"
         
