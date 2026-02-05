@@ -349,7 +349,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     # URL del archivo de fotos en GitHub
     GITHUB_USER = "franciscotomatis"
     REPO_NAME = "APP-C-rdoba"
-    FOTOS_JSON_URL = "https://drive.google.com/uc?export=download&id=1S5I0UIXqLJ2hxKQsv4mOY1KY1FzZcpzH"
+    FOTOS_JSON_URL = "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_metadata/fotos_procesadas.json"
 
     print(f"✅ Fotos se cargarán desde: {FOTOS_JSON_URL}")
 
@@ -401,7 +401,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         var props = feature.properties || {{}};
         var nombre = props.NOMBRE_FOTO || "Foto del perito";
         var metodo = props.METODO || "Desconocido";
-        var imgBase64 = props.IMAGEN || "";
+        var imgUrl = props.IMAGEN_URL || "";
         
         var html = `
         <div style="font-family: Arial, sans-serif; max-width: 500px; min-width: 300px;">
@@ -413,7 +413,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             </div>
             
             <div style="padding: 15px; text-align: center; background: #FFF3F2;">
-                <img src="${{imgBase64}}" 
+                <img src="${imgUrl}" 
                     style="max-width: 100%; max-height: 350px; 
                             border-radius: 6px; border: 2px solid #F44336;
                             box-shadow: 0 3px 10px rgba(0,0,0,0.15);
