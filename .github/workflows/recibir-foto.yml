@@ -1,0 +1,58 @@
+name: Recibir Foto desde App
+
+on:
+  workflow_dispatch:
+    inputs:
+      foto_base64:
+        description: 'Foto en base64'
+        required: true
+      nombre_archivo:
+        description: 'Nombre del archivo'
+        required: true
+      latitud:
+        description: 'Latitud GPS'
+        required: false
+        default: '-31.4201'
+      longitud:
+        description: 'Longitud GPS'
+        required: false
+        default: '-64.1888'
+
+jobs:
+  guardar-foto:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: 🛎️ Checkout del repositorio
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: 📷 Guardar foto recibida
+      run: |
+        echo "📸 Recibiendo foto: ${{ github.event.inputs.nombre_archivo }}"
+        
+        # Decodificar base64
+        echo "${{ github.event.inputs.foto_base64 }}" | base64 --decode > "fotos_subidas/${{ github.event.inputs.nombre_archivo }}"
+        
+        # Crear archivo de metadatos
+        echo '{
+          "nombre": "${{ github.event.inputs.nombre_archivo }}",
+          "lat": ${{ github.event.inputs.latitud }},
+          "lon": ${{ github.event.inputs.longitud }},
+          "fecha": "'$(date -Iseconds)'",
+          "subido_via": "app_web"
+        }' > "fotos_subidas/${{ github.event.inputs.nombre_archivo }}.json"
+        
+        echo "✅ Foto guardada en fotos_subidas/"
+    
+    - name: 💾 Hacer commit
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        
+        git add fotos_subidas/
+        git commit -m "📸 Nueva foto desde app web" || echo "No hay cambios"
+        git push
