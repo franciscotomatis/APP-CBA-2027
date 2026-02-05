@@ -401,7 +401,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         var props = feature.properties || {{}};
         var nombre = props.NOMBRE_FOTO || "Foto del perito";
         var metodo = props.METODO || "Desconocido";
-        var imgUrl = props.IMAGEN_URL || "";
+        var imgUrl = props.IMAGEN_URL || props.IMAGEN || "";
         
         var html = `
         <div style="font-family: Arial, sans-serif; max-width: 500px; min-width: 300px;">
@@ -413,7 +413,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             </div>
             
             <div style="padding: 15px; text-align: center; background: #FFF3F2;">
-                <img src="${imgUrl}" 
+                <img src="${{imgUrl}}" 
                     style="max-width: 100%; max-height: 350px; 
                             border-radius: 6px; border: 2px solid #F44336;
                             box-shadow: 0 3px 10px rgba(0,0,0,0.15);
