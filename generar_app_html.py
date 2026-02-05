@@ -2104,26 +2104,133 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         }
     }
 
-    // Función para subir a GitHub (versión simplificada)
+    // ========== SUBIR A GITHUB REAL ==========
     async function subirAGitHubAPI(fotoData) {
-        // NOTA: Para producción necesitarías un backend intermedio
-        // Esta es una versión simplificada que guarda en localStorage
+        console.log('🔼 Iniciando subida real a GitHub...');
         
-        console.log('Simulando subida a GitHub:', fotoData.nombre);
+        // ⚠️ REEMPLAZA CON TU TOKEN NUEVO ⚠️
+        const GITHUB_TOKEN = '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';
         
-        // Guardar en localStorage como pendiente
-        const fotosPendientes = JSON.parse(localStorage.getItem('fotosPendientesGitHub') || '[]');
-        fotosPendientes.push({
-            ...fotoData,
+        const REPO_OWNER = 'franciscotomatis';
+        const REPO_NAME = 'APP-C-rdoba';
+        const BRANCH = 'main';
+        
+        const timestamp = Date.now();
+        const nombreArchivo = `foto_${Math.abs(fotoData.lat).toFixed(6)}_${Math.abs(fotoData.lon).toFixed(6)}_${timestamp}.jpg`;
+        const rutaEnRepo = `fotos_subidas/${nombreArchivo}`;
+        
+        try {
+            const response = await fetch(
+                `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${rutaEnRepo}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        message: `📸 Nueva foto desde campo - ${new Date().toLocaleString('es-AR')}`,
+                        content: fotoData.datos,
+                        branch: BRANCH
+                    })
+                }
+            );
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                console.log('✅ Foto subida a GitHub exitosamente');
+                console.log('📁 URL:', result.content.html_url);
+                
+                mostrarNotificacion('✅ Foto subida al repositorio', 'success');
+                
+                // Programar verificación del workflow
+                setTimeout(() => {
+                    mostrarNotificacion('🔄 Se procesará automáticamente en 2 minutos', 'info');
+                }, 1500);
+                
+                return { success: true, url: result.content.html_url };
+                
+            } else {
+                console.error('❌ Error GitHub API:', result.message);
+                
+                // Si es error de token
+                if (result.message.includes('token') || result.message.includes('Bad credentials')) {
+                    mostrarNotificacion('🔐 Error de token - Usando modo manual', 'warning');
+                }
+                
+                // Guardar para subida manual
+                return guardarParaSubidaManual(fotoData, nombreArchivo);
+            }
+            
+        } catch (error) {
+            console.error('❌ Error de red:', error);
+            return guardarParaSubidaManual(fotoData, nombreArchivo);
+        }
+    }
+    
+    function guardarParaSubidaManual(fotoData, nombreArchivo) {
+        // Usar MISMA lista que offline para simplificar
+        const fotosOffline = JSON.parse(localStorage.getItem('fotosOffline') || '[]');
+        
+        fotosOffline.push({
+            id: Date.now(),
+            nombre: nombreArchivo,
+            datos: fotoData.datos,
+            gps: { lat: fotoData.lat, lon: fotoData.lon },
+            timestamp: new Date().toISOString(),
             estado: 'pendiente',
-            fecha: new Date().toISOString()
+            intentos: 0
         });
-        localStorage.setItem('fotosPendientesGitHub', JSON.stringify(fotosPendientes));
         
-        // Simular éxito después de 1 segundo
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        localStorage.setItem('fotosOffline', JSON.stringify(fotosOffline));
         
-        return true;
+        // Mostrar botón de pendientes
+        actualizarBotonPendientes(fotosOffline.length);
+        
+        console.log('📸 Foto guardada para subida manual');
+        
+        return {
+            success: false,
+            mensaje: 'Guardada para subida manual',
+            cantidad: fotosOffline.length
+        };
+    }
+    
+    function actualizarBotonPendientes(cantidad) {
+        // Buscar o crear botón
+        let boton = document.getElementById('btnFotosPendientes');
+        
+        if (!boton && cantidad > 0) {
+            boton = document.createElement('div');
+            boton.id = 'btnFotosPendientes';
+            boton.style.position = 'fixed';
+            boton.style.bottom = '80px';
+            boton.style.right = '20px';
+            boton.style.zIndex = '9998';
+            document.body.appendChild(boton);
+        }
+        
+        if (cantidad > 0 && boton) {
+            boton.innerHTML = `
+                <button onclick="mostrarFotosPendientes()" style="
+                    background: #FF9800;
+                    color: white;
+                    border: none;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                    cursor: pointer;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+                ">
+                    📋 ${cantidad} foto(s) pendientes
+                </button>
+            `;
+        } else if (boton && cantidad === 0) {
+            boton.remove();
+        }
     }
 
     // ========== MODO OFFLINE ==========
@@ -2159,13 +2266,54 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         const fotosOffline = JSON.parse(localStorage.getItem('fotosOffline') || '[]');
         if (fotosOffline.length === 0) return;
         
-        console.log(`🔄 Sincronizando ${fotosOffline.length} fotos offline...`);
+        console.log(`🔄 Intentando subir ${fotosOffline.length} fotos offline...`);
         
-        // Aquí iría la subida real
-        // Por ahora solo limpiamos
-        localStorage.removeItem('fotosOffline');
+        // Intentar subir cada foto
+        const fotosExitosas = [];
+        const fotosFallidas = [];
         
-        mostrarNotificacion(`✅ ${fotosOffline.length} fotos sincronizadas`, 'success');
+        for (const foto of fotosOffline) {
+            try {
+                // Intentar subir usando la misma función
+                const resultado = await subirAGitHubAPI({
+                    datos: foto.datos,
+                    lat: foto.gps.lat,
+                    lon: foto.gps.lon,
+                    nombre: foto.nombre
+                });
+                
+                if (resultado.success) {
+                    fotosExitosas.push(foto);
+                } else {
+                    foto.intentos = (foto.intentos || 0) + 1;
+                    fotosFallidas.push(foto);
+                }
+                
+                // Esperar 1 segundo entre subidas
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+            } catch (error) {
+                console.error('Error subiendo foto offline:', error);
+                foto.intentos = (foto.intentos || 0) + 1;
+                fotosFallidas.push(foto);
+            }
+        }
+        
+        // Actualizar localStorage
+        if (fotosExitosas.length > 0) {
+            // Eliminar solo las exitosas
+            const nuevasFotos = fotosOffline.filter(f => 
+                !fotosExitosas.some(exitosa => exitosa.id === f.id)
+            );
+            localStorage.setItem('fotosOffline', JSON.stringify(nuevasFotos));
+            
+            mostrarNotificacion(`✅ ${fotosExitosas.length} fotos subidas`, 'success');
+        }
+        
+        // Actualizar botón
+        actualizarBotonPendientes(fotosFallidas.length);
+        
+        console.log(`Resultado: ${fotosExitosas.length} exitosas, ${fotosFallidas.length} fallidas`);
     }
 
     // ========== NOTIFICACIONES ==========
