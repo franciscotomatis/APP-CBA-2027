@@ -2109,7 +2109,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         console.log('🔼 Iniciando subida real a GitHub...');
         
         // ⚠️ REEMPLAZA CON TU TOKEN NUEVO ⚠️
-        const GITHUB_TOKEN = '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';
+        const GITHUB_TOKEN = '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';
         
         const REPO_OWNER = 'franciscotomatis';
         const REPO_NAME = 'APP-C-rdoba';
