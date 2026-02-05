@@ -2103,73 +2103,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             }, 2000);
         }
     }
-
-    // ========== SUBIR A GITHUB REAL ==========
-    async function subirAGitHubAPI(fotoData) {
-        console.log('🔼 Iniciando subida real a GitHub...');
-        
-        // ⚠️ REEMPLAZA CON TU TOKEN NUEVO ⚠️
-        const GITHUB_TOKEN = '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';
-        
-        const REPO_OWNER = 'franciscotomatis';
-        const REPO_NAME = 'APP-C-rdoba';
-        const BRANCH = 'main';
-        
-        const timestamp = Date.now();
-        const nombreArchivo = `foto_${Math.abs(fotoData.lat).toFixed(6)}_${Math.abs(fotoData.lon).toFixed(6)}_${timestamp}.jpg`;
-        const rutaEnRepo = `fotos_subidas/${nombreArchivo}`;
-        
-        try {
-            const response = await fetch(
-                `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${rutaEnRepo}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify({
-                        message: `📸 Nueva foto desde campo - ${new Date().toLocaleString('es-AR')}`,
-                        content: fotoData.datos,
-                        branch: BRANCH
-                    })
-                }
-            );
-            
-            const result = await response.json();
-            
-            if (response.ok) {
-                console.log('✅ Foto subida a GitHub exitosamente');
-                console.log('📁 URL:', result.content.html_url);
-                
-                mostrarNotificacion('✅ Foto subida al repositorio', 'success');
-                
-                // Programar verificación del workflow
-                setTimeout(() => {
-                    mostrarNotificacion('🔄 Se procesará automáticamente en 2 minutos', 'info');
-                }, 1500);
-                
-                return { success: true, url: result.content.html_url };
-                
-            } else {
-                console.error('❌ Error GitHub API:', result.message);
-                
-                // Si es error de token
-                if (result.message.includes('token') || result.message.includes('Bad credentials')) {
-                    mostrarNotificacion('🔐 Error de token - Usando modo manual', 'warning');
-                }
-                
-                // Guardar para subida manual
-                return guardarParaSubidaManual(fotoData, nombreArchivo);
-            }
-            
-        } catch (error) {
-            console.error('❌ Error de red:', error);
-            return guardarParaSubidaManual(fotoData, nombreArchivo);
-        }
-    }
-    
+   
     function guardarParaSubidaManual(fotoData, nombreArchivo) {
         // Usar MISMA lista que offline para simplificar
         const fotosOffline = JSON.parse(localStorage.getItem('fotosOffline') || '[]');
