@@ -2108,9 +2108,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             }
             
             // Usar la nueva función
-            const subidaExitosa = await subirFotoConWorkflow(fotoData);
+            const resultado = await subirFotoConWorkflow(fotoData);
             
-            if (subidaExitosa) {
+            if (resultado.success) {  // ✅ Esto está bien
                 mensajeProgreso.innerHTML = '✅ Foto subida exitosamente';
                 infoSubida.innerHTML = 'Aparecerá en el mapa en 2 minutos';
                 
