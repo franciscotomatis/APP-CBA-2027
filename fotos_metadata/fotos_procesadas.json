@@ -1,12 +1,12 @@
 {
   "type": "FeatureCollection",
   "metadata": {
-    "total_fotos": 319,
+    "total_fotos": 423,
     "fotos_subidas": 62,
     "fotos_sin_gps": 1,
     "fecha": "2026-02-05 11:29:12",
-    "fotos_agregadas": 86,
-    "fecha_actualizacion": "2026-02-23 13:27:56"
+    "fotos_agregadas": 104,
+    "fecha_actualizacion": "2026-03-16 11:57:40"
   },
   "features": [
     {
@@ -6326,6 +6326,2086 @@
         "ARCHIVO_ORIGEN": "IMG_7741.HEIC",
         "COORDENADAS": "-33.665161, -64.996278",
         "FECHA": "2026-02-23 13:27"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.05404722222222,
+          -32.37907777777778
+        ]
+      },
+      "properties": {
+        "id": "foto_6affc18c",
+        "NOMBRE_FOTO": "IMG_7833",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_6affc18c.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_6affc18c.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7833.HEIC",
+        "COORDENADAS": "-32.379078, -64.054047",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.28207777777778,
+          -32.97103055555556
+        ]
+      },
+      "properties": {
+        "id": "foto_011e7a64",
+        "NOMBRE_FOTO": "IMG_7783",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_011e7a64.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_011e7a64.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7783.HEIC",
+        "COORDENADAS": "-32.971031, -62.282078",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.39806111111111,
+          -32.022622222222225
+        ]
+      },
+      "properties": {
+        "id": "foto_4fa0ae82",
+        "NOMBRE_FOTO": "IMG_7868",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_4fa0ae82.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_4fa0ae82.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7868.HEIC",
+        "COORDENADAS": "-32.022622, -63.398061",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.17241666666666,
+          -32.958755555555555
+        ]
+      },
+      "properties": {
+        "id": "foto_5a25bea1",
+        "NOMBRE_FOTO": "IMG_7779",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_5a25bea1.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_5a25bea1.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7779.HEIC",
+        "COORDENADAS": "-32.958756, -62.172417",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.19521388888889,
+          -32.22809166666667
+        ]
+      },
+      "properties": {
+        "id": "foto_723417c7",
+        "NOMBRE_FOTO": "IMG_7835",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_723417c7.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_723417c7.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7835.HEIC",
+        "COORDENADAS": "-32.228092, -64.195214",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.00624166666667,
+          -33.670094444444445
+        ]
+      },
+      "properties": {
+        "id": "foto_3b1ecdcb",
+        "NOMBRE_FOTO": "IMG_7740",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_3b1ecdcb.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_3b1ecdcb.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7740.HEIC",
+        "COORDENADAS": "-33.670094, -65.006242",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.97336666666667,
+          -33.03328333333333
+        ]
+      },
+      "properties": {
+        "id": "foto_8366c876",
+        "NOMBRE_FOTO": "IMG_7792",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_8366c876.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_8366c876.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7792.HEIC",
+        "COORDENADAS": "-33.033283, -62.973367",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.891666666666666,
+          -33.12932222222222
+        ]
+      },
+      "properties": {
+        "id": "foto_c5d10b32",
+        "NOMBRE_FOTO": "IMG_7764",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_c5d10b32.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_c5d10b32.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7764.HEIC",
+        "COORDENADAS": "-33.129322, -62.891667",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.56059166666667,
+          -33.358069444444446
+        ]
+      },
+      "properties": {
+        "id": "foto_07227784",
+        "NOMBRE_FOTO": "IMG_7977",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_07227784.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_07227784.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7977.HEIC",
+        "COORDENADAS": "-33.358069, -62.560592",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.47335833333334,
+          -32.557963888888885
+        ]
+      },
+      "properties": {
+        "id": "foto_1cc8a818",
+        "NOMBRE_FOTO": "IMG_7804",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_1cc8a818.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_1cc8a818.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7804.HEIC",
+        "COORDENADAS": "-32.557964, -63.473358",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.8308,
+          -33.15357222222222
+        ]
+      },
+      "properties": {
+        "id": "foto_197ec4b0",
+        "NOMBRE_FOTO": "IMG_7794",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_197ec4b0.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_197ec4b0.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7794.HEIC",
+        "COORDENADAS": "-33.153572, -62.830800",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.10114166666666,
+          -32.340538888888894
+        ]
+      },
+      "properties": {
+        "id": "foto_2d80f611",
+        "NOMBRE_FOTO": "IMG_7830",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_2d80f611.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_2d80f611.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7830.HEIC",
+        "COORDENADAS": "-32.340539, -64.101142",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.18131944444444,
+          -32.981225
+        ]
+      },
+      "properties": {
+        "id": "foto_e6a897e9",
+        "NOMBRE_FOTO": "IMG_7782",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_e6a897e9.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_e6a897e9.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7782.HEIC",
+        "COORDENADAS": "-32.981225, -62.181319",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.01054444444445,
+          -33.6554
+        ]
+      },
+      "properties": {
+        "id": "foto_fb08df9e",
+        "NOMBRE_FOTO": "IMG_7735",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_fb08df9e.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_fb08df9e.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7735.HEIC",
+        "COORDENADAS": "-33.655400, -65.010544",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.826633333333334,
+          -33.15432222222222
+        ]
+      },
+      "properties": {
+        "id": "foto_b42c019e",
+        "NOMBRE_FOTO": "IMG_7796",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_b42c019e.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_b42c019e.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7796.HEIC",
+        "COORDENADAS": "-33.154322, -62.826633",
+        "FECHA": "2026-03-16 11:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.50739166666666,
+          -32.528727777777775
+        ]
+      },
+      "properties": {
+        "id": "foto_d53c0423",
+        "NOMBRE_FOTO": "IMG_7813",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_d53c0423.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_d53c0423.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7813.HEIC",
+        "COORDENADAS": "-32.528728, -63.507392",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.83079444444445,
+          -33.15358611111111
+        ]
+      },
+      "properties": {
+        "id": "foto_1f59b38a",
+        "NOMBRE_FOTO": "IMG_7795",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_1f59b38a.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_1f59b38a.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7795.HEIC",
+        "COORDENADAS": "-33.153586, -62.830794",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.13563888888889,
+          -32.961850000000005
+        ]
+      },
+      "properties": {
+        "id": "foto_c1ac04ce",
+        "NOMBRE_FOTO": "IMG_7777",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_c1ac04ce.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_c1ac04ce.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7777.HEIC",
+        "COORDENADAS": "-32.961850, -62.135639",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.564791666666665,
+          -33.36613333333334
+        ]
+      },
+      "properties": {
+        "id": "foto_2ef0b381",
+        "NOMBRE_FOTO": "IMG_7978",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_2ef0b381.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_2ef0b381.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7978.HEIC",
+        "COORDENADAS": "-33.366133, -62.564792",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.32135,
+          -32.78284444444444
+        ]
+      },
+      "properties": {
+        "id": "foto_613756a4",
+        "NOMBRE_FOTO": "IMG_7825",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_613756a4.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_613756a4.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7825.HEIC",
+        "COORDENADAS": "-32.782844, -63.321350",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.02066111111111,
+          -33.659725
+        ]
+      },
+      "properties": {
+        "id": "foto_cdaadb87",
+        "NOMBRE_FOTO": "IMG_7737",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_cdaadb87.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_cdaadb87.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7737.HEIC",
+        "COORDENADAS": "-33.659725, -65.020661",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.54597222222222,
+          -33.355269444444446
+        ]
+      },
+      "properties": {
+        "id": "foto_9a5cf23c",
+        "NOMBRE_FOTO": "IMG_7976",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_9a5cf23c.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_9a5cf23c.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7976.HEIC",
+        "COORDENADAS": "-33.355269, -62.545972",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.04730277777777,
+          -33.01657222222222
+        ]
+      },
+      "properties": {
+        "id": "foto_4d3ae0e0",
+        "NOMBRE_FOTO": "IMG_7989",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_4d3ae0e0.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_4d3ae0e0.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7989.HEIC",
+        "COORDENADAS": "-33.016572, -62.047303",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.570663888888895,
+          -32.08141666666667
+        ]
+      },
+      "properties": {
+        "id": "foto_2e46bfa1",
+        "NOMBRE_FOTO": "IMG_7870",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_2e46bfa1.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_2e46bfa1.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7870.HEIC",
+        "COORDENADAS": "-32.081417, -63.570664",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.35243888888889,
+          -32.55637222222222
+        ]
+      },
+      "properties": {
+        "id": "foto_ecb31461",
+        "NOMBRE_FOTO": "IMG_7811",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_ecb31461.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_ecb31461.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7811.HEIC",
+        "COORDENADAS": "-32.556372, -63.352439",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.82689166666667,
+          -33.15436111111111
+        ]
+      },
+      "properties": {
+        "id": "foto_5ee6e5a5",
+        "NOMBRE_FOTO": "IMG_7798",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_5ee6e5a5.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_5ee6e5a5.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7798.HEIC",
+        "COORDENADAS": "-33.154361, -62.826892",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.137255555555555,
+          -32.97235555555556
+        ]
+      },
+      "properties": {
+        "id": "foto_05061b38",
+        "NOMBRE_FOTO": "IMG_7778",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_05061b38.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_05061b38.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7778.HEIC",
+        "COORDENADAS": "-32.972356, -62.137256",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.50739166666666,
+          -32.528705555555554
+        ]
+      },
+      "properties": {
+        "id": "foto_259160b4",
+        "NOMBRE_FOTO": "IMG_7812",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_259160b4.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_259160b4.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7812.HEIC",
+        "COORDENADAS": "-32.528706, -63.507392",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.87206388888889,
+          -33.153483333333334
+        ]
+      },
+      "properties": {
+        "id": "foto_ae626150",
+        "NOMBRE_FOTO": "IMG_7816",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_ae626150.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_ae626150.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7816.HEIC",
+        "COORDENADAS": "-33.153483, -62.872064",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.34915277777778,
+          -32.566538888888886
+        ]
+      },
+      "properties": {
+        "id": "foto_48fc02ea",
+        "NOMBRE_FOTO": "IMG_7809",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_48fc02ea.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_48fc02ea.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7809.HEIC",
+        "COORDENADAS": "-32.566539, -63.349153",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.85424722222222,
+          -33.218269444444445
+        ]
+      },
+      "properties": {
+        "id": "foto_087ef46a",
+        "NOMBRE_FOTO": "IMG_7817",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_087ef46a.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_087ef46a.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7817.HEIC",
+        "COORDENADAS": "-33.218269, -62.854247",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.13525,
+          -33.04393333333333
+        ]
+      },
+      "properties": {
+        "id": "foto_bb9f17de",
+        "NOMBRE_FOTO": "IMG_7986",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_bb9f17de.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_bb9f17de.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7986.HEIC",
+        "COORDENADAS": "-33.043933, -62.135250",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.13516944444444,
+          -33.04415833333333
+        ]
+      },
+      "properties": {
+        "id": "foto_0c1bd511",
+        "NOMBRE_FOTO": "IMG_7987",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_0c1bd511.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_0c1bd511.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7987.HEIC",
+        "COORDENADAS": "-33.044158, -62.135169",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.07330277777777,
+          -33.304808333333334
+        ]
+      },
+      "properties": {
+        "id": "foto_cb75329d",
+        "NOMBRE_FOTO": "IMG_7760",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_cb75329d.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_cb75329d.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7760.HEIC",
+        "COORDENADAS": "-33.304808, -64.073303",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.14718333333333,
+          -31.51396111111111
+        ]
+      },
+      "properties": {
+        "id": "foto_0b4fd31a",
+        "NOMBRE_FOTO": "IMG_7876",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_0b4fd31a.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_0b4fd31a.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7876.HEIC",
+        "COORDENADAS": "-31.513961, -63.147183",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.117066666666666,
+          -32.971650000000004
+        ]
+      },
+      "properties": {
+        "id": "foto_6be8c742",
+        "NOMBRE_FOTO": "IMG_7776",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_6be8c742.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_6be8c742.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7776.HEIC",
+        "COORDENADAS": "-32.971650, -62.117067",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.542941666666664,
+          -33.36689722222222
+        ]
+      },
+      "properties": {
+        "id": "foto_d6b80de6",
+        "NOMBRE_FOTO": "IMG_7979",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_d6b80de6.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_d6b80de6.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7979.HEIC",
+        "COORDENADAS": "-33.366897, -62.542942",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.13731666666666,
+          -31.54469166666667
+        ]
+      },
+      "properties": {
+        "id": "foto_f4a8603a",
+        "NOMBRE_FOTO": "IMG_7874",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_f4a8603a.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_f4a8603a.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7874.HEIC",
+        "COORDENADAS": "-31.544692, -63.137317",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.92986388888889,
+          -34.382111111111115
+        ]
+      },
+      "properties": {
+        "id": "foto_2d069bc0",
+        "NOMBRE_FOTO": "IMG_7746",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_2d069bc0.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_2d069bc0.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7746.HEIC",
+        "COORDENADAS": "-34.382111, -63.929864",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.14922222222224,
+          -32.36409444444445
+        ]
+      },
+      "properties": {
+        "id": "foto_ad4f80ea",
+        "NOMBRE_FOTO": "IMG_7832",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_ad4f80ea.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_ad4f80ea.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7832.HEIC",
+        "COORDENADAS": "-32.364094, -64.149222",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.14703055555555,
+          -31.5155
+        ]
+      },
+      "properties": {
+        "id": "foto_e65641d3",
+        "NOMBRE_FOTO": "IMG_7877",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_e65641d3.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_e65641d3.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7877.HEIC",
+        "COORDENADAS": "-31.515500, -63.147031",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.576797222222226,
+          -33.34825555555556
+        ]
+      },
+      "properties": {
+        "id": "foto_a4681e29",
+        "NOMBRE_FOTO": "IMG_7973",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_a4681e29.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_a4681e29.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7973.HEIC",
+        "COORDENADAS": "-33.348256, -62.576797",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.809475,
+          -32.865875
+        ]
+      },
+      "properties": {
+        "id": "foto_027cb2d6",
+        "NOMBRE_FOTO": "IMG_7995",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_027cb2d6.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_027cb2d6.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7995.HEIC",
+        "COORDENADAS": "-32.865875, -61.809475",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.90476111111111,
+          -33.203877777777784
+        ]
+      },
+      "properties": {
+        "id": "foto_f3206f5d",
+        "NOMBRE_FOTO": "IMG_7762",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_f3206f5d.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_f3206f5d.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7762.HEIC",
+        "COORDENADAS": "-33.203878, -62.904761",
+        "FECHA": "2026-03-16 11:53"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.56426944444444,
+          -33.340225000000004
+        ]
+      },
+      "properties": {
+        "id": "foto_33739e47",
+        "NOMBRE_FOTO": "IMG_7974",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_33739e47.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_33739e47.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7974.HEIC",
+        "COORDENADAS": "-33.340225, -62.564269",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.05368055555555,
+          -33.012280555555556
+        ]
+      },
+      "properties": {
+        "id": "foto_baa4cfb3",
+        "NOMBRE_FOTO": "IMG_7990",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_baa4cfb3.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_baa4cfb3.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7990.HEIC",
+        "COORDENADAS": "-33.012281, -62.053681",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.95675,
+          -34.54293055555555
+        ]
+      },
+      "properties": {
+        "id": "foto_e9b1805c",
+        "NOMBRE_FOTO": "IMG_7752",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_e9b1805c.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_e9b1805c.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7752.HEIC",
+        "COORDENADAS": "-34.542931, -63.956750",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.83793888888889,
+          -34.58866388888889
+        ]
+      },
+      "properties": {
+        "id": "foto_21d3b1b6",
+        "NOMBRE_FOTO": "IMG_7751",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_21d3b1b6.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_21d3b1b6.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7751.HEIC",
+        "COORDENADAS": "-34.588664, -63.837939",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.929716666666664,
+          -34.38236111111111
+        ]
+      },
+      "properties": {
+        "id": "foto_7a9f1d07",
+        "NOMBRE_FOTO": "IMG_7747",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_7a9f1d07.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_7a9f1d07.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7747.HEIC",
+        "COORDENADAS": "-34.382361, -63.929717",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.83086111111111,
+          -33.21803611111111
+        ]
+      },
+      "properties": {
+        "id": "foto_aca81024",
+        "NOMBRE_FOTO": "IMG_7818",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_aca81024.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_aca81024.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7818.HEIC",
+        "COORDENADAS": "-33.218036, -62.830861",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.80673611111111,
+          -32.867469444444446
+        ]
+      },
+      "properties": {
+        "id": "foto_e2bbe447",
+        "NOMBRE_FOTO": "IMG_7996",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_e2bbe447.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_e2bbe447.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7996.HEIC",
+        "COORDENADAS": "-32.867469, -61.806736",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.10741388888889,
+          -32.336911111111114
+        ]
+      },
+      "properties": {
+        "id": "foto_faa53faa",
+        "NOMBRE_FOTO": "IMG_7831",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_faa53faa.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_faa53faa.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7831.HEIC",
+        "COORDENADAS": "-32.336911, -64.107414",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.01136666666666,
+          -34.35658611111111
+        ]
+      },
+      "properties": {
+        "id": "foto_77f1899c",
+        "NOMBRE_FOTO": "IMG_7749",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_77f1899c.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_77f1899c.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7749.HEIC",
+        "COORDENADAS": "-34.356586, -64.011367",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.973372222222224,
+          -33.03329166666666
+        ]
+      },
+      "properties": {
+        "id": "foto_cdbb192b",
+        "NOMBRE_FOTO": "IMG_7793",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_cdbb192b.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_cdbb192b.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7793.HEIC",
+        "COORDENADAS": "-33.033292, -62.973372",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.11897222222221,
+          -33.681841666666664
+        ]
+      },
+      "properties": {
+        "id": "foto_a83ec5c2",
+        "NOMBRE_FOTO": "IMG_7744",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_a83ec5c2.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_a83ec5c2.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7744.HEIC",
+        "COORDENADAS": "-33.681842, -65.118972",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.32136944444445,
+          -32.78279166666667
+        ]
+      },
+      "properties": {
+        "id": "foto_70c49144",
+        "NOMBRE_FOTO": "IMG_7826",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_70c49144.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_70c49144.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7826.HEIC",
+        "COORDENADAS": "-32.782792, -63.321369",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.11612777777778,
+          -32.96666666666667
+        ]
+      },
+      "properties": {
+        "id": "foto_3de288ab",
+        "NOMBRE_FOTO": "IMG_7774",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_3de288ab.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_3de288ab.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7774.HEIC",
+        "COORDENADAS": "-32.966667, -62.116128",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.07349444444444,
+          -33.30696944444444
+        ]
+      },
+      "properties": {
+        "id": "foto_8ad42d32",
+        "NOMBRE_FOTO": "IMG_7758",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_8ad42d32.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_8ad42d32.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7758.HEIC",
+        "COORDENADAS": "-33.306969, -64.073494",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.35219444444444,
+          -32.55603333333333
+        ]
+      },
+      "properties": {
+        "id": "foto_81b47f2a",
+        "NOMBRE_FOTO": "IMG_7810",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_81b47f2a.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_81b47f2a.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7810.HEIC",
+        "COORDENADAS": "-32.556033, -63.352194",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.8265,
+          -33.15453055555555
+        ]
+      },
+      "properties": {
+        "id": "foto_1631e034",
+        "NOMBRE_FOTO": "IMG_7799",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_1631e034.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_1631e034.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7799.HEIC",
+        "COORDENADAS": "-33.154531, -62.826500",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.27964444444444,
+          -32.96223055555556
+        ]
+      },
+      "properties": {
+        "id": "foto_16063d22",
+        "NOMBRE_FOTO": "IMG_7784",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_16063d22.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_16063d22.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7784.HEIC",
+        "COORDENADAS": "-32.962231, -62.279644",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.826888888888895,
+          -33.15446111111111
+        ]
+      },
+      "properties": {
+        "id": "foto_07c3bd25",
+        "NOMBRE_FOTO": "IMG_7797",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_07c3bd25.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_07c3bd25.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7797.HEIC",
+        "COORDENADAS": "-33.154461, -62.826889",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.891725,
+          -33.12931944444445
+        ]
+      },
+      "properties": {
+        "id": "foto_9a450fec",
+        "NOMBRE_FOTO": "IMG_7763",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_9a450fec.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_9a450fec.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7763.HEIC",
+        "COORDENADAS": "-33.129319, -62.891725",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.18185,
+          -32.98193611111111
+        ]
+      },
+      "properties": {
+        "id": "foto_4a0a0130",
+        "NOMBRE_FOTO": "IMG_7781",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_4a0a0130.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_4a0a0130.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7781.HEIC",
+        "COORDENADAS": "-32.981936, -62.181850",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.392891666666664,
+          -32.020316666666666
+        ]
+      },
+      "properties": {
+        "id": "foto_d227a06f",
+        "NOMBRE_FOTO": "IMG_7869",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_d227a06f.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_d227a06f.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7869.HEIC",
+        "COORDENADAS": "-32.020317, -63.392892",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.27368055555556,
+          -33.17627222222222
+        ]
+      },
+      "properties": {
+        "id": "foto_0a11abc1",
+        "NOMBRE_FOTO": "IMG_7787",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_0a11abc1.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_0a11abc1.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7787.HEIC",
+        "COORDENADAS": "-33.176272, -63.273681",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.31959166666667,
+          -32.781241666666666
+        ]
+      },
+      "properties": {
+        "id": "foto_1ababfa5",
+        "NOMBRE_FOTO": "IMG_7822",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_1ababfa5.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_1ababfa5.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7822.HEIC",
+        "COORDENADAS": "-32.781242, -63.319592",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.07343333333333,
+          -33.30694444444444
+        ]
+      },
+      "properties": {
+        "id": "foto_5499e871",
+        "NOMBRE_FOTO": "IMG_7759",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_5499e871.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_5499e871.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7759.HEIC",
+        "COORDENADAS": "-33.306944, -64.073433",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.973597222222224,
+          -33.033252777777776
+        ]
+      },
+      "properties": {
+        "id": "foto_3fba1c94",
+        "NOMBRE_FOTO": "IMG_7791",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_3fba1c94.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_3fba1c94.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7791.HEIC",
+        "COORDENADAS": "-33.033253, -62.973597",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.31964166666667,
+          -32.78125277777778
+        ]
+      },
+      "properties": {
+        "id": "foto_4cabb49b",
+        "NOMBRE_FOTO": "IMG_7823",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_4cabb49b.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_4cabb49b.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7823.HEIC",
+        "COORDENADAS": "-32.781253, -63.319642",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.837944444444446,
+          -34.58865
+        ]
+      },
+      "properties": {
+        "id": "foto_51eeb7bb",
+        "NOMBRE_FOTO": "IMG_7750",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_51eeb7bb.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_51eeb7bb.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7750.HEIC",
+        "COORDENADAS": "-34.588650, -63.837944",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.15996666666666,
+          -31.53049722222222
+        ]
+      },
+      "properties": {
+        "id": "foto_8e7eda5e",
+        "NOMBRE_FOTO": "IMG_7873",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_8e7eda5e.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_8e7eda5e.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7873.HEIC",
+        "COORDENADAS": "-31.530497, -63.159967",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.83876388888889,
+          -32.90824166666666
+        ]
+      },
+      "properties": {
+        "id": "foto_270d28be",
+        "NOMBRE_FOTO": "IMG_7991",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_270d28be.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_270d28be.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7991.HEIC",
+        "COORDENADAS": "-32.908242, -61.838764",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.27365833333333,
+          -33.17626666666666
+        ]
+      },
+      "properties": {
+        "id": "foto_11734139",
+        "NOMBRE_FOTO": "IMG_7786",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_11734139.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_11734139.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7786.HEIC",
+        "COORDENADAS": "-33.176267, -63.273658",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.13558611111111,
+          -33.04963333333333
+        ]
+      },
+      "properties": {
+        "id": "foto_93db539e",
+        "NOMBRE_FOTO": "IMG_7984",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_93db539e.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_93db539e.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7984.HEIC",
+        "COORDENADAS": "-33.049633, -62.135586",
+        "FECHA": "2026-03-16 11:54"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.06100555555555,
+          -33.006930555555556
+        ]
+      },
+      "properties": {
+        "id": "foto_219bf6cc",
+        "NOMBRE_FOTO": "IMG_7988",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_219bf6cc.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_219bf6cc.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7988.HEIC",
+        "COORDENADAS": "-33.006931, -62.061006",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.141333333333336,
+          -31.55152777777778
+        ]
+      },
+      "properties": {
+        "id": "foto_4e9a01e6",
+        "NOMBRE_FOTO": "IMG_7875",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_4e9a01e6.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_4e9a01e6.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7875.HEIC",
+        "COORDENADAS": "-31.551528, -63.141333",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.09115555555555,
+          -32.33989444444445
+        ]
+      },
+      "properties": {
+        "id": "foto_1cf7f3bb",
+        "NOMBRE_FOTO": "IMG_7829",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_1cf7f3bb.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_1cf7f3bb.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7829.HEIC",
+        "COORDENADAS": "-32.339894, -64.091156",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.84127777777778,
+          -33.216347222222225
+        ]
+      },
+      "properties": {
+        "id": "foto_3b83b156",
+        "NOMBRE_FOTO": "IMG_7820",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_3b83b156.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_3b83b156.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7820.HEIC",
+        "COORDENADAS": "-33.216347, -62.841278",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.54689722222222,
+          -33.35965277777778
+        ]
+      },
+      "properties": {
+        "id": "foto_05042c4c",
+        "NOMBRE_FOTO": "IMG_7980",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_05042c4c.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_05042c4c.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7980.HEIC",
+        "COORDENADAS": "-33.359653, -62.546897",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.51078888888889,
+          -32.54648888888889
+        ]
+      },
+      "properties": {
+        "id": "foto_a933e980",
+        "NOMBRE_FOTO": "IMG_7815",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_a933e980.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_a933e980.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7815.HEIC",
+        "COORDENADAS": "-32.546489, -63.510789",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.51226944444444,
+          -32.526925
+        ]
+      },
+      "properties": {
+        "id": "foto_cd1eba7b",
+        "NOMBRE_FOTO": "IMG_7814",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_cd1eba7b.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_cd1eba7b.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7814.HEIC",
+        "COORDENADAS": "-32.526925, -63.512269",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.17258888888889,
+          -32.95863611111111
+        ]
+      },
+      "properties": {
+        "id": "foto_f39d9511",
+        "NOMBRE_FOTO": "IMG_7780",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_f39d9511.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_f39d9511.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7780.HEIC",
+        "COORDENADAS": "-32.958636, -62.172589",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.55811388888888,
+          -33.348866666666666
+        ]
+      },
+      "properties": {
+        "id": "foto_143a908f",
+        "NOMBRE_FOTO": "IMG_7975",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_143a908f.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_143a908f.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7975.HEIC",
+        "COORDENADAS": "-33.348867, -62.558114",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.96013333333334,
+          -34.543013888888886
+        ]
+      },
+      "properties": {
+        "id": "foto_6e8b2552",
+        "NOMBRE_FOTO": "IMG_7753",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_6e8b2552.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_6e8b2552.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7753.HEIC",
+        "COORDENADAS": "-34.543014, -63.960133",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.01061111111112,
+          -33.65538333333333
+        ]
+      },
+      "properties": {
+        "id": "foto_c4f95b2b",
+        "NOMBRE_FOTO": "IMG_7734",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_c4f95b2b.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_c4f95b2b.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7734.HEIC",
+        "COORDENADAS": "-33.655383, -65.010611",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.349133333333334,
+          -32.56655
+        ]
+      },
+      "properties": {
+        "id": "foto_73a5885f",
+        "NOMBRE_FOTO": "IMG_7808",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_73a5885f.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_73a5885f.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7808.HEIC",
+        "COORDENADAS": "-32.566550, -63.349133",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.32128055555556,
+          -32.78245833333333
+        ]
+      },
+      "properties": {
+        "id": "foto_70b3d5a9",
+        "NOMBRE_FOTO": "IMG_7824",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_70b3d5a9.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_70b3d5a9.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7824.HEIC",
+        "COORDENADAS": "-32.782458, -63.321281",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.96381111111111,
+          -34.54611666666666
+        ]
+      },
+      "properties": {
+        "id": "foto_eae5b0ad",
+        "NOMBRE_FOTO": "IMG_7754",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_eae5b0ad.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_eae5b0ad.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7754.HEIC",
+        "COORDENADAS": "-34.546117, -63.963811",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.99627777777778,
+          -33.66516111111111
+        ]
+      },
+      "properties": {
+        "id": "foto_5e954b68",
+        "NOMBRE_FOTO": "IMG_7741",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_5e954b68.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_5e954b68.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7741.HEIC",
+        "COORDENADAS": "-33.665161, -64.996278",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.84128611111112,
+          -33.21630555555556
+        ]
+      },
+      "properties": {
+        "id": "foto_99e5a265",
+        "NOMBRE_FOTO": "IMG_7819",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_99e5a265.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_99e5a265.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7819.HEIC",
+        "COORDENADAS": "-33.216306, -62.841286",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.01114722222222,
+          -34.35661944444445
+        ]
+      },
+      "properties": {
+        "id": "foto_95a189c1",
+        "NOMBRE_FOTO": "IMG_7748",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_95a189c1.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_95a189c1.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7748.HEIC",
+        "COORDENADAS": "-34.356619, -64.011147",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.11546388888888,
+          -33.66409722222222
+        ]
+      },
+      "properties": {
+        "id": "foto_111c3699",
+        "NOMBRE_FOTO": "IMG_7743",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_111c3699.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_111c3699.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7743.HEIC",
+        "COORDENADAS": "-33.664097, -65.115464",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.83753611111111,
+          -32.91621111111111
+        ]
+      },
+      "properties": {
+        "id": "foto_9359bb09",
+        "NOMBRE_FOTO": "IMG_7994",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_9359bb09.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_9359bb09.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7994.HEIC",
+        "COORDENADAS": "-32.916211, -61.837536",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.02059166666666,
+          -33.65945
+        ]
+      },
+      "properties": {
+        "id": "foto_cb6cf3fe",
+        "NOMBRE_FOTO": "IMG_7736",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_cb6cf3fe.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_cb6cf3fe.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7736.HEIC",
+        "COORDENADAS": "-33.659450, -65.020592",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.37055833333332,
+          -32.470325
+        ]
+      },
+      "properties": {
+        "id": "foto_6d9c4cdc",
+        "NOMBRE_FOTO": "IMG_7834",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_6d9c4cdc.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_6d9c4cdc.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7834.HEIC",
+        "COORDENADAS": "-32.470325, -64.370558",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.01278611111111,
+          -33.667366666666666
+        ]
+      },
+      "properties": {
+        "id": "foto_96cc079a",
+        "NOMBRE_FOTO": "IMG_7738",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_96cc079a.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_96cc079a.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7738.HEIC",
+        "COORDENADAS": "-33.667367, -65.012786",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.00624166666667,
+          -33.67009722222222
+        ]
+      },
+      "properties": {
+        "id": "foto_0cd00a0a",
+        "NOMBRE_FOTO": "IMG_7739",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_0cd00a0a.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_0cd00a0a.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7739.HEIC",
+        "COORDENADAS": "-33.670097, -65.006242",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.47329444444445,
+          -32.55798333333333
+        ]
+      },
+      "properties": {
+        "id": "foto_0e14cd92",
+        "NOMBRE_FOTO": "IMG_7805",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_0e14cd92.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_0e14cd92.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7805.HEIC",
+        "COORDENADAS": "-32.557983, -63.473294",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.57101111111111,
+          -32.08100833333334
+        ]
+      },
+      "properties": {
+        "id": "foto_7ec81da6",
+        "NOMBRE_FOTO": "IMG_7871",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_7ec81da6.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_7ec81da6.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7871.HEIC",
+        "COORDENADAS": "-32.081008, -63.571011",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.00063333333334,
+          -33.660624999999996
+        ]
+      },
+      "properties": {
+        "id": "foto_859af140",
+        "NOMBRE_FOTO": "IMG_7742",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_859af140.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_859af140.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7742.HEIC",
+        "COORDENADAS": "-33.660625, -65.000633",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.11621111111111,
+          -32.96665277777778
+        ]
+      },
+      "properties": {
+        "id": "foto_7cbb541b",
+        "NOMBRE_FOTO": "IMG_7775",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_7cbb541b.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_7cbb541b.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7775.HEIC",
+        "COORDENADAS": "-32.966653, -62.116211",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.16033888888889,
+          -31.530444444444445
+        ]
+      },
+      "properties": {
+        "id": "foto_179e2670",
+        "NOMBRE_FOTO": "IMG_7872",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_179e2670.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_179e2670.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7872.HEIC",
+        "COORDENADAS": "-31.530444, -63.160339",
+        "FECHA": "2026-03-16 11:55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.11897222222221,
+          -33.68185833333333
+        ]
+      },
+      "properties": {
+        "id": "foto_d7c9d6f7",
+        "NOMBRE_FOTO": "IMG_7745",
+        "METODO": "Perito en campo",
+        "IMAGEN_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/full/foto_d7c9d6f7.jpg",
+        "MINIATURA_URL": "https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/fotos_imagenes/thumb/foto_d7c9d6f7.jpg",
+        "ARCHIVO_ORIGEN": "IMG_7745.HEIC",
+        "COORDENADAS": "-33.681858, -65.118972",
+        "FECHA": "2026-03-16 11:55"
       }
     }
   ]
