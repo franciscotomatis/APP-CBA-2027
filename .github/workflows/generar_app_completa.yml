@@ -2,8 +2,8 @@ name: Actualizar Datos y Generar App Completa
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Cada 6 horas
-  workflow_dispatch:        # Para ejecutar manualmente
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
   push:
     branches: [ main ]
 
@@ -46,7 +46,7 @@ jobs:
         fi
     
     - name: Generar aplicación HTML
-      env:  # ← ¡AGREGAR ESTO!
+      env:
         MULTIRIESGO_USER: ${{ secrets.MULTIRIESGO_USER }}
         MULTIRIESGO_PASS: ${{ secrets.MULTIRIESGO_PASS }}
       run: |
@@ -69,6 +69,9 @@ jobs:
     
     - name: Subir cambios automáticamente
       run: |
+        # Hacer pull ANTES de push (esto es lo que faltaba)
+        git pull origin main --rebase || true
+        
         # Verificar si hay cambios
         if [[ -n $(git status --porcelain) ]]; then
           echo "📤 Subiendo cambios..."
@@ -77,12 +80,10 @@ jobs:
           git push
           echo "✅ Cambios subidos"
           
-          # Mostrar links útiles
           echo ""
           echo "🔗 LINKS DIRECTOS:"
           echo "📊 Datos GeoJSON: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/geojson_unificado_actual.geojson"
           echo "🌐 App HTML: https://franciscotomatis.github.io/APP-C-rdoba/"
-          echo "   (O abre directamente: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/index.html)"
         else
           echo "ℹ️ No hay cambios para subir"
         fi
