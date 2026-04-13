@@ -69,8 +69,14 @@ jobs:
     
     - name: Subir cambios automáticamente
       run: |
-        # Hacer pull ANTES de push (esto es lo que faltaba)
-        git pull origin main --rebase || true
+        # Guardar cambios locales temporalmente
+        git stash
+        
+        # Traer cambios remotos
+        git pull origin main --rebase
+        
+        # Restaurar cambios locales
+        git stash pop || true
         
         # Verificar si hay cambios
         if [[ -n $(git status --porcelain) ]]; then
