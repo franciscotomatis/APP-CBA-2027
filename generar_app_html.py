@@ -151,16 +151,18 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         zoom_control=True
     )
 
-    # ========== CAPAS BASE (100% IDÉNTICAS) ==========
+    # ========== CAPAS BASE (ACTUALIZADAS - ESRI) ==========
+    # Esri Satélite
     folium.TileLayer(
-        tiles='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
-        attr='Google',
-        name='🌍 Google Satélite',
-        max_zoom=20,
+        tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        attr='Esri',
+        name='🛰️ Esri Satélite',
+        max_zoom=19,
         overlay=False,
         control=True
     ).add_to(m)
 
+    # Google Híbrido (se mantiene)
     folium.TileLayer(
         tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
         attr='Google',
@@ -170,18 +172,22 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         control=True
     ).add_to(m)
 
+    # Esri Dark Gray
     folium.TileLayer(
-        tiles='https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-        attr='© CartoDB',
-        name='🌙 Modo oscuro',
+        tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+        attr='Esri',
+        name='🌙 Esri Dark Gray',
+        max_zoom=16,
         overlay=False,
         control=True
     ).add_to(m)
 
+    # Esri Standard
     folium.TileLayer(
-        tiles='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        attr='© OpenStreetMap',
-        name='🌐 OpenStreetMap',
+        tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+        attr='Esri',
+        name='🗺️ Esri Standard',
+        max_zoom=19,
         overlay=False,
         control=True
     ).add_to(m)
