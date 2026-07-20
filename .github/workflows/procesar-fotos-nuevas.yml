@@ -1,0 +1,57 @@
+name: Procesar Fotos Nuevas
+
+on:
+  push:
+    paths:
+      - 'fotos_subidas/**'
+      - '!fotos_subidas/procesadas/**'
+      - '!fotos_subidas/README.md'
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  procesar:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Instalar dependencias
+      run: |
+        pip install pillow
+        echo "✅ Dependencias instaladas"
+    
+    - name: Verificar fotos nuevas
+      id: check
+      run: |
+        fotos=$(find fotos_subidas -maxdepth 1 -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.heic" \) 2>/dev/null | wc -l)
+        echo "Fotos encontradas: $fotos"
+        if [ $fotos -gt 0 ]; then
+          echo "hay_fotos=true" >> $GITHUB_OUTPUT
+        else
+          echo "hay_fotos=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Procesar fotos
+      if: steps.check.outputs.hay_fotos == 'true'
+      run: |
+        echo "🔄 Procesando fotos..."
+        python scripts/procesar_fotos_nuevas.py
+    
+    - name: Subir cambios
+      if: steps.check.outputs.hay_fotos == 'true'
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git add fotos_imagenes/ fotos_metadata/ fotos_subidas/
+        git commit -m "📸 Fotos nuevas procesadas" || echo "No hay cambios"
+        git push
