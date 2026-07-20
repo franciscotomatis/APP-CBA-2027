@@ -10,9 +10,14 @@ on:
 jobs:
   actualizar_y_generar:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
     - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.TOKEN_FOTOS }}
+        fetch-depth: 0
     
     - name: Configurar Python
       uses: actions/setup-python@v4
@@ -62,8 +67,9 @@ jobs:
         echo "..."
         echo "----------------------------------------"
     
-    - name: Configurar Git
+    - name: Configurar Git con token
       run: |
+        git remote set-url origin https://${{ secrets.TOKEN_FOTOS }}@github.com/${{ github.repository }}.git
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
     
@@ -83,13 +89,13 @@ jobs:
           echo "📤 Subiendo cambios..."
           git add geojson_unificado_actual.geojson index.html
           git commit -m "🚀 Actualización automática $(TZ='America/Argentina/Buenos_Aires' date +'%Y-%m-%d %H:%M') - Datos + App"
-          git push
+          git push origin main
           echo "✅ Cambios subidos"
           
           echo ""
           echo "🔗 LINKS DIRECTOS:"
-          echo "📊 Datos GeoJSON: https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/geojson_unificado_actual.geojson"
-          echo "🌐 App HTML: https://franciscotomatis.github.io/APP-C-rdoba/"
+          echo "📊 Datos GeoJSON: https://raw.githubusercontent.com/${{ github.repository }}/main/geojson_unificado_actual.geojson"
+          echo "🌐 App HTML: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
         else
           echo "ℹ️ No hay cambios para subir"
         fi
@@ -102,10 +108,10 @@ jobs:
         ## 🚀 ACCESO RÁPIDO
         
         ### 📊 App actualizada (HTML listo para usar)
-        [👉 ABRIR APLICACIÓN](https://franciscotomatis.github.io/APP-C-rdoba/app_cordoba_actual.html)
+        [👉 ABRIR APLICACIÓN](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/app_cordoba_actual.html)
         
         ### 🔍 Datos actuales (GeoJSON)
-        [📁 DESCARGAR DATOS](https://raw.githubusercontent.com/franciscotomatis/APP-C-rdoba/main/geojson_unificado_actual.geojson)
+        [📁 DESCARGAR DATOS](https://raw.githubusercontent.com/${{ github.repository }}/main/geojson_unificado_actual.geojson)
         
         ## 🔐 CREDENCIALES DE ACCESO
         - **Usuario:** `Sancor`
