@@ -2081,14 +2081,14 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 const nombreArchivo = `foto_${Math.abs(fotoData.lat).toFixed(6)}_${Math.abs(fotoData.lon).toFixed(6)}_${Date.now()}.jpg`;
                 
                 try {
-                    // Usar GitHub API para trigger workflow
                     const response = await fetch(
                         'https://api.github.com/repos/franciscotomatis/APP-CBA-2027/actions/workflows/recibir-foto.yml/dispatches',
                         {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/vnd.github.v3+json',
-                                'Content-Type': 'application/json',  
+                                'Content-Type': 'application/json'
+                                // ← ELIMINÉ EL Authorization
                             },
                             body: JSON.stringify({
                                 ref: 'main',
