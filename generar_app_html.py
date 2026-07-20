@@ -1931,6 +1931,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     let gpsActual = null;
     let estaEnLinea = navigator.onLine;
 
+    // ========== CONFIGURACIÓN GITHUB ==========
+
+
     // ========== FUNCIONES DEL PANEL ==========
     function abrirPanelSubirFoto() {
         document.getElementById('panelSubirFoto').style.display = 'block';
@@ -2080,12 +2083,12 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 try {
                     // Usar GitHub API para trigger workflow
                     const response = await fetch(
-                        'https://api.github.com/repos/franciscotomatis/APP-C-rdoba/actions/workflows/recibir-foto.yml/dispatches',
+                        'https://api.github.com/repos/franciscotomatis/APP-CBA-2027/actions/workflows/recibir-foto.yml/dispatches',
                         {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/vnd.github.v3+json',
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',  
                             },
                             body: JSON.stringify({
                                 ref: 'main',
