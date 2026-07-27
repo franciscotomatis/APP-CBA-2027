@@ -1540,103 +1540,220 @@ def crear_app_pro_definitiva(geojson_data, gdf, campos, output_file):
     }}
     
     // ============================================================
-    // DATOS PARA GRÁFICOS
+    // DATOS DEL GEOJSON (INYECTADOS DESDE PYTHON)
     // ============================================================
     
-    const DATOS_CULTIVOS = {json.dumps(datos_cultivos)};
-    const DATOS_ZONAS = {json.dumps(datos_zonas)};
-    const TOTAL_POLIGONOS = {total_poligonos};
-    const TOTAL_HECTAREAS = {total_hectareas};
+    const GEOJSON_DATA = {json.dumps(geojson_data['features'])};
+    const CAMPOS = {json.dumps(campos)};
+    
+    // ============================================================
+    // FUNCIÓN PARA GENERAR GRÁFICOS DEL DASHBOARD
+    // ============================================================
     
     function generarGraficosDashboard() {{
-        // Gráfico 1: Cultivos
-        const ctx1 = document.getElementById('cultivoChart').getContext('2d');
-        new Chart(ctx1, {{
-            type: 'bar',
-            data: {{
-                labels: Object.keys(DATOS_CULTIVOS),
-                datasets: [{{
-                    label: 'Hectáreas',
-                    data: Object.values(DATOS_CULTIVOS),
-                    backgroundColor: ['#4CAF50','#FFC107','#795548','#FF9800','#9E9E9E','#2196F3'],
-                    borderRadius: 6
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {{ legend: {{ display: false }} }}
-            }}
-        }});
+        console.log("📊 Generando gráficos del dashboard...");
+        console.log("📊 Datos del GeoJSON:", GEOJSON_DATA.length, "features");
         
-        // Gráfico 2: Zonas
-        const ctx2 = document.getElementById('zonaChart').getContext('2d');
-        const coloresZonas = ['#2d7d46','#4CAF50','#66BB6A','#A5D6A7','#FF9800'];
-        new Chart(ctx2, {{
-            type: 'doughnut',
-            data: {{
-                labels: Object.keys(DATOS_ZONAS).map(z => 'Zona ' + z),
-                datasets: [{{
-                    data: Object.values(DATOS_ZONAS),
-                    backgroundColor: coloresZonas.slice(0, Object.keys(DATOS_ZONAS).length)
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {{ legend: {{ position: 'bottom' }} }}
+        try {{
+            // ===== EXTRAER DATOS DEL GEOJSON =====
+            var cultivosData = {{}};
+            var zonasData = {{}};
+            var totalLotes = 0;
+            var totalHectareas = 0;
+            
+            // Recorrer los datos del GeoJSON
+            GEOJSON_DATA.forEach(function(feature) {{
+                var props = feature.properties;
+                // Usar los nombres de campos EXACTOS según tu GeoJSON
+                var cultivo = (props.CULTIVO || props.cultivo || props.Cultivo || 'OTROS').toUpperCase();
+                var zona = (props.ZONA_CZ4 || props.zona || '0');
+                var hectareas = Number(props.HECTAREAS_ASEGURADAS || props.hectareas || 0);
+                
+                // Sumar por cultivo
+                if (cultivosData[cultivo]) {{
+                    cultivosData[cultivo] += hectareas;
+                }} else {{
+                    cultivosData[cultivo] = hectareas;
+                }}
+                
+                // Sumar por zona
+                if (zonasData[zona]) {{
+                    zonasData[zona] += hectareas;
+                }} else {{
+                    zonasData[zona] = hectareas;
+                }}
+                
+                totalLotes++;
+                totalHectareas += hectareas;
+            }});
+            
+            console.log("📊 Datos de cultivos:", cultivosData);
+            console.log("📊 Datos de zonas:", zonasData);
+            console.log("📊 Total lotes:", totalLotes);
+            console.log("📊 Total hectáreas:", totalHectareas);
+            
+            // Verificar que hay datos
+            if (Object.keys(cultivosData).length === 0) {{
+                console.warn("⚠️ No hay datos de cultivos disponibles");
+                document.querySelectorAll('.dash-card').forEach(function(card) {{
+                    card.innerHTML = '<div style="text-align:center;padding:20px;color:#999;">No hay datos disponibles</div>';
+                }});
+                return;
             }}
-        }});
-        
-        // Gráfico 3: Distribución
-        const ctx3 = document.getElementById('distribucionChart').getContext('2d');
-        const totalHa = Object.values(DATOS_CULTIVOS).reduce((a,b) => a + b, 0);
-        const datosPorcentaje = Object.values(DATOS_CULTIVOS).map(v => (v / totalHa * 100).toFixed(1));
-        new Chart(ctx3, {{
-            type: 'polarArea',
-            data: {{
-                labels: Object.keys(DATOS_CULTIVOS),
-                datasets: [{{
-                    data: Object.values(DATOS_CULTIVOS),
-                    backgroundColor: ['#4CAF50','#FFC107','#795548','#FF9800','#9E9E9E','#2196F3']
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {{
-                    legend: {{ position: 'bottom' }},
-                    tooltip: {{
-                        callbacks: {{
-                            label: function(context) {{
-                                return context.label + ': ' + context.raw.toLocaleString() + ' ha (' + 
-                                    (context.raw / totalHa * 100).toFixed(1) + '%)';
+            
+            // ===== GRÁFICO 1: Cultivos =====
+            var ctx1 = document.getElementById('cultivoChart');
+            if (ctx1) {{
+                try {{
+                    // Destruir gráfico anterior si existe
+                    if (window.cultivoChartInstance) {{
+                        window.cultivoChartInstance.destroy();
+                    }}
+                    window.cultivoChartInstance = new Chart(ctx1.getContext('2d'), {{
+                        type: 'bar',
+                        data: {{
+                            labels: Object.keys(cultivosData),
+                            datasets: [{{
+                                label: 'Hectáreas',
+                                data: Object.values(cultivosData),
+                                backgroundColor: ['#4CAF50','#FFC107','#795548','#FF9800','#9E9E9E','#2196F3','#E91E63','#9C27B0'],
+                                borderRadius: 6
+                            }}]
+                        }},
+                        options: {{
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {{ legend: {{ display: false }} }},
+                            scales: {{
+                                y: {{
+                                    beginAtZero: true,
+                                    ticks: {{
+                                        callback: function(value) {{ return value.toLocaleString(); }}
+                                    }}
+                                }}
                             }}
                         }}
-                    }}
+                    }});
+                    console.log("✅ Gráfico de cultivos generado");
+                }} catch(e) {{
+                    console.error("❌ Error en gráfico de cultivos:", e);
                 }}
             }}
-        }});
-        
-        // Gráfico 4: Resumen
-        const ctx4 = document.getElementById('resumenChart').getContext('2d');
-        new Chart(ctx4, {{
-            type: 'bar',
-            data: {{
-                labels: ['Lotes', 'Zonas', 'Cultivos'],
-                datasets: [{{
-                    label: 'Cantidad',
-                    data: [TOTAL_POLIGONOS, Object.keys(DATOS_ZONAS).length, Object.keys(DATOS_CULTIVOS).length],
-                    backgroundColor: ['#2d7d46','#4CAF50','#FFC107'],
-                    borderRadius: 6
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {{ legend: {{ display: false }} }}
+            
+            // ===== GRÁFICO 2: Zonas =====
+            var ctx2 = document.getElementById('zonaChart');
+            if (ctx2) {{
+                try {{
+                    if (window.zonaChartInstance) {{
+                        window.zonaChartInstance.destroy();
+                    }}
+                    var coloresZonas = ['#2d7d46','#4CAF50','#66BB6A','#A5D6A7','#FF9800','#FF5722','#2196F3'];
+                    window.zonaChartInstance = new Chart(ctx2.getContext('2d'), {{
+                        type: 'doughnut',
+                        data: {{
+                            labels: Object.keys(zonasData).map(function(z) {{ return 'Zona ' + z; }}),
+                            datasets: [{{
+                                data: Object.values(zonasData),
+                                backgroundColor: coloresZonas.slice(0, Object.keys(zonasData).length)
+                            }}]
+                        }},
+                        options: {{
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {{
+                                legend: {{ position: 'bottom' }},
+                                tooltip: {{
+                                    callbacks: {{
+                                        label: function(context) {{
+                                            var total = context.dataset.data.reduce(function(a,b) {{ return a + b; }}, 0);
+                                            var porcentaje = (context.raw / total * 100).toFixed(1);
+                                            return context.label + ': ' + context.raw.toLocaleString() + ' ha (' + porcentaje + '%)';
+                                        }}
+                                    }}
+                                }}
+                            }}
+                        }}
+                    }});
+                    console.log("✅ Gráfico de zonas generado");
+                }} catch(e) {{
+                    console.error("❌ Error en gráfico de zonas:", e);
+                }}
             }}
-        }});
+            
+            // ===== GRÁFICO 3: Distribución =====
+            var ctx3 = document.getElementById('distribucionChart');
+            if (ctx3) {{
+                try {{
+                    if (window.distribucionChartInstance) {{
+                        window.distribucionChartInstance.destroy();
+                    }}
+                    var totalHa = Object.values(cultivosData).reduce(function(a,b) {{ return a + b; }}, 0);
+                    window.distribucionChartInstance = new Chart(ctx3.getContext('2d'), {{
+                        type: 'polarArea',
+                        data: {{
+                            labels: Object.keys(cultivosData),
+                            datasets: [{{
+                                data: Object.values(cultivosData),
+                                backgroundColor: ['#4CAF50','#FFC107','#795548','#FF9800','#9E9E9E','#2196F3','#E91E63','#9C27B0']
+                            }}]
+                        }},
+                        options: {{
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {{
+                                legend: {{ position: 'bottom' }},
+                                tooltip: {{
+                                    callbacks: {{
+                                        label: function(context) {{
+                                            var porcentaje = (context.raw / totalHa * 100).toFixed(1);
+                                            return context.label + ': ' + context.raw.toLocaleString() + ' ha (' + porcentaje + '%)';
+                                        }}
+                                    }}
+                                }}
+                            }}
+                        }}
+                    }});
+                    console.log("✅ Gráfico de distribución generado");
+                }} catch(e) {{
+                    console.error("❌ Error en gráfico de distribución:", e);
+                }}
+            }}
+            
+            // ===== GRÁFICO 4: Resumen =====
+            var ctx4 = document.getElementById('resumenChart');
+            if (ctx4) {{
+                try {{
+                    if (window.resumenChartInstance) {{
+                        window.resumenChartInstance.destroy();
+                    }}
+                    window.resumenChartInstance = new Chart(ctx4.getContext('2d'), {{
+                        type: 'bar',
+                        data: {{
+                            labels: ['Lotes', 'Zonas', 'Cultivos'],
+                            datasets: [{{
+                                label: 'Cantidad',
+                                data: [totalLotes, Object.keys(zonasData).length, Object.keys(cultivosData).length],
+                                backgroundColor: ['#2d7d46','#4CAF50','#FFC107'],
+                                borderRadius: 6
+                            }}]
+                        }},
+                        options: {{
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {{ legend: {{ display: false }} }}
+                        }}
+                    }});
+                    console.log("✅ Gráfico de resumen generado");
+                }} catch(e) {{
+                    console.error("❌ Error en gráfico de resumen:", e);
+                }}
+            }}
+            
+            console.log("📊 Todos los gráficos generados correctamente");
+            
+        }} catch(error) {{
+            console.error("❌ Error general en generarGraficosDashboard:", error);
+        }}
     }}
     
     // ============================================================
@@ -1678,13 +1795,15 @@ def crear_app_pro_definitiva(geojson_data, gdf, campos, output_file):
                 layer.setStyle({{ opacity: 1, fillOpacity: 0.6 }});
                 layer.options.interactive = true;
             }});
+            document.getElementById('estadoFiltro').innerHTML = 'Mostrando todos los polígonos';
             return;
         }}
         
         var contador = 0;
         capa.eachLayer(function(layer) {{
             var props = layer.feature.properties;
-            var cultivo = (props["{campos['cultivo']}"] || '').toUpperCase();
+            // Usar el nombre EXACTO del campo CULTIVO en tu GeoJSON
+            var cultivo = (props.CULTIVO || props.cultivo || props.Cultivo || '').toUpperCase();
             if (seleccionados.includes(cultivo)) {{
                 layer.setStyle({{ opacity: 1, fillOpacity: 0.6 }});
                 layer.options.interactive = true;
@@ -1694,7 +1813,8 @@ def crear_app_pro_definitiva(geojson_data, gdf, campos, output_file):
                 layer.options.interactive = false;
             }}
         }});
-        document.getElementById('estadoFiltro').innerHTML = 'Mostrando ' + contador + ' polígonos';
+        document.getElementById('estadoFiltro').innerHTML = 'Mostrando ' + contador + ' polígonos (' + seleccionados.length + ' cultivos)';
+        console.log("✅ Filtrado: " + contador + " polígonos mostrados");
     }}
     
     // ============================================================
@@ -1708,12 +1828,15 @@ def crear_app_pro_definitiva(geojson_data, gdf, campos, output_file):
             return;
         }}
         var capa = obtenerCapaPoligonos();
-        if (!capa) return;
+        if (!capa) {{
+            console.warn("⚠️ No se encontró la capa de polígonos");
+            return;
+        }}
         var contador = 0;
         var bounds = null;
         capa.eachLayer(function(layer) {{
             var props = layer.feature.properties;
-            var cliente = (props["{campos['cliente']}"] || '').toLowerCase();
+            var cliente = (props.CLIENTE || props.cliente || '').toLowerCase();
             if (cliente.includes(valor)) {{
                 layer.setStyle({{ opacity: 1, fillOpacity: 0.8, weight: 3, color: '#FF5722' }});
                 layer.options.interactive = true;
@@ -2012,7 +2135,7 @@ def main():
         print(f"   ✅ Filtro de cultivos funcional")
         print(f"   ✅ Buscador de clientes (el original)")
         print(f"   ✅ Modo oscuro/claro")
-        print(f"   ✅ Dashboard con 4 gráficos interactivos")
+        print(f"   ✅ Dashboard con 4 gráficos interactivos (datos reales)")
         print(f"   ✅ Capa de fotos desde GitHub")
         print(f"   ✅ Capa de siniestros (con filtro)")
         print(f"   ✅ Sistema de leyendas WMS")
