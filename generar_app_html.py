@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-GENERADOR DE APLICACIÓN WEB - VERSIÓN PRO INTEGRADA
-TODO integrado en el nuevo diseño: header, sidebar, bottom bar
-Sin recuadros flotantes viejos
+GENERADOR DE APLICACIÓN WEB - VERSIÓN PRO COMPLETA
+PROGRAMA CÓRDOBA 25/26
+Interfaz renovada, filtros funcionales, modo oscuro, dashboard integrado
 """
 
 import geopandas as gpd
@@ -18,7 +18,7 @@ from datetime import datetime
 from owslib.wms import WebMapService
 import re
 
-print("🔐🌽🌱 GENERADOR PRO INTEGRADO - PROGRAMA CÓRDOBA 25/26")
+print("🔐🌽🌱 GENERADOR PRO COMPLETO - PROGRAMA CÓRDOBA 25/26")
 print("=" * 80)
 
 # ========== CREDENCIALES ==========
@@ -119,8 +119,8 @@ def agregar_elemento_html_seguro(mapa, html_content):
             print(f"❌ Error crítico: {e2}")
             return False
 
-def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
-    print(f"\n🗺️ Creando aplicación web PRO INTEGRADA: {output_file}")
+def crear_app_pro_completa(geojson_data, gdf, campos, output_file):
+    print(f"\n🗺️ Creando aplicación web PRO COMPLETA: {output_file}")
     
     if not gdf.empty:
         minx, miny, maxx, maxy = gdf.total_bounds
@@ -522,7 +522,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
     FOTOS_JSON_URL = f"https://raw.githubusercontent.com/{GITHUB_USER}/{REPO_NAME}/main/fotos_metadata/fotos_procesadas.json"
     print(f"✅ Fotos se cargarán desde: {FOTOS_JSON_URL}")
 
-    # ========== HTML DE LA INTERFAZ PRO INTEGRADA ==========
+    # ========== INTERFAZ PRO COMPLETA ==========
     from datetime import datetime, timezone, timedelta
     hora_argentina = datetime.now(timezone(timedelta(hours=-3)))
     fecha_hora_argentina = hora_argentina.strftime("%d/%m/%Y • %H:%M")
@@ -836,9 +836,8 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
     fotos_layer = folium.FeatureGroup(name='📸 Fotos del perito', show=True)
     fotos_layer.add_to(m)
     agregar_elemento_html_seguro(m, fotos_html)
-    print("✅ Sistema de carga de fotos desde GitHub configurado")
 
-    # ===== INTERFAZ PRO INTEGRADA =====
+    # ===== INTERFAZ PRO COMPLETA =====
     interfaz_pro_html = f'''
     <style>
     :root {{
@@ -1120,6 +1119,45 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         color:white;
     }}
     
+    .dashboard-preview {{
+        background:rgba(255,255,255,0.04);
+        border-radius:8px;
+        padding:12px;
+        cursor:pointer;
+        transition:all 0.2s;
+        border:1px solid rgba(255,255,255,0.06);
+    }}
+    
+    .dashboard-preview:hover {{
+        background:rgba(255,255,255,0.08);
+        border-color:rgba(255,255,255,0.15);
+    }}
+    
+    .dashboard-preview .dash-mini-grid {{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+        margin-top:8px;
+    }}
+    
+    .dashboard-preview .dash-mini-item {{
+        background:rgba(255,255,255,0.04);
+        border-radius:6px;
+        padding:8px;
+        text-align:center;
+    }}
+    
+    .dashboard-preview .dash-mini-item .num {{
+        font-size:18px;
+        font-weight:700;
+        color:white;
+    }}
+    
+    .dashboard-preview .dash-mini-item .label {{
+        font-size:9px;
+        color:rgba(255,255,255,0.4);
+    }}
+    
     #map-container {{
         position: fixed;
         top: var(--header-height);
@@ -1207,7 +1245,6 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         color: white;
     }}
     
-    /* ===== DASHBOARD OVERLAY ===== */
     #dashboard-overlay {{
         position: fixed;
         top: var(--header-height);
@@ -1395,28 +1432,16 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         <!-- Dashboard Preview -->
         <div class="section">
             <div class="section-title">📈 Dashboard</div>
-            <div class="dashboard-preview" onclick="abrirDashboardCompleto()" style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;cursor:pointer;transition:all 0.2s;border:1px solid rgba(255,255,255,0.06);">
+            <div class="dashboard-preview" onclick="abrirDashboardCompleto()">
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                     <span style="font-size:13px;font-weight:500;">Ver dashboard completo</span>
                     <span style="font-size:18px;">→</span>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-                    <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px;text-align:center;">
-                        <div style="font-size:18px;font-weight:700;color:white;">{len(datos_cultivos)}</div>
-                        <div style="font-size:9px;color:rgba(255,255,255,0.4);">Cultivos</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px;text-align:center;">
-                        <div style="font-size:18px;font-weight:700;color:white;">{total_zonas}</div>
-                        <div style="font-size:9px;color:rgba(255,255,255,0.4);">Zonas</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px;text-align:center;">
-                        <div style="font-size:18px;font-weight:700;color:white;">{total_poligonos}</div>
-                        <div style="font-size:9px;color:rgba(255,255,255,0.4);">Lotes</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px;text-align:center;">
-                        <div style="font-size:18px;font-weight:700;color:white;">{total_hectareas:,.0f}</div>
-                        <div style="font-size:9px;color:rgba(255,255,255,0.4);">Ha totales</div>
-                    </div>
+                <div class="dash-mini-grid">
+                    <div class="dash-mini-item"><div class="num">{len(datos_cultivos)}</div><div class="label">Cultivos</div></div>
+                    <div class="dash-mini-item"><div class="num">{total_zonas}</div><div class="label">Zonas</div></div>
+                    <div class="dash-mini-item"><div class="num">{total_poligonos}</div><div class="label">Lotes</div></div>
+                    <div class="dash-mini-item"><div class="num">{total_hectareas:,.0f}</div><div class="label">Ha totales</div></div>
                 </div>
             </div>
         </div>
@@ -1435,7 +1460,6 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         <button onclick="abrirDashboardCompleto()">📊 Dashboard</button>
     </div>
     
-    <!-- ===== DASHBOARD COMPLETO ===== -->
     <div id="dashboard-overlay">
         <button class="close-dash" onclick="cerrarDashboard()">✕</button>
         <div style="padding-top:20px;">
@@ -1449,7 +1473,6 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         </div>
     </div>
     
-    <!-- ===== PANEL SUBIR FOTO ===== -->
     <div id="panelSubirFoto" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card);padding:24px;border-radius:16px;z-index:10002;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid var(--border);">
         <h3 style="margin-bottom:16px;color:var(--text);">📸 Subir foto</h3>
         <div id="previewFoto" style="width:100%;height:200px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text);opacity:0.5;margin-bottom:12px;overflow:hidden;">
@@ -1561,7 +1584,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         if (!capa) return;
         capa.eachLayer(function(layer) {{
             var props = layer.feature.properties;
-            var cultivo = (props.CULTIVO || props.cultivo || '').toUpperCase();
+            var cultivo = (props.CULTIVO || '').toUpperCase();
             var colores = {{
                 'SOJA': '#4CAF50',
                 'MAÍZ': '#FFC107',
@@ -1596,7 +1619,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         var bounds = null;
         capa.eachLayer(function(layer) {{
             var props = layer.feature.properties;
-            var cliente = (props.CLIENTE || props.cliente || '').toLowerCase();
+            var cliente = (props.CLIENTE || '').toLowerCase();
             if (cliente.includes(valor)) {{
                 layer.setStyle({{ opacity: 1, fillOpacity: 0.8, weight: 3, color: '#FF5722' }});
                 layer.options.interactive = true;
@@ -1614,7 +1637,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
     }}
     
     // ============================================================
-    // FILTRO POR CULTIVO
+    // FILTRO POR CULTIVO (CORREGIDO)
     // ============================================================
     
     function aplicarFiltroCultivos() {{
@@ -1633,7 +1656,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         var bounds = null;
         capa.eachLayer(function(layer) {{
             var props = layer.feature.properties;
-            var cultivo = (props.CULTIVO || props.cultivo || '').toUpperCase();
+            var cultivo = (props.CULTIVO || '').toUpperCase();
             if (seleccionados.includes(cultivo)) {{
                 layer.setStyle({{ opacity: 1, fillOpacity: 0.8, weight: 2, color: '#4CAF50' }});
                 layer.options.interactive = true;
@@ -1651,7 +1674,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
     }}
     
     // ============================================================
-    // FILTRO POR SINIESTRO
+    // FILTRO POR SINIESTRO (CORREGIDO)
     // ============================================================
     
     function aplicarFiltroSiniestros() {{
@@ -1670,7 +1693,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
         var bounds = null;
         capa.eachLayer(function(layer) {{
             var props = layer.feature.properties;
-            var causa = (props.CAUSA_STRO || props.causa_stro || '').toUpperCase();
+            var causa = (props.CAUSA_STRO || '').toUpperCase();
             if (seleccionados.includes(causa)) {{
                 layer.setStyle({{ opacity: 1, fillOpacity: 0.8, weight: 2, color: '#F44336' }});
                 layer.options.interactive = true;
@@ -1725,9 +1748,9 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
             var totalHa = 0;
             GEOJSON_DATA.forEach(function(feature) {{
                 var props = feature.properties;
-                var cultivo = (props.CULTIVO || props.cultivo || 'OTROS').toUpperCase();
-                var zona = (props.ZONA_CZ4 || props.zona || '0');
-                var hectareas = Number(props.HECTAREAS_ASEGURADAS || props.hectareas || 0);
+                var cultivo = (props.CULTIVO || 'OTROS').toUpperCase();
+                var zona = (props.ZONA_CZ4 || '0');
+                var hectareas = Number(props.HECTAREAS_ASEGURADAS || 0);
                 if (cultivosData[cultivo]) cultivosData[cultivo] += hectareas;
                 else cultivosData[cultivo] = hectareas;
                 if (zonasData[zona]) zonasData[zona] += hectareas;
@@ -2170,7 +2193,7 @@ def crear_app_pro_integrada(geojson_data, gdf, campos, output_file):
 
     # ========== GUARDAR ==========
     m.save(output_file)
-    print(f"✅ Aplicación PRO INTEGRADA guardada como: {output_file}")
+    print(f"✅ Aplicación PRO COMPLETA guardada como: {output_file}")
     
     return output_file
 
@@ -2194,15 +2217,15 @@ def main():
             if campo:
                 print(f"   • {nombre}: '{campo}'")
         
-        crear_app_pro_integrada(geojson_data, gdf, campos, output_file)
+        crear_app_pro_completa(geojson_data, gdf, campos, output_file)
         
         print(f"\n{'='*80}")
-        print("🎉 APLICACIÓN PRO INTEGRADA GENERADA EXITOSAMENTE")
+        print("🎉 APLICACIÓN PRO COMPLETA GENERADA EXITOSAMENTE")
         print(f"{'='*80}")
         print(f"📁 Archivo: {output_file}")
         print(f"📊 Polígonos: {len(gdf)}")
         print(f"\n🌐 Para usar: Abre {output_file} en cualquier navegador")
-        print(f"📋 Funcionalidades PRO INTEGRADAS:")
+        print(f"📋 Funcionalidades PRO COMPLETAS:")
         print(f"   ✅ Login seguro EXACTO")
         print(f"   ✅ Panel lateral con estadísticas, cultivos y zonas")
         print(f"   ✅ Filtro de clientes (con zoom)")
