@@ -2726,7 +2726,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     
     agregar_elemento_html_seguro(m, login_html)
 
-    # ============================================================
+        # ============================================================
     # INTERFAZ PRO - NUEVO DISEÑO (HEADER + SIDEBAR + BOTTOM BAR)
     # ============================================================
     
@@ -3260,6 +3260,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     let darkMode = false;
     let capaPoligonos = null;
     
+    // ===== FUNCIONES DE LA INTERFAZ =====
+    
     function toggleSidebar() {{
         sidebarOpen = !sidebarOpen;
         document.getElementById('sidebar').classList.toggle('collapsed');
@@ -3279,7 +3281,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     }}
     
     function abrirSubirFoto() {{
-        // Buscar el botón original de subir fotos y hacer click
         var btnOriginal = document.querySelector('#controlSubirFotos a');
         if (btnOriginal) {{
             btnOriginal.click();
@@ -3294,8 +3295,20 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         if (typeof filtrarCliente === 'function') filtrarCliente();
     }}
     
+    // ===== OBTENER CAPA DE POLÍGONOS (USANDO EL NOMBRE DE LA CAPA) =====
+    
     function obtenerCapaPoligonos() {{
         if (capaPoligonos) return capaPoligonos;
+        
+        // Buscar por nombre (la misma técnica que usa tu buscador original)
+        var capa = window["{capa_nombre}"];
+        if (capa) {{
+            console.log("✅ Capa encontrada por nombre: {capa_nombre}");
+            capaPoligonos = capa;
+            return capa;
+        }}
+        
+        // Fallback: buscar en map._layers
         if (typeof map !== 'undefined') {{
             for (var key in map._layers) {{
                 var layer = map._layers[key];
@@ -3303,7 +3316,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                     var count = 0;
                     layer.eachLayer(function() {{ count++; }});
                     if (count > 1000) {{
-                        console.log("✅ Capa de polígonos encontrada:", count);
+                        console.log("✅ Capa encontrada en map._layers:", count);
                         capaPoligonos = layer;
                         return layer;
                     }}
@@ -3337,6 +3350,8 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         }});
     }}
     
+    // ===== FILTRO POR CLIENTE (IGUAL QUE EL ORIGINAL) =====
+    
     function filtrarCliente() {{
         var valor = document.getElementById('clienteInput').value.toLowerCase().trim();
         if (!valor) {{
@@ -3344,7 +3359,10 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             return;
         }}
         var capa = obtenerCapaPoligonos();
-        if (!capa) return;
+        if (!capa) {{
+            console.warn("⚠️ No se encontró la capa de polígonos");
+            return;
+        }}
         var contador = 0;
         var bounds = null;
         capa.eachLayer(function(layer) {{
@@ -3366,13 +3384,18 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         document.getElementById('estadoFiltroCliente').innerHTML = '🔍 ' + contador + ' clientes encontrados';
     }}
     
+    // ===== FILTRO POR CULTIVO (IGUAL QUE EL DE CLIENTE, PERO CON CULTIVO) =====
+    
     function aplicarFiltroCultivos() {{
         var seleccionados = [];
         document.querySelectorAll('#cultivoFilters input:checked').forEach(function(el) {{
             seleccionados.push(el.value);
         }});
         var capa = obtenerCapaPoligonos();
-        if (!capa) return;
+        if (!capa) {{
+            console.warn("⚠️ No se encontró la capa de polígonos");
+            return;
+        }}
         if (seleccionados.length === 0) {{
             resetearEstilos();
             document.getElementById('estadoFiltroCultivo').innerHTML = 'Todos los cultivos';
