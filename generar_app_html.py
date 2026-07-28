@@ -2726,8 +2726,9 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     
     agregar_elemento_html_seguro(m, login_html)
 
-        # ============================================================
-    # INTERFAZ PRO - NUEVO DISEÑO (HEADER + SIDEBAR + BOTTOM BAR)
+    # ============================================================
+    # INTERFAZ PRO - ESTILO ONESOIL
+    # Sin controles en el mapa, todo en el sidebar
     # ============================================================
     
     from datetime import datetime, timezone, timedelta
@@ -2737,7 +2738,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     total_poligonos = len(gdf)
     total_hectareas = gdf[campos.get('hectareas', 'HECTAREAS_ASEGURADAS')].sum() if campos.get('hectareas') else 0
     
-    # ===== Obtener datos para la interfaz =====
+    # ===== Obtener datos =====
     cultivos_unicos = []
     if campos['cultivo'] and campos['cultivo'] in gdf.columns:
         cultivos_unicos = sorted(gdf[campos['cultivo']].dropna().unique())
@@ -2746,17 +2747,16 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     if campos['cliente'] and campos['cliente'] in gdf.columns:
         clientes_unicos = sorted(gdf[campos['cliente']].dropna().astype(str).unique())
     
-    # ===== Generar checkboxes de cultivos =====
+    # ===== Checkboxes cultivos (sin iconos) =====
     checkboxes_cultivos = ""
     for cultivo in cultivos_unicos:
         cultivo_str = str(cultivo).upper()
-        icono = '🌱' if 'SOJA' in cultivo_str else '🌽' if 'MAÍZ' in cultivo_str else '🌾' if 'TRIGO' in cultivo_str else '🌻' if 'GIRASOL' in cultivo_str else '📦'
-        checkboxes_cultivos += f'<label class="active"><input type="checkbox" value="{cultivo_str}" checked><span>{icono} {cultivo_str.capitalize()}</span></label>'
+        checkboxes_cultivos += f'<label class="active"><input type="checkbox" value="{cultivo_str}" checked><span>{cultivo_str.capitalize()}</span></label>'
     
-    # ===== Generar opciones de clientes =====
+    # ===== Opciones clientes =====
     opciones_clientes = "".join(f'<option value="{cliente}">' for cliente in clientes_unicos)
     
-    # ===== Generar datos de cultivos para el panel =====
+    # ===== Datos de cultivos para el panel =====
     datos_cultivos = {}
     if campos['cultivo'] and campos['cultivo'] in gdf.columns and campos['hectareas']:
         for cultivo in cultivos_unicos:
@@ -2767,52 +2767,63 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     cultivos_panel_html = ""
     for cultivo, hectareas in datos_cultivos.items():
         cultivo_str = str(cultivo).upper()
-        icono = '🌱' if 'SOJA' in cultivo_str else '🌽' if 'MAÍZ' in cultivo_str else '🌾' if 'TRIGO' in cultivo_str else '🌻' if 'GIRASOL' in cultivo_str else '📦'
         cultivos_panel_html += f'''
-        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-            <span>{icono} {cultivo_str.capitalize()}</span>
-            <span style="font-weight:600;color:white;">{hectareas:,.0f} ha</span>
+        <div class="stat-row">
+            <span>{cultivo_str.capitalize()}</span>
+            <span>{hectareas:,.0f} ha</span>
         </div>
         '''
     
     total_zonas = len(gdf[campos['zona']].dropna().unique()) if campos['zona'] else 0
     
-    # ===== HTML de la interfaz =====
+    # ===== INTERFAZ COMPLETA =====
     interfaz_pro_html = f'''
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
     :root {{
-        --bg: #f0f2f5;
-        --sidebar: #1a2332;
-        --sidebar-text: #e0e4ea;
+        --bg: #f5f7fa;
+        --sidebar: #ffffff;
+        --sidebar-text: #1a2332;
         --card: #ffffff;
-        --text: #1a2332;
-        --border: #e2e8f0;
-        --shadow: 0 4px 20px rgba(0,0,0,0.1);
+        --text: #0f172a;
+        --border: #e8ecf0;
+        --shadow: 0 2px 12px rgba(0,0,0,0.06);
         --header-height: 56px;
         --bottom-height: 48px;
+        --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --accent: #1a7a3a;
+        --accent-hover: #145a2a;
+        --radius: 8px;
     }}
     
     [data-theme="dark"] {{
-        --bg: #0d1117;
-        --sidebar: #161b22;
-        --sidebar-text: #c9d1d9;
-        --card: #1c2333;
-        --text: #e6edf3;
-        --border: #30363d;
-        --shadow: 0 4px 20px rgba(0,0,0,0.4);
+        --bg: #0a0a0a;
+        --sidebar: #141414;
+        --sidebar-text: #e5e5e5;
+        --card: #1a1a1a;
+        --text: #f0f0f0;
+        --border: #2a2a2a;
+        --shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }}
+    
+    * {{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }}
     
     body {{
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-family: var(--font);
         background: var(--bg);
         color: var(--text);
         transition: background 0.3s, color 0.3s;
         overflow: hidden;
         height: 100vh;
+        -webkit-font-smoothing: antialiased;
     }}
     
+    /* ===== HEADER ===== */
     #header {{
         position: fixed;
         top: 0;
@@ -2820,96 +2831,81 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         right: 0;
         height: var(--header-height);
         background: var(--sidebar);
-        color: white;
+        border-bottom: 1px solid var(--border);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 16px;
+        padding: 0 20px;
         z-index: 9999;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow);
     }}
     
     #header .logo {{
-        font-weight: 800;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: -0.3px;
+        color: var(--text);
     }}
     
     #header .logo span {{
-        background: #2d7d46;
+        background: var(--accent);
+        color: white;
         padding: 2px 10px;
         border-radius: 20px;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 600;
+        margin-left: 6px;
     }}
-    
-    #header .search {{
-        flex: 1;
-        max-width: 400px;
-        margin: 0 20px;
-    }}
-    
-    #header .search input {{
-        width: 100%;
-        padding: 8px 16px;
-        border: none;
-        border-radius: 20px;
-        background: rgba(255,255,255,0.12);
-        color: white;
-        font-size: 14px;
-        outline: none;
-        transition: background 0.3s;
-    }}
-    
-    #header .search input::placeholder {{ color: rgba(255,255,255,0.5); }}
-    #header .search input:focus {{ background: rgba(255,255,255,0.2); }}
     
     #header .actions {{
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 6px;
     }}
     
     #header .actions button {{
         background: none;
         border: none;
-        color: rgba(255,255,255,0.8);
-        font-size: 20px;
+        color: var(--text);
+        opacity: 0.5;
+        font-size: 12px;
         cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 8px;
+        padding: 6px 12px;
+        border-radius: var(--radius);
         transition: all 0.2s;
+        font-family: var(--font);
+        font-weight: 500;
     }}
     
     #header .actions button:hover {{
-        background: rgba(255,255,255,0.1);
-        color: white;
+        opacity: 1;
+        background: var(--border);
     }}
     
+    /* ===== SIDEBAR ===== */
     #sidebar {{
         position: fixed;
         top: var(--header-height);
         left: 0;
         bottom: var(--bottom-height);
-        width: 320px;
+        width: 300px;
         background: var(--sidebar);
+        border-right: 1px solid var(--border);
         color: var(--sidebar-text);
         z-index: 9998;
         overflow-y: auto;
-        padding: 16px;
+        padding: 16px 16px 20px;
         transition: transform 0.3s ease;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255,255,255,0.2) transparent;
+        scrollbar-color: var(--border) transparent;
     }}
     
     #sidebar::-webkit-scrollbar {{ width: 4px; }}
     #sidebar::-webkit-scrollbar-track {{ background: transparent; }}
-    #sidebar::-webkit-scrollbar-thumb {{ background: rgba(255,255,255,0.2); border-radius: 4px; }}
+    #sidebar::-webkit-scrollbar-thumb {{ background: var(--border); border-radius: 4px; }}
     
     #sidebar.collapsed {{
-        transform: translateX(-320px);
+        transform: translateX(-300px);
     }}
     
     #sidebar .section {{
@@ -2917,16 +2913,18 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     }}
     
     #sidebar .section-title {{
-        font-size: 11px;
+        font-size: 10px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        color: rgba(255,255,255,0.4);
-        margin-bottom: 8px;
+        color: var(--text);
+        opacity: 0.35;
+        margin-bottom: 10px;
         font-weight: 600;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
     }}
     
+    /* ===== STATS ===== */
     #sidebar .stats-grid {{
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -2934,61 +2932,108 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     }}
     
     #sidebar .stat-card {{
-        background: rgba(255,255,255,0.06);
-        border-radius: 8px;
+        background: var(--bg);
+        border-radius: var(--radius);
         padding: 12px;
         text-align: center;
+        border: 1px solid var(--border);
     }}
     
     #sidebar .stat-card .num {{
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
-        color: white;
+        color: var(--text);
+        letter-spacing: -0.3px;
     }}
     
     #sidebar .stat-card .label {{
-        font-size: 10px;
-        color: rgba(255,255,255,0.5);
+        font-size: 9px;
+        color: var(--text);
+        opacity: 0.4;
         margin-top: 2px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }}
     
+    /* ===== STATS LIST ===== */
+    .stats-list {{
+        background: var(--bg);
+        border-radius: var(--radius);
+        padding: 6px 12px;
+        border: 1px solid var(--border);
+    }}
+    
+    .stats-list .stat-row {{
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--text);
+    }}
+    
+    .stats-list .stat-row:last-child {{
+        border-bottom: none;
+    }}
+    
+    .stats-list .stat-row span:last-child {{
+        font-weight: 600;
+    }}
+    
+    .stats-list .stat-total {{
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        margin-top: 4px;
+        border-top: 1px solid var(--border);
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--text);
+    }}
+    
+    /* ===== FILTROS ===== */
     .filter-group {{
         margin-bottom: 12px;
     }}
     
     .filter-group label {{
         display: block;
-        font-size: 12px;
-        color: rgba(255,255,255,0.6);
-        margin-bottom: 4px;
+        font-size: 11px;
+        color: var(--text);
+        opacity: 0.5;
+        margin-bottom: 5px;
         font-weight: 500;
     }}
     
     .filter-group .checkbox-group {{
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 4px;
     }}
     
     .filter-group .checkbox-group label {{
         display: flex;
         align-items: center;
         gap: 4px;
-        font-size: 12px;
-        background: rgba(255,255,255,0.06);
-        padding: 4px 10px;
-        border-radius: 20px;
+        font-size: 11px;
+        background: var(--bg);
+        padding: 4px 12px;
+        border-radius: 16px;
         cursor: pointer;
         transition: all 0.2s;
-        color: rgba(255,255,255,0.7);
+        color: var(--text);
+        opacity: 0.5;
+        font-weight: 400;
+        margin-bottom: 0;
+        border: 1px solid var(--border);
     }}
     
     .filter-group .checkbox-group label:hover {{
-        background: rgba(255,255,255,0.12);
+        opacity: 0.8;
     }}
     
     .filter-group .checkbox-group input:checked + span {{
-        color: white;
+        opacity: 1;
     }}
     
     .filter-group .checkbox-group input {{
@@ -2996,87 +3041,123 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     }}
     
     .filter-group .checkbox-group label.active {{
-        background: #2d7d46;
+        background: var(--accent);
         color: white;
+        opacity: 1;
+        border-color: var(--accent);
     }}
     
     .filter-group input[type="text"] {{
-        width:100%;
-        padding:8px 12px;
-        border:none;
-        border-radius:8px;
-        background:rgba(255,255,255,0.08);
-        color:white;
-        font-size:13px;
-        outline:none;
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 12px;
+        outline: none;
+        font-family: var(--font);
+        transition: border-color 0.2s;
+    }}
+    
+    .filter-group input[type="text"]:focus {{
+        border-color: var(--accent);
     }}
     
     .filter-group input[type="text"]::placeholder {{
-        color: rgba(255,255,255,0.4);
+        opacity: 0.3;
     }}
     
     .filter-group .btn-group {{
-        display:flex;
-        gap:6px;
-        margin-top:8px;
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
     }}
     
     .filter-group .btn-group button {{
-        flex:1;
-        padding:8px;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-        font-size:12px;
-        font-weight:600;
+        flex: 1;
+        padding: 7px;
+        border: none;
+        border-radius: var(--radius);
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: var(--font);
+        transition: all 0.2s;
     }}
     
     .filter-group .btn-group .btn-primary {{
-        background:#2d7d46;
-        color:white;
+        background: var(--accent);
+        color: white;
+    }}
+    
+    .filter-group .btn-group .btn-primary:hover {{
+        background: var(--accent-hover);
     }}
     
     .filter-group .btn-group .btn-secondary {{
-        background:rgba(255,255,255,0.06);
-        color:rgba(255,255,255,0.6);
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }}
+    
+    .filter-group .btn-group .btn-secondary:hover {{
+        background: var(--border);
     }}
     
     .filter-group .estado-filtro {{
-        font-size:10px;
-        color:rgba(255,255,255,0.5);
-        margin-top:6px;
+        font-size: 10px;
+        color: var(--text);
+        opacity: 0.35;
+        margin-top: 6px;
     }}
     
-    .stats-list {{
-        background: rgba(255,255,255,0.04);
-        border-radius: 8px;
+    /* ===== CONTROLES DEL MAPA ===== */
+    .map-controls {{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }}
+    
+    .map-controls .control-btn {{
+        flex: 1;
+        min-width: 40px;
         padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: var(--font);
+        text-align: center;
     }}
     
-    .stats-list .stat-item {{
-        display:flex;
-        justify-content:space-between;
-        padding:4px 0;
-        border-bottom:1px solid rgba(255,255,255,0.05);
-        font-size:12px;
+    .map-controls .control-btn:hover {{
+        background: var(--border);
     }}
     
-    .stats-list .stat-item:last-child {{
-        border-bottom:none;
+    .map-controls .control-btn.primary {{
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
     }}
     
-    .stats-list .stat-item .value {{
-        font-weight:600;
-        color:white;
+    .map-controls .control-btn.primary:hover {{
+        background: var(--accent-hover);
     }}
     
+    /* ===== MAPA ===== */
     #map-container {{
         position: fixed;
         top: var(--header-height);
-        left: 320px;
+        left: 300px;
         right: 0;
         bottom: var(--bottom-height);
         transition: left 0.3s ease;
+        background: var(--bg);
     }}
     
     #map-container.expanded {{
@@ -3086,26 +3167,29 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     #map {{
         width: 100%;
         height: 100%;
+        background: var(--bg);
     }}
     
+    /* ===== TOGGLE SIDEBAR ===== */
     #toggleSidebar {{
         position: fixed;
         top: calc(var(--header-height) + 10px);
-        left: 330px;
+        left: 310px;
         z-index: 9997;
-        background: var(--card);
+        background: var(--sidebar);
         border: 1px solid var(--border);
         border-radius: 50%;
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         box-shadow: var(--shadow);
-        font-size: 16px;
+        font-size: 12px;
         transition: all 0.3s;
         color: var(--text);
+        font-family: var(--font);
     }}
     
     #toggleSidebar:hover {{
@@ -3116,6 +3200,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         left: 10px;
     }}
     
+    /* ===== BOTTOM BAR ===== */
     #bottom-bar {{
         position: fixed;
         bottom: 0;
@@ -3123,40 +3208,46 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         right: 0;
         height: var(--bottom-height);
         background: var(--sidebar);
+        border-top: 1px solid var(--border);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 4px;
         padding: 0 16px;
         z-index: 9996;
-        border-top: 1px solid rgba(255,255,255,0.05);
     }}
     
     #bottom-bar button {{
         background: none;
         border: none;
-        color: rgba(255,255,255,0.6);
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 12px;
+        color: var(--text);
+        opacity: 0.4;
+        padding: 6px 14px;
+        border-radius: var(--radius);
+        font-size: 11px;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+        font-family: var(--font);
     }}
     
     #bottom-bar button:hover {{
-        background: rgba(255,255,255,0.08);
-        color: white;
+        opacity: 0.8;
+        background: var(--bg);
     }}
     
     #bottom-bar button.primary {{
-        background: #2d7d46;
+        background: var(--accent);
         color: white;
+        opacity: 1;
     }}
     
+    #bottom-bar button.primary:hover {{
+        background: var(--accent-hover);
+        opacity: 1;
+    }}
+    
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {{
         #sidebar {{
             width: 280px;
@@ -3168,13 +3259,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         #map-container {{
             left: 0;
         }}
-        #header .search {{
-            max-width: 140px;
-            margin: 0 8px;
-        }}
-        #header .logo {{
-            font-size: 14px;
-        }}
         #toggleSidebar {{
             left: 10px;
         }}
@@ -3182,63 +3266,74 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     </style>
     
     <header id="header">
-        <div class="logo">🌽 PROGRAMA CÓRDOBA 25/26 <span>PRO</span></div>
-        <div class="search">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar cliente, campo, localidad..." oninput="buscarGlobal(this.value)">
-        </div>
+        <div class="logo">Programa Cordoba 25/26 <span>PRO</span></div>
         <div class="actions">
-            <button onclick="toggleTheme()" id="themeToggle" title="Modo nocturno">🌙</button>
-            <button onclick="toggleSidebar()" title="Panel lateral">☰</button>
-            <button onclick="abrirSubirFoto()" title="Subir foto">📸</button>
+            <button onclick="toggleTheme()" id="themeToggle">Modo</button>
+            <button onclick="toggleSidebar()">Panel</button>
         </div>
     </header>
     
     <div id="sidebar">
+        <!-- Estadísticas -->
         <div class="section">
-            <div class="section-title">📊 Datos Generales</div>
+            <div class="section-title">Datos generales</div>
             <div class="stats-grid">
                 <div class="stat-card"><div class="num">{total_poligonos}</div><div class="label">Lotes</div></div>
-                <div class="stat-card"><div class="num">{total_hectareas:,.0f}</div><div class="label">Hectáreas</div></div>
+                <div class="stat-card"><div class="num">{total_hectareas:,.0f}</div><div class="label">Hectareas</div></div>
                 <div class="stat-card"><div class="num" id="totalFotos">0</div><div class="label">Fotos</div></div>
                 <div class="stat-card"><div class="num">{total_zonas}</div><div class="label">Zonas</div></div>
             </div>
         </div>
         
+        <!-- Superficie por cultivo -->
         <div class="section">
-            <div class="section-title">🌾 Hectáreas por Cultivo</div>
+            <div class="section-title">Superficie por cultivo</div>
             <div class="stats-list">
                 {cultivos_panel_html}
-                <div style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid rgba(255,255,255,0.1);margin-top:4px;font-weight:700;color:white;">
-                    <span>TOTAL</span>
+                <div class="stat-total">
+                    <span>Total</span>
                     <span>{total_hectareas:,.0f} ha</span>
                 </div>
             </div>
         </div>
         
+        <!-- Filtros -->
         <div class="section">
-            <div class="section-title">🔍 Buscar Cliente</div>
+            <div class="section-title">Filtros</div>
+            
             <div class="filter-group">
-                <input list="clientesList" id="clienteInput" placeholder="🔍 Escribe o selecciona cliente...">
+                <label>Cliente</label>
+                <input list="clientesList" id="clienteInput" placeholder="Escribe o selecciona un cliente...">
                 <datalist id="clientesList">{opciones_clientes}</datalist>
                 <div class="btn-group">
-                    <button class="btn-primary" onclick="filtrarCliente()">✓ Filtrar</button>
-                    <button class="btn-secondary" onclick="resetearFiltros()">↺ Resetear</button>
+                    <button class="btn-primary" onclick="aplicarFiltros()">Aplicar</button>
+                    <button class="btn-secondary" onclick="resetearFiltros()">Resetear</button>
                 </div>
-                <div class="estado-filtro" id="estadoFiltroCliente">Mostrando {total_poligonos} polígonos</div>
+                <div class="estado-filtro" id="estadoFiltroCliente">Mostrando todos los lotes</div>
             </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">🌱 Filtro por Cultivo</div>
+            
             <div class="filter-group">
+                <label>Cultivo</label>
                 <div class="checkbox-group" id="cultivoFilters">
                     {checkboxes_cultivos}
                 </div>
                 <div class="btn-group">
-                    <button class="btn-primary" onclick="aplicarFiltroCultivos()">✓ Aplicar</button>
-                    <button class="btn-secondary" onclick="resetearFiltros()">↺ Resetear</button>
+                    <button class="btn-primary" onclick="aplicarFiltros()">Aplicar</button>
+                    <button class="btn-secondary" onclick="resetearFiltros()">Resetear</button>
                 </div>
                 <div class="estado-filtro" id="estadoFiltroCultivo">Todos los cultivos</div>
+            </div>
+        </div>
+        
+        <!-- Controles del mapa -->
+        <div class="section">
+            <div class="section-title">Controles</div>
+            <div class="map-controls">
+                <button onclick="zoomIn()" class="control-btn">+</button>
+                <button onclick="zoomOut()" class="control-btn">-</button>
+                <button onclick="toggleLayerControl()" class="control-btn">Capas</button>
+                <button onclick="toggleMedicion()" class="control-btn">Medir</button>
+                <button onclick="abrirSubirFoto()" class="control-btn primary">Subir foto</button>
             </div>
         </div>
     </div>
@@ -3250,18 +3345,18 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     <button id="toggleSidebar" onclick="toggleSidebar()">◀</button>
     
     <div id="bottom-bar">
-        <button onclick="toggleSidebar()">☰ Panel</button>
-        <button onclick="toggleTheme()" id="themeBtn">🌙 Nocturno</button>
-        <button onclick="abrirSubirFoto()">📸 Subir foto</button>
+        <button onclick="toggleSidebar()">Panel</button>
+        <button onclick="toggleTheme()" id="themeBtn">Modo</button>
+        <button onclick="abrirSubirFoto()" class="primary">Subir foto</button>
     </div>
     
     <script>
     let sidebarOpen = true;
     let darkMode = false;
     let capaPoligonos = null;
+    let layerControlVisible = false;
     
-    // ===== FUNCIONES DE LA INTERFAZ =====
-    
+    // ===== TOGGLES =====
     function toggleSidebar() {{
         sidebarOpen = !sidebarOpen;
         document.getElementById('sidebar').classList.toggle('collapsed');
@@ -3275,9 +3370,37 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     function toggleTheme() {{
         darkMode = !darkMode;
         document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
-        document.getElementById('themeToggle').textContent = darkMode ? '☀️' : '🌙';
-        document.getElementById('themeBtn').textContent = darkMode ? '☀️ Diurno' : '🌙 Nocturno';
+        document.getElementById('themeToggle').textContent = darkMode ? 'Claro' : 'Oscuro';
+        document.getElementById('themeBtn').textContent = darkMode ? 'Claro' : 'Oscuro';
         setTimeout(() => map.invalidateSize(), 100);
+    }}
+    
+    // ===== CONTROLES DEL MAPA =====
+    function zoomIn() {{
+        if (typeof map !== 'undefined') map.zoomIn();
+    }}
+    
+    function zoomOut() {{
+        if (typeof map !== 'undefined') map.zoomOut();
+    }}
+    
+    function toggleLayerControl() {{
+        var layerControl = document.querySelector('.leaflet-control-layers');
+        if (layerControl) {{
+            layerControlVisible = !layerControlVisible;
+            layerControl.style.display = layerControlVisible ? 'block' : 'none';
+        }} else {{
+            alert('El control de capas no esta disponible');
+        }}
+    }}
+    
+    function toggleMedicion() {{
+        var measureControl = document.querySelector('.leaflet-control-measure');
+        if (measureControl) {{
+            measureControl.click();
+        }} else {{
+            alert('La herramienta de medicion no esta disponible');
+        }}
     }}
     
     function abrirSubirFoto() {{
@@ -3285,30 +3408,19 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         if (btnOriginal) {{
             btnOriginal.click();
         }} else {{
-            alert('La función de subir fotos está disponible en el botón 📸 del mapa');
+            alert('La funcion de subir fotos no esta disponible');
         }}
     }}
     
-    function buscarGlobal(texto) {{
-        if (!texto || texto.length < 3) return;
-        document.getElementById('clienteInput').value = texto;
-        if (typeof filtrarCliente === 'function') filtrarCliente();
-    }}
-    
-    // ===== OBTENER CAPA DE POLÍGONOS (USANDO EL NOMBRE DE LA CAPA) =====
-    
+    // ===== OBTENER CAPA =====
     function obtenerCapaPoligonos() {{
         if (capaPoligonos) return capaPoligonos;
-        
-        // Buscar por nombre (la misma técnica que usa tu buscador original)
         var capa = window["{capa_nombre}"];
         if (capa) {{
-            console.log("✅ Capa encontrada por nombre: {capa_nombre}");
+            console.log("Capa encontrada por nombre: {capa_nombre}");
             capaPoligonos = capa;
             return capa;
         }}
-        
-        // Fallback: buscar en map._layers
         if (typeof map !== 'undefined') {{
             for (var key in map._layers) {{
                 var layer = map._layers[key];
@@ -3316,7 +3428,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                     var count = 0;
                     layer.eachLayer(function() {{ count++; }});
                     if (count > 1000) {{
-                        console.log("✅ Capa encontrada en map._layers:", count);
+                        console.log("Capa encontrada en map._layers:", count);
                         capaPoligonos = layer;
                         return layer;
                     }}
@@ -3334,7 +3446,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             var cultivo = (props.CULTIVO || '').toUpperCase();
             var colores = {{
                 'SOJA': '#4CAF50',
-                'MAÍZ': '#FFC107',
+                'MAIZ': '#FFC107',
                 'TRIGO': '#795548',
                 'GIRASOL': '#FF9800'
             }};
@@ -3350,64 +3462,30 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         }});
     }}
     
-    // ===== FILTRO POR CLIENTE (IGUAL QUE EL ORIGINAL) =====
-    
-    function filtrarCliente() {{
-        var valor = document.getElementById('clienteInput').value.toLowerCase().trim();
-        if (!valor) {{
-            resetearFiltros();
-            return;
-        }}
+    // ===== FILTROS COMBINADOS =====
+    function aplicarFiltros() {{
+        var clienteValor = document.getElementById('clienteInput').value.toLowerCase().trim();
+        var cultivosSeleccionados = [];
+        document.querySelectorAll('#cultivoFilters input:checked').forEach(function(el) {{
+            cultivosSeleccionados.push(el.value);
+        }});
+        
         var capa = obtenerCapaPoligonos();
-        if (!capa) {{
-            console.warn("⚠️ No se encontró la capa de polígonos");
-            return;
-        }}
+        if (!capa) return;
+        
         var contador = 0;
         var bounds = null;
+        
         capa.eachLayer(function(layer) {{
             var props = layer.feature.properties;
             var cliente = (props.CLIENTE || '').toLowerCase();
-            if (cliente.includes(valor)) {{
-                layer.setStyle({{ opacity: 1, fillOpacity: 0.8, weight: 3, color: '#FF5722' }});
-                layer.options.interactive = true;
-                contador++;
-                if (layer.getBounds && layer.getBounds().isValid()) {{
-                    bounds = bounds ? bounds.extend(layer.getBounds()) : layer.getBounds();
-                }}
-            }} else {{
-                layer.setStyle({{ opacity: 0, fillOpacity: 0 }});
-                layer.options.interactive = false;
-            }}
-        }});
-        if (contador > 0 && bounds) map.fitBounds(bounds, {{padding: [50,50]}});
-        document.getElementById('estadoFiltroCliente').innerHTML = '🔍 ' + contador + ' clientes encontrados';
-    }}
-    
-    // ===== FILTRO POR CULTIVO (IGUAL QUE EL DE CLIENTE, PERO CON CULTIVO) =====
-    
-    function aplicarFiltroCultivos() {{
-        var seleccionados = [];
-        document.querySelectorAll('#cultivoFilters input:checked').forEach(function(el) {{
-            seleccionados.push(el.value);
-        }});
-        var capa = obtenerCapaPoligonos();
-        if (!capa) {{
-            console.warn("⚠️ No se encontró la capa de polígonos");
-            return;
-        }}
-        if (seleccionados.length === 0) {{
-            resetearEstilos();
-            document.getElementById('estadoFiltroCultivo').innerHTML = 'Todos los cultivos';
-            return;
-        }}
-        var contador = 0;
-        var bounds = null;
-        capa.eachLayer(function(layer) {{
-            var props = layer.feature.properties;
             var cultivo = (props.CULTIVO || '').toUpperCase();
-            if (seleccionados.includes(cultivo)) {{
-                layer.setStyle({{ opacity: 1, fillOpacity: 0.8, weight: 2, color: '#4CAF50' }});
+            
+            var coincideCliente = !clienteValor || cliente.includes(clienteValor);
+            var coincideCultivo = cultivosSeleccionados.length === 0 || cultivosSeleccionados.includes(cultivo);
+            
+            if (coincideCliente && coincideCultivo) {{
+                layer.setStyle({{ opacity: 1, fillOpacity: 0.8, weight: 2, color: '#FF5722' }});
                 layer.options.interactive = true;
                 contador++;
                 if (layer.getBounds && layer.getBounds().isValid()) {{
@@ -3418,8 +3496,13 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 layer.options.interactive = false;
             }}
         }});
-        if (contador > 0 && bounds) map.fitBounds(bounds, {{padding: [50,50]}});
-        document.getElementById('estadoFiltroCultivo').innerHTML = '🌱 ' + contador + ' polígonos (' + seleccionados.join(', ') + ')';
+        
+        if (contador > 0 && bounds) {{
+            map.fitBounds(bounds, {{padding: [50,50]}});
+        }}
+        
+        document.getElementById('estadoFiltroCliente').innerHTML = 'Mostrando ' + contador + ' lotes';
+        document.getElementById('estadoFiltroCultivo').innerHTML = contador + ' lotes encontrados';
     }}
     
     function resetearFiltros() {{
@@ -3429,7 +3512,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             el.closest('label').classList.add('active');
         }});
         resetearEstilos();
-        document.getElementById('estadoFiltroCliente').innerHTML = 'Mostrando todos los polígonos';
+        document.getElementById('estadoFiltroCliente').innerHTML = 'Mostrando todos los lotes';
         document.getElementById('estadoFiltroCultivo').innerHTML = 'Todos los cultivos';
         var capa = obtenerCapaPoligonos();
         if (capa) {{
@@ -3447,13 +3530,13 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     }});
     
     document.getElementById('clienteInput').addEventListener('keypress', function(e) {{
-        if (e.key === 'Enter') filtrarCliente();
+        if (e.key === 'Enter') aplicarFiltros();
     }});
     
     setTimeout(function() {{
         capaPoligonos = obtenerCapaPoligonos();
         resetearEstilos();
-        console.log("✅ Sistema de filtros inicializado");
+        console.log("Sistema de filtros inicializado");
     }}, 1500);
     </script>
     '''
