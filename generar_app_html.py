@@ -2502,19 +2502,57 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             color: #2C2C2C;
         }
     
-        .leaflet-control-zoom a {
-            background: linear-gradient(135deg, rgba(250, 249, 246, 0.95), rgba(245, 245, 240, 0.95));
-            border: 1px solid rgba(212, 212, 212, 0.8) !important;
-            color: #2C5530 !important;
-            border-radius: 6px !important;
+        /* ========== OCULTAR CONTROLES DE LEAFLET/FOLIUM ========== */
+        
+        /* Ocultar zoom + y zoom - */
+        .leaflet-control-zoom {
+            display: none !important;
         }
-    
+        
+        /* Ocultar Layer Control (capas) */
         .leaflet-control-layers {
-            background: linear-gradient(135deg, rgba(250, 249, 246, 0.95), rgba(245, 245, 240, 0.95)) !important;
-            border: 1px solid rgba(212, 212, 212, 0.8) !important;
-            border-radius: 10px !important;
+            display: none !important;
         }
-    </style>
+        
+        /* Ocultar Measure Control (medición) */
+        .leaflet-control-measure {
+            display: none !important;
+        }
+        
+        /* Ocultar Fullscreen */
+        .leaflet-control-fullscreen {
+            display: none !important;
+        }
+        
+        /* Ocultar escala */
+        .leaflet-control-scale {
+            display: none !important;
+        }
+        
+        /* Ocultar Locate Control (GPS) */
+        .leaflet-control-locate {
+            display: none !important;
+        }
+        
+        /* También ocultar el contenedor si tiene controles */
+        .leaflet-control-container {
+            display: none !important;
+        }
+        
+        /* ===== BOTÓN DE SUBIR FOTO - MANTENER VISIBLE ===== */
+        #controlSubirFotos {
+            display: block !important;
+            z-index: 9999 !important;
+        }
+        
+        /* Asegurar que el botón de subir foto esté visible */
+        #controlSubirFotos a {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* ==================================================== */
     '''
     
     agregar_elemento_html_seguro(m, estilos_globales)
