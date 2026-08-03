@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-GENERADOR AUTOMÁTICO DE APLICACIÓN HTML - ESTILO ONESOIL
-Versión para GitHub Actions
-Con controles en el sidebar y mapa limpio
+GENERADOR AUTOMÁTICO DE APLICACIÓN HTML - CON CONTROLES EN EL MAPA
+Versión estable - Controles visibles y funcionales
 """
 
 import geopandas as gpd
@@ -128,9 +127,9 @@ def agregar_elemento_html_seguro(mapa, html_content):
             return False
 
 def crear_app_completa(geojson_data, gdf, campos, output_file):
-    """CREA LA APLICACIÓN COMPLETA CON ESTILO ONESOIL"""
+    """CREA LA APLICACIÓN COMPLETA - VERSIÓN ESTABLE"""
     
-    print(f"\n🗺️ Creando aplicación web estilo OneSoil: {output_file}")
+    print(f"\n🗺️ Creando aplicación web: {output_file}")
     
     if not gdf.empty:
         minx, miny, maxx, maxy = gdf.total_bounds
@@ -140,13 +139,13 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         center = [-31.4201, -64.1888]
         bounds = [[center[0]-0.1, center[1]-0.1], [center[0]+0.1, center[1]+0.1]]
 
-    # Crear mapa base
+    # Crear mapa base CON controles VISIBLES
     m = folium.Map(
         location=center,
         zoom_start=11,
         control_scale=True,
         tiles=None,
-        zoom_control=True
+        zoom_control=True  # <-- ZOOM VISIBLE
     )
 
     # ========== CAPAS BASE ==========
@@ -186,10 +185,10 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         control=True
     ).add_to(m)
 
-    # ========== ESTILOS POR CULTIVO ==========
+    # ========== ESTILOS POR CULTIVO (COLORES ORIGINALES) ==========
     def estilo_por_cultivo(feature):
         propiedades = feature['properties']
-        color_relleno = '#9C27B0'
+        color_relleno = '#9C27B0'  # Default
         color_borde = '#7B1FA2'
 
         if campos['cultivo'] and campos['cultivo'] in propiedades:
@@ -1414,7 +1413,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     '''
     agregar_elemento_html_seguro(m, js_leyendas_completo)
 
-    # ========== CONTROLES (OCULTOS CON CSS) ==========
+    # ========== CONTROLES VISIBLES EN EL MAPA ==========
     folium.LayerControl(position='topright', collapsed=True).add_to(m)
     Fullscreen(
         position='topright',
@@ -1851,7 +1850,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     except Exception as e:
         print(f"⚠️  Error GPS: {e}")
 
-    # ========== ESTILOS GLOBALES + OCULTAR CONTROLES ==========
+    # ========== ESTILOS GLOBALES (SIN OCULTAR CONTROLES) ==========
     estilos_globales = '''
     <style>
         :root {
@@ -1901,36 +1900,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             font-size: 11px;
             color: #2C2C2C;
-        }
-        
-        /* ============================================================
-           OCULTAR TODOS LOS CONTROLES DE FOLIUM/LEAFLET
-           ============================================================ */
-        .leaflet-control-zoom { display: none !important; }
-        .leaflet-control-layers { display: none !important; }
-        .leaflet-control-measure { display: none !important; }
-        .leaflet-control-fullscreen { display: none !important; }
-        .leaflet-control-scale { display: none !important; }
-        .leaflet-control-locate { display: none !important; }
-        .leaflet-control-container { display: none !important; }
-        
-        /* ===== BOTÓN DE SUBIR FOTO - MANTENER VISIBLE ===== */
-        #controlSubirFotos {
-            display: block !important;
-            z-index: 9999 !important;
-        }
-        #controlSubirFotos a {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-        
-        /* ===== SIDEBAR DE ONESOIL - ASEGURAR VISIBILIDAD ===== */
-        #sidebar {
-            z-index: 9998 !important;
-        }
-        #map-container {
-            z-index: 1 !important;
         }
     </style>
     '''
@@ -2098,7 +2067,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     agregar_elemento_html_seguro(m, login_html)
 
     # ============================================================
-    # INTERFAZ PRO - ESTILO ONESOIL
+    # INTERFAZ PRO - SOLO SIDEBAR (SIN CONTROLES)
     # ============================================================
     
     from datetime import datetime, timezone, timedelta
@@ -2142,6 +2111,7 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     
     total_zonas = len(gdf[campos['zona']].dropna().unique()) if campos['zona'] else 0
     
+    # ===== INTERFAZ SOLO SIDEBAR (SIN CONTROLES) =====
     interfaz_pro_html = f'''
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -2472,42 +2442,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         margin-top: 6px;
     }}
     
-    .map-controls {{
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-    }}
-    
-    .map-controls .control-btn {{
-        flex: 1;
-        min-width: 40px;
-        padding: 8px 12px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: var(--bg);
-        color: var(--text);
-        font-size: 12px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-family: var(--font);
-        text-align: center;
-    }}
-    
-    .map-controls .control-btn:hover {{
-        background: var(--border);
-    }}
-    
-    .map-controls .control-btn.primary {{
-        background: var(--accent);
-        color: white;
-        border-color: var(--accent);
-    }}
-    
-    .map-controls .control-btn.primary:hover {{
-        background: var(--accent-hover);
-    }}
-    
     #map-container {{
         position: fixed;
         top: var(--header-height);
@@ -2676,17 +2610,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
                 <div class="estado-filtro" id="estadoFiltroCultivo">Todos los cultivos</div>
             </div>
         </div>
-        
-        <div class="section">
-            <div class="section-title">Controles</div>
-            <div class="map-controls">
-                <button onclick="zoomIn()" class="control-btn">+</button>
-                <button onclick="zoomOut()" class="control-btn">-</button>
-                <button onclick="toggleLayerControl()" class="control-btn">Capas</button>
-                <button onclick="toggleMedicion()" class="control-btn">Medir</button>
-                <button onclick="abrirSubirFoto()" class="control-btn primary">Subir foto</button>
-            </div>
-        </div>
     </div>
     
     <div id="map-container">
@@ -2705,7 +2628,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
     let sidebarOpen = true;
     let darkMode = false;
     let capaPoligonos = null;
-    let layerControlVisible = false;
     
     function toggleSidebar() {{
         sidebarOpen = !sidebarOpen;
@@ -2723,33 +2645,6 @@ def crear_app_completa(geojson_data, gdf, campos, output_file):
         document.getElementById('themeToggle').textContent = darkMode ? 'Claro' : 'Oscuro';
         document.getElementById('themeBtn').textContent = darkMode ? 'Claro' : 'Oscuro';
         setTimeout(() => map.invalidateSize(), 100);
-    }}
-    
-    function zoomIn() {{
-        if (typeof map !== 'undefined') map.zoomIn();
-    }}
-    
-    function zoomOut() {{
-        if (typeof map !== 'undefined') map.zoomOut();
-    }}
-    
-    function toggleLayerControl() {{
-        var layerControl = document.querySelector('.leaflet-control-layers');
-        if (layerControl) {{
-            layerControlVisible = !layerControlVisible;
-            layerControl.style.display = layerControlVisible ? 'block' : 'none';
-        }} else {{
-            alert('El control de capas no esta disponible');
-        }}
-    }}
-    
-    function toggleMedicion() {{
-        var measureControl = document.querySelector('.leaflet-control-measure');
-        if (measureControl) {{
-            measureControl.click();
-        }} else {{
-            alert('La herramienta de medicion no esta disponible');
-        }}
     }}
     
     function abrirSubirFoto() {{
